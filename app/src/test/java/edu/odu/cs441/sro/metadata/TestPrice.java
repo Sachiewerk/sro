@@ -1,6 +1,7 @@
 package edu.odu.cs441.sro.metadata;
 
 import org.junit.Test;
+import java.util.UUID;
 
 import static org.junit.Assert.*;
 
@@ -12,10 +13,11 @@ import static org.junit.Assert.*;
  */
 public class TestPrice {
 
+    private final UUID uuid = UUID.randomUUID();
 
     @Test
     public void TestPrice() {
-        Price price = new Price("54");
+        Price price = new Price(uuid, "54");
 
         assertEquals("", price.getPrice(), "54.00");
         assertEquals("", price.toString(), "$54.00");

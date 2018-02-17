@@ -2,16 +2,14 @@ package edu.odu.cs441.sro.metadata;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Created by michael on 2/16/18.
  *
  * Location class represents the location of the transaction
  */
-public class Location extends Tag implements Serializable {
-
-    // The string literal that should be display when no location is specified
-    private static final String NOT_SPECIFIED_LITERAL = "[Not Specified]";
+public class Location extends Tag implements Serializable, Comparable<Location> {
 
     // This location list is shared by all instances of Location class
     private static ArrayList<String> LOCATIONS = new ArrayList<String> ();
@@ -82,8 +80,8 @@ public class Location extends Tag implements Serializable {
     /**
      * Default Constructor to create Location object with unspecified location
      */
-    public Location() {
-        super("location");
+    public Location(UUID uuid) {
+        super(uuid);
         SELECTED_LOCATION = NOT_SPECIFIED_LITERAL;
     }
 
@@ -92,8 +90,8 @@ public class Location extends Tag implements Serializable {
      * if the given location does not exist in the global, it is added to the list.
      * @param location String
      */
-    public Location(String location) {
-        super("location");
+    public Location(UUID uuid, String location) {
+        super(uuid);
 
         int index = indexOf(location);
 
@@ -109,9 +107,21 @@ public class Location extends Tag implements Serializable {
     }
 
     /**
+     * Override compareTo method to compare two location by the selected location.
+     * @param location Location
+     * @return int
+     */
+    @Override
+    public int compareTo(Location location) {
+        return this.SELECTED_LOCATION.toUpperCase().compareTo(
+                location.SELECTED_LOCATION.toUpperCase());
+    }
+
+    /**
      * Return the selected location of this object as string
      * @return String string literal of the current selected location
      */
+    @Override
     public String toString() {
         return SELECTED_LOCATION;
     }

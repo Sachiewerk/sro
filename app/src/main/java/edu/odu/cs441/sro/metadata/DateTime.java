@@ -5,6 +5,7 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.Locale;
+import java.util.UUID;
 
 /**
  * Created by michael on 2/16/18.
@@ -17,15 +18,17 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
     /**
      * Default Constructor. The date is set to the time when this DateTime object
      * is instantiated.
+     * @param uuid UUID
      */
-    public DateTime() {
+    public DateTime(UUID uuid) {
         // Create this date with the current date and time.
-        super("datetime");
+        super(uuid);
         DATETIME = LocalDateTime.now();
     }
 
     /**
      * Create this DateTime object with the specified date and time.
+     * @param uuid UUID
      * @param year int
      * @param month Month
      * @param dayOfMonth int
@@ -33,19 +36,27 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
      * @param minute int
      * @param second int
      */
-    public DateTime(int year, int month, int dayOfMonth, int hour, int minute, int second){
-        super("datetime");
+    public DateTime(
+            UUID uuid,
+            int year,
+            int month,
+            int dayOfMonth,
+            int hour,
+            int minute,
+            int second){
+        super(uuid);
         DATETIME = LocalDateTime.of(year, Month.of(month), dayOfMonth, hour, minute, second);
     }
 
     /**
      * Create this DateTime object with just the dates and set the time to midnight
+     * @param uuid UUID
      * @param year int
      * @param month int
      * @param dayOfMonth int
      */
-    public DateTime(int year, int month, int dayOfMonth) {
-        super("datetime");
+    public DateTime(UUID uuid, int year, int month, int dayOfMonth) {
+        super(uuid);
         DATETIME = LocalDateTime.of(year, Month.of(month), dayOfMonth, 0, 0);
     }
 

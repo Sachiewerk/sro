@@ -3,6 +3,7 @@ package edu.odu.cs441.sro.metadata;
 import org.junit.Test;
 import edu.odu.cs441.sro.metadata.DateTime;
 import static org.junit.Assert.*;
+import java.util.UUID;
 
 /**
  * Created by michael on 2/16/18.
@@ -18,6 +19,7 @@ public class TestDateTime {
     private int hour;
     private int minute;
     private int second;
+    private final UUID uuid = UUID.randomUUID();
 
     public TestDateTime() {
         initializeDateTime();
@@ -34,7 +36,7 @@ public class TestDateTime {
 
     @Test
     public void TestDateTime() throws Exception {
-        DateTime dateTime = new DateTime(year, month, day, hour, minute, second);
+        DateTime dateTime = new DateTime(uuid, year, month, day, hour, minute, second);
 
         assertEquals("The year as string was not correct", dateTime.getYear(), "2018");
 

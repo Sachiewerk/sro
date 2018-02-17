@@ -6,6 +6,7 @@ import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.Currency;
 import java.util.Locale;
+import java.util.UUID;
 
 /**
  * Created by michael on 2/17/18.
@@ -14,7 +15,7 @@ import java.util.Locale;
  * The default currency is USD and the default locale is US.
  * The currency and the locale can be explicitly set.
  */
-public class Price extends Tag implements Serializable {
+public class Price extends Tag implements Serializable, Comparable<Price> {
 
     private BigDecimal VALUE;
     private Currency CURRENCY;
@@ -23,9 +24,10 @@ public class Price extends Tag implements Serializable {
     /**
      * Default Constructor with the default currency and locale -
      * the amount is set to zero
+     * @param uuid UUID
      */
-    public Price(){
-        super("price");
+    public Price(UUID uuid){
+        super(uuid);
         VALUE = new BigDecimal("0.00");
         CURRENCY = Currency.getInstance("USD");
         LOCALE = Locale.US;
@@ -34,9 +36,10 @@ public class Price extends Tag implements Serializable {
     /**
      * Constructor that accepts double value
      * @param value double
+     * @param uuid UUID
      */
-    public Price(double value) {
-        super("price");
+    public Price(UUID uuid, double value) {
+        super(uuid);
         VALUE = new BigDecimal(String.valueOf(value));
         CURRENCY = Currency.getInstance("USD");
         LOCALE = Locale.US;
@@ -44,10 +47,11 @@ public class Price extends Tag implements Serializable {
 
     /**
      * Constructor that accepts floating-point value
+     * @param uuid UUID
      * @param value float
      */
-    public Price(float value) {
-        super("price");
+    public Price(UUID uuid, float value) {
+        super(uuid);
         VALUE = new BigDecimal(String.valueOf(value));
         CURRENCY = Currency.getInstance("USD");
         LOCALE = Locale.US;
@@ -55,10 +59,11 @@ public class Price extends Tag implements Serializable {
 
     /**
      * Constructor that accepts integer value
+     * @param uuid UUID
      * @param value int
      */
-    public Price(int value) {
-        super("price");
+    public Price(UUID uuid, int value) {
+        super(uuid);
         VALUE = new BigDecimal(String.valueOf(value) + ".00");
         CURRENCY = Currency.getInstance("USD");
         LOCALE = Locale.US;
@@ -66,10 +71,11 @@ public class Price extends Tag implements Serializable {
 
     /**
      * Constructor that accepts string value
+     * @param uuid UUID
      * @param value String
      */
-    public Price(String value) {
-        super("price");
+    public Price(UUID uuid, String value) {
+        super(uuid);
         VALUE = new BigDecimal(value);
         CURRENCY = Currency.getInstance("USD");
         LOCALE = Locale.US;
@@ -159,10 +165,21 @@ public class Price extends Tag implements Serializable {
     }
 
     /**
+     *
+     * @param price Price
+     * @return int
+     */
+    @Override
+    public int compareTo(Price price) {
+        return this.VALUE.compareTo(price.VALUE);
+    }
+
+    /**
      * Override toString method to return the price with the currency symbol and specific
      * locale formatting
      * @return String price with locale-specific formatting
      */
+    @Override
     public String toString() {
         BigDecimal displayValue =
                 VALUE.setScale(CURRENCY.getDefaultFractionDigits(), RoundingMode.HALF_EVEN);
