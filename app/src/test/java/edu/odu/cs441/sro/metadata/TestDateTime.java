@@ -1,10 +1,11 @@
-package edu.odu.cs441.sro;
+package edu.odu.cs441.sro.metadata;
 
 import org.junit.Test;
 import edu.odu.cs441.sro.metadata.DateTime;
 import static org.junit.Assert.*;
 
 /**
+ * Created by michael on 2/16/18.
  * Test edu.odu.cs441.sro.metadata.DateTime
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
