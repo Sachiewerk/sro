@@ -12,7 +12,7 @@ import java.util.Locale;
  */
 public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
 
-    private LocalDateTime dateTime;
+    private LocalDateTime DATETIME;
 
     /**
      * Default Constructor. The date is set to the time when this DateTime object
@@ -21,7 +21,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
     public DateTime() {
         // Create this date with the current date and time.
         super("datetime");
-        dateTime = LocalDateTime.now();
+        DATETIME = LocalDateTime.now();
     }
 
     /**
@@ -35,7 +35,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
      */
     public DateTime(int year, int month, int dayOfMonth, int hour, int minute, int second){
         super("datetime");
-        dateTime = LocalDateTime.of(year, Month.of(month), dayOfMonth, hour, minute, second);
+        DATETIME = LocalDateTime.of(year, Month.of(month), dayOfMonth, hour, minute, second);
     }
 
     /**
@@ -46,7 +46,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
      */
     public DateTime(int year, int month, int dayOfMonth) {
         super("datetime");
-        dateTime = LocalDateTime.of(year, Month.of(month), dayOfMonth, 0, 0);
+        DATETIME = LocalDateTime.of(year, Month.of(month), dayOfMonth, 0, 0);
     }
 
     /**
@@ -54,7 +54,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
      * @return String year
      */
     public String getYear(){
-        return String.valueOf(dateTime.getYear());
+        return String.valueOf(DATETIME.getYear());
     }
 
     /**
@@ -62,7 +62,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
      * @return String long month
      */
     public String getLongMonth() {
-        return dateTime.getMonth().getDisplayName(TextStyle.FULL, Locale.US);
+        return DATETIME.getMonth().getDisplayName(TextStyle.FULL, Locale.US);
     }
 
     /**
@@ -70,7 +70,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
      * @return String short month
      */
     public String getShortMonth(){
-        return dateTime.getMonth().getDisplayName(TextStyle.SHORT, Locale.US);
+        return DATETIME.getMonth().getDisplayName(TextStyle.SHORT, Locale.US);
     }
 
     /**
@@ -78,7 +78,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
      * @return String day
      */
     public String getDay() {
-        return String.valueOf(dateTime.getDayOfMonth());
+        return String.valueOf(DATETIME.getDayOfMonth());
     }
 
     /**
@@ -86,7 +86,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
      * @return String hour
      */
     public String getHour() {
-        return String.valueOf(dateTime.getHour());
+        return String.valueOf(DATETIME.getHour());
     }
 
     /**
@@ -94,7 +94,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
      * @return String minute
      */
     public String getMinute() {
-        return String.valueOf(dateTime.getMinute());
+        return String.valueOf(DATETIME.getMinute());
     }
 
     /**
@@ -102,7 +102,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
      * @return String second
      */
     public String getSecond() {
-        return String.valueOf(dateTime.getSecond());
+        return String.valueOf(DATETIME.getSecond());
     }
 
     /**
@@ -110,7 +110,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
      * @return int year
      */
     public int getIntYear(){
-        return dateTime.getYear();
+        return DATETIME.getYear();
     }
 
     /**
@@ -118,7 +118,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
      * @return int month
      */
     public int getIntMonth() {
-        return dateTime.getMonth().getValue();
+        return DATETIME.getMonth().getValue();
     }
 
     /**
@@ -126,7 +126,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
      * @return int day
      */
     public int getIntDay() {
-        return dateTime.getDayOfMonth();
+        return DATETIME.getDayOfMonth();
     }
 
     /**
@@ -134,7 +134,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
      * @return int hour
      */
     public int getIntHour() {
-        return dateTime.getHour();
+        return DATETIME.getHour();
     }
 
     /**
@@ -142,7 +142,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
      * @return int minute
      */
     public int getIntMinute() {
-        return dateTime.getMinute();
+        return DATETIME.getMinute();
     }
 
     /**
@@ -150,7 +150,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
      * @return int second
      */
     public int getIntSecond() {
-        return dateTime.getSecond();
+        return DATETIME.getSecond();
     }
 
     /**
@@ -158,7 +158,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
      * @param newDateTime LocalDateTime
      */
     public void setDateTime(LocalDateTime newDateTime){
-        dateTime = newDateTime;
+        DATETIME = newDateTime;
     }
 
     /**
@@ -179,7 +179,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
             int minute,
             int second) {
 
-        dateTime = LocalDateTime.of(year, Month.of(month), dayOfMonth, hour, minute, second);
+        DATETIME = LocalDateTime.of(year, Month.of(month), dayOfMonth, hour, minute, second);
     }
 
     /**
@@ -195,8 +195,8 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
             int dayOfMonth
             ) {
 
-        dateTime = LocalDateTime.of(year, Month.of(month), dayOfMonth,
-                dateTime.getHour(), dateTime.getMinute(), dateTime.getSecond());
+        DATETIME = LocalDateTime.of(year, Month.of(month), dayOfMonth,
+                DATETIME.getHour(), DATETIME.getMinute(), DATETIME.getSecond());
     }
 
     /**
@@ -209,7 +209,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
      */
     @Override
     public int compareTo(DateTime dateTime) {
-        return this.dateTime.compareTo(dateTime.dateTime);
+        return this.DATETIME.compareTo(dateTime.DATETIME);
     }
 
     /**
@@ -220,6 +220,6 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
     @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy 'at' hh:mm:ss a");
-        return dateTime.format(formatter);
+        return DATETIME.format(formatter);
     }
 }
