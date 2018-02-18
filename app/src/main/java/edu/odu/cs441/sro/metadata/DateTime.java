@@ -5,13 +5,14 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
  * Created by michael on 2/16/18.
  * DateTime class represents the created date of any transactions.
  */
-public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
+public class DateTime extends Tag implements Serializable, Comparable<DateTime>, Cloneable {
 
     private LocalDateTime DATETIME;
 
@@ -27,10 +28,26 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
     }
 
     /**
+     * Copy Constructor
+     * @param toCopy DateTime
+     */
+    public DateTime(DateTime toCopy) {
+        super(toCopy.getUUID());
+        DATETIME = LocalDateTime.of(
+                toCopy.getIntYear(),
+                toCopy.getIntMonth(),
+                toCopy.getIntDay(),
+                toCopy.getIntHour(),
+                toCopy.getIntMinute(),
+                toCopy.getIntSecond()
+        );
+    }
+
+    /**
      * Create this DateTime object with the specified date and time.
      * @param uuid UUID
      * @param year int
-     * @param month Month
+     * @param month int
      * @param dayOfMonth int
      * @param hour int
      * @param minute int
@@ -49,6 +66,29 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
     }
 
     /**
+     * Create this DateTime object with the specified date and time.
+     * @param uuid UUID
+     * @param year int
+     * @param month String
+     * @param dayOfMonth int
+     * @param hour int
+     * @param minute int
+     * @param second int
+     */
+    public DateTime(
+            UUID uuid,
+            int year,
+            String month,
+            int dayOfMonth,
+            int hour,
+            int minute,
+            int second){
+        super(uuid);
+        month = month.toUpperCase();
+        DATETIME = LocalDateTime.of(year, Month.valueOf(month), dayOfMonth, hour, minute, second);
+    }
+
+    /**
      * Create this DateTime object with just the dates and set the time to midnight
      * @param uuid UUID
      * @param year int
@@ -58,6 +98,19 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
     public DateTime(UUID uuid, int year, int month, int dayOfMonth) {
         super(uuid);
         DATETIME = LocalDateTime.of(year, Month.of(month), dayOfMonth, 0, 0);
+    }
+
+    /**
+     * Create this DateTime object with just the dates and set the time to midnight
+     * @param uuid UUID
+     * @param year int
+     * @param month String
+     * @param dayOfMonth int
+     */
+    public DateTime(UUID uuid, int year, String month, int dayOfMonth) {
+        super(uuid);
+        month = month.toUpperCase();
+        DATETIME = LocalDateTime.of(year, Month.valueOf(month), dayOfMonth, 0, 0);
     }
 
     /**
@@ -85,27 +138,47 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
     }
 
     /**
+     * Return the two-digit month as string
+     * @return String two-digit month
+     */
+    public String getTwoDigitMonth() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM");
+        return DATETIME.format(formatter);
+    }
+
+    /**
      * Return the day as string
      * @return String day
      */
     public String getDay() {
-        return String.valueOf(DATETIME.getDayOfMonth());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd");
+        return DATETIME.format(formatter);
     }
 
     /**
-     * Return the hour as string
+     * Return the hour as string (Military)
      * @return String hour
      */
     public String getHour() {
-        return String.valueOf(DATETIME.getHour());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH");
+        return DATETIME.format(formatter);
     }
 
+    /**
+     * Return AMPM Hour as string
+     * @return String hour
+     */
+    public String getAMPMHour() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh");
+        return DATETIME.format(formatter);
+    }
     /**
      * Return the minute as string
      * @return String minute
      */
     public String getMinute() {
-        return String.valueOf(DATETIME.getMinute());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("mm");
+        return DATETIME.format(formatter);
     }
 
     /**
@@ -113,7 +186,17 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
      * @return String second
      */
     public String getSecond() {
-        return String.valueOf(DATETIME.getSecond());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ss");
+        return DATETIME.format(formatter);
+    }
+
+    /**
+     * Get AM or PM
+     * @return String AM or PM
+     */
+    public String getAMPM() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("a");
+        return DATETIME.format(formatter);
     }
 
     /**
@@ -141,11 +224,20 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
     }
 
     /**
-     * Return the hour as integer
+     * Return the hour as integer (Military)
      * @return int hour
      */
     public int getIntHour() {
         return DATETIME.getHour();
+    }
+
+    /**
+     * Return the AMPM hour as integer
+     * @return int hour
+     */
+    public int getIntAMPMHour() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh");
+        return Integer.parseInt(DATETIME.format(formatter));
     }
 
     /**
@@ -195,6 +287,27 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
 
     /**
      * Change this datetime to the specified datetime parameters
+     * which include full date and time
+     * @param year int
+     * @param month String
+     * @param dayOfMonth int
+     * @param hour int
+     * @param minute int
+     * @param second int
+     */
+    public void setDateTime(
+            int year,
+            String month,
+            int dayOfMonth,
+            int hour,
+            int minute,
+            int second) {
+        month = month.toUpperCase();
+        DATETIME = LocalDateTime.of(year, Month.valueOf(month), dayOfMonth, hour, minute, second);
+    }
+
+    /**
+     * Change this datetime to the specified datetime parameters
      * which include only date
      * @param year int
      * @param month int
@@ -208,6 +321,62 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>{
 
         DATETIME = LocalDateTime.of(year, Month.of(month), dayOfMonth,
                 DATETIME.getHour(), DATETIME.getMinute(), DATETIME.getSecond());
+    }
+
+    /**
+     * Change this datetime to the specified datetime parameters
+     * which include only date
+     * @param year int
+     * @param month String
+     * @param dayOfMonth int
+     */
+    public void setDateTime(
+            int year,
+            String month,
+            int dayOfMonth
+    ) {
+        month = month.toUpperCase();
+        DATETIME = LocalDateTime.of(year, Month.valueOf(month), dayOfMonth,
+                DATETIME.getHour(), DATETIME.getMinute(), DATETIME.getSecond());
+    }
+
+    /**
+     * Compare this DateTime to another DateTime -
+     * must have the same UUID and same Local Date and Time
+     * @param obj Object
+     * @return boolean true if both objects are equal
+     */
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof DateTime)) {
+            return false;
+        }
+
+        DateTime dateTime = (DateTime) obj;
+
+        return this.getUUID().equals(dateTime.getUUID()) &&
+                this.DATETIME.equals(dateTime.DATETIME);
+    }
+
+    /**
+     * Override hashCode
+     * @return int hashCode of this object
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUUID(), DATETIME);
+    }
+
+    /**
+     * Clone this object
+     * @return Object deep copy of this object
+     */
+    @Override
+    public Object clone() {
+        return new DateTime(this);
     }
 
     /**
