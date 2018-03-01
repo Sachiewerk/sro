@@ -1,10 +1,9 @@
 package edu.odu.cs441.sro.metadata;
 
+
 import java.io.Serializable;
-import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.time.format.TextStyle;
-import java.util.Locale;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -14,7 +13,8 @@ import java.util.UUID;
  */
 public class DateTime extends Tag implements Serializable, Comparable<DateTime>, Cloneable {
 
-    private LocalDateTime DATETIME;
+    private Date DATE;
+
 
     /**
      * Default Constructor. The date is set to the time when this DateTime object
@@ -24,7 +24,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
     public DateTime(UUID uuid) {
         // Create this date with the current date and time.
         super(uuid);
-        DATETIME = LocalDateTime.now();
+        DATE = new Date();
     }
 
     /**
@@ -33,7 +33,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
      */
     public DateTime(DateTime toCopy) {
         super(toCopy.getUUID());
-        DATETIME = LocalDateTime.of(
+        DATE = new Date(
                 toCopy.getIntYear(),
                 toCopy.getIntMonth(),
                 toCopy.getIntDay(),
@@ -62,30 +62,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
             int minute,
             int second){
         super(uuid);
-        DATETIME = LocalDateTime.of(year, Month.of(month), dayOfMonth, hour, minute, second);
-    }
-
-    /**
-     * Create this DateTime object with the specified date and time.
-     * @param uuid UUID
-     * @param year int
-     * @param month String
-     * @param dayOfMonth int
-     * @param hour int
-     * @param minute int
-     * @param second int
-     */
-    public DateTime(
-            UUID uuid,
-            int year,
-            String month,
-            int dayOfMonth,
-            int hour,
-            int minute,
-            int second){
-        super(uuid);
-        month = month.toUpperCase();
-        DATETIME = LocalDateTime.of(year, Month.valueOf(month), dayOfMonth, hour, minute, second);
+        DATE = new Date(year - 1900, month - 1, dayOfMonth, hour, minute, second);
     }
 
     /**
@@ -97,20 +74,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
      */
     public DateTime(UUID uuid, int year, int month, int dayOfMonth) {
         super(uuid);
-        DATETIME = LocalDateTime.of(year, Month.of(month), dayOfMonth, 0, 0);
-    }
-
-    /**
-     * Create this DateTime object with just the dates and set the time to midnight
-     * @param uuid UUID
-     * @param year int
-     * @param month String
-     * @param dayOfMonth int
-     */
-    public DateTime(UUID uuid, int year, String month, int dayOfMonth) {
-        super(uuid);
-        month = month.toUpperCase();
-        DATETIME = LocalDateTime.of(year, Month.valueOf(month), dayOfMonth, 0, 0);
+        DATE = new Date(year - 1900, month - 1, dayOfMonth, 0, 0);
     }
 
     /**
@@ -118,7 +82,9 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
      * @return String year
      */
     public String getYear(){
-        return String.valueOf(DATETIME.getYear());
+        SimpleDateFormat ft =
+                new SimpleDateFormat ("yyyy");
+        return ft.format(DATE);
     }
 
     /**
@@ -126,7 +92,45 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
      * @return String long month
      */
     public String getLongMonth() {
-        return DATETIME.getMonth().getDisplayName(TextStyle.FULL, Locale.US);
+        if(DATE.getMonth() + 1 == 1) {
+            return "January";
+        }
+        else if(DATE.getMonth() + 1 == 2) {
+            return "February";
+        }
+        else if(DATE.getMonth() + 1 == 3) {
+            return "March";
+        }
+        else if(DATE.getMonth() + 1 == 4) {
+            return "April";
+        }
+        else if(DATE.getMonth() + 1 == 5) {
+            return "May";
+        }
+        else if(DATE.getMonth() + 1 == 6) {
+            return "June";
+        }
+        else if(DATE.getMonth() + 1 == 7) {
+            return "July";
+        }
+        else if(DATE.getMonth() + 1 == 8) {
+            return "August";
+        }
+        else if(DATE.getMonth() + 1 == 9) {
+            return "September";
+        }
+        else if(DATE.getMonth() + 1 == 10) {
+            return "October";
+        }
+        else if(DATE.getMonth() + 1 == 11) {
+            return "November";
+        }
+        else if(DATE.getMonth() + 1 == 12) {
+            return "December";
+        }
+        else {
+            throw new IllegalArgumentException("The month is out of range.");
+        }
     }
 
     /**
@@ -134,7 +138,45 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
      * @return String short month
      */
     public String getShortMonth(){
-        return DATETIME.getMonth().getDisplayName(TextStyle.SHORT, Locale.US);
+        if(DATE.getMonth() + 1 == 1) {
+            return "Jan";
+        }
+        else if(DATE.getMonth() + 1 == 2) {
+            return "Feb";
+        }
+        else if(DATE.getMonth() + 1 == 3) {
+            return "Mar";
+        }
+        else if(DATE.getMonth() + 1 == 4) {
+            return "Apr";
+        }
+        else if(DATE.getMonth() + 1 == 5) {
+            return "May";
+        }
+        else if(DATE.getMonth() + 1 == 6) {
+            return "Jun";
+        }
+        else if(DATE.getMonth() + 1 == 7) {
+            return "Jul";
+        }
+        else if(DATE.getMonth() + 1 == 8) {
+            return "Aug";
+        }
+        else if(DATE.getMonth() + 1 == 9) {
+            return "Sep";
+        }
+        else if(DATE.getMonth() + 1 == 10) {
+            return "Oct";
+        }
+        else if(DATE.getMonth() + 1 == 11) {
+            return "Nov";
+        }
+        else if(DATE.getMonth() + 1 == 12) {
+            return "Dec";
+        }
+        else {
+            throw new IllegalArgumentException("The month is out of range.");
+        }
     }
 
     /**
@@ -142,8 +184,9 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
      * @return String two-digit month
      */
     public String getTwoDigitMonth() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM");
-        return DATETIME.format(formatter);
+        SimpleDateFormat ft =
+                new SimpleDateFormat ("MM");
+        return ft.format(DATE);
     }
 
     /**
@@ -151,8 +194,9 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
      * @return String day
      */
     public String getDay() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd");
-        return DATETIME.format(formatter);
+        SimpleDateFormat ft =
+                new SimpleDateFormat ("dd");
+        return ft.format(DATE);
     }
 
     /**
@@ -160,8 +204,9 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
      * @return String hour
      */
     public String getHour() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH");
-        return DATETIME.format(formatter);
+        SimpleDateFormat ft =
+                new SimpleDateFormat ("HH");
+        return ft.format(DATE);
     }
 
     /**
@@ -169,16 +214,18 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
      * @return String hour
      */
     public String getAMPMHour() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh");
-        return DATETIME.format(formatter);
+        SimpleDateFormat ft =
+                new SimpleDateFormat ("hh");
+        return ft.format(DATE);
     }
     /**
      * Return the minute as string
      * @return String minute
      */
     public String getMinute() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("mm");
-        return DATETIME.format(formatter);
+        SimpleDateFormat ft =
+                new SimpleDateFormat ("mm");
+        return ft.format(DATE);
     }
 
     /**
@@ -186,8 +233,9 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
      * @return String second
      */
     public String getSecond() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ss");
-        return DATETIME.format(formatter);
+        SimpleDateFormat ft =
+                new SimpleDateFormat ("ss");
+        return ft.format(DATE);
     }
 
     /**
@@ -195,8 +243,9 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
      * @return String AM or PM
      */
     public String getAMPM() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("a");
-        return DATETIME.format(formatter);
+        SimpleDateFormat ft =
+                new SimpleDateFormat ("a");
+        return ft.format(DATE);
     }
 
     /**
@@ -204,7 +253,9 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
      * @return int year
      */
     public int getIntYear(){
-        return DATETIME.getYear();
+        SimpleDateFormat ft =
+                new SimpleDateFormat ("yyyy");
+        return Integer.parseInt(ft.format(DATE));
     }
 
     /**
@@ -212,7 +263,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
      * @return int month
      */
     public int getIntMonth() {
-        return DATETIME.getMonth().getValue();
+        return DATE.getMonth() + 1;
     }
 
     /**
@@ -220,7 +271,9 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
      * @return int day
      */
     public int getIntDay() {
-        return DATETIME.getDayOfMonth();
+        SimpleDateFormat ft =
+                new SimpleDateFormat ("dd");
+        return Integer.parseInt(ft.format(DATE));
     }
 
     /**
@@ -228,7 +281,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
      * @return int hour
      */
     public int getIntHour() {
-        return DATETIME.getHour();
+        return DATE.getHours();
     }
 
     /**
@@ -236,8 +289,9 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
      * @return int hour
      */
     public int getIntAMPMHour() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh");
-        return Integer.parseInt(DATETIME.format(formatter));
+        SimpleDateFormat ft =
+                new SimpleDateFormat ("hh");
+        return Integer.parseInt(ft.format(DATE));
     }
 
     /**
@@ -245,7 +299,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
      * @return int minute
      */
     public int getIntMinute() {
-        return DATETIME.getMinute();
+        return DATE.getMinutes();
     }
 
     /**
@@ -253,15 +307,16 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
      * @return int second
      */
     public int getIntSecond() {
-        return DATETIME.getSecond();
+        return DATE.getSeconds();
     }
 
     /**
      * Change this datetime to the specified datetime
-     * @param newDateTime LocalDateTime
+     * @param newDate LocalDateTime
      */
-    public void setDateTime(LocalDateTime newDateTime){
-        DATETIME = newDateTime;
+    public void setDateTime(Date newDate){
+        newDate.setYear(newDate.getYear() - 1900);
+        DATE = newDate;
     }
 
     /**
@@ -282,28 +337,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
             int minute,
             int second) {
 
-        DATETIME = LocalDateTime.of(year, Month.of(month), dayOfMonth, hour, minute, second);
-    }
-
-    /**
-     * Change this datetime to the specified datetime parameters
-     * which include full date and time
-     * @param year int
-     * @param month String
-     * @param dayOfMonth int
-     * @param hour int
-     * @param minute int
-     * @param second int
-     */
-    public void setDateTime(
-            int year,
-            String month,
-            int dayOfMonth,
-            int hour,
-            int minute,
-            int second) {
-        month = month.toUpperCase();
-        DATETIME = LocalDateTime.of(year, Month.valueOf(month), dayOfMonth, hour, minute, second);
+        DATE = new Date(year - 1900, month - 1, dayOfMonth, hour, minute, second);
     }
 
     /**
@@ -319,25 +353,8 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
             int dayOfMonth
             ) {
 
-        DATETIME = LocalDateTime.of(year, Month.of(month), dayOfMonth,
-                DATETIME.getHour(), DATETIME.getMinute(), DATETIME.getSecond());
-    }
-
-    /**
-     * Change this datetime to the specified datetime parameters
-     * which include only date
-     * @param year int
-     * @param month String
-     * @param dayOfMonth int
-     */
-    public void setDateTime(
-            int year,
-            String month,
-            int dayOfMonth
-    ) {
-        month = month.toUpperCase();
-        DATETIME = LocalDateTime.of(year, Month.valueOf(month), dayOfMonth,
-                DATETIME.getHour(), DATETIME.getMinute(), DATETIME.getSecond());
+        DATE = new Date(year - 1900, month - 1, dayOfMonth,
+                DATE.getHours(), DATE.getMinutes(), DATE.getSeconds());
     }
 
     /**
@@ -358,7 +375,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
         DateTime dateTime = (DateTime) obj;
 
         return this.getUUID().equals(dateTime.getUUID()) &&
-                this.DATETIME.equals(dateTime.DATETIME);
+                this.DATE.equals(dateTime.DATE);
     }
 
     /**
@@ -367,7 +384,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
      */
     @Override
     public int hashCode() {
-        return Objects.hash(getUUID(), DATETIME);
+        return Objects.hash(getUUID(), DATE);
     }
 
     /**
@@ -389,7 +406,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
      */
     @Override
     public int compareTo(DateTime dateTime) {
-        return this.DATETIME.compareTo(dateTime.DATETIME);
+        return this.DATE.compareTo(dateTime.DATE);
     }
 
     /**
@@ -399,7 +416,8 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
      */
     @Override
     public String toString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy 'at' hh:mm:ss a");
-        return DATETIME.format(formatter);
+        SimpleDateFormat ft =
+                new SimpleDateFormat ("MM-dd-yyyy 'at' hh:mm:ss a");
+        return ft.format(DATE);
     }
 }
