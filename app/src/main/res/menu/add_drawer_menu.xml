@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/add_photo_receipt"
+            android:icon="@drawable/ic_search"
+            android:title="Add Receipt with Photo" />
+        <item
+            android:id="@+id/add_nophoto_receipt"
+            android:icon="@drawable/ic_subscription"
+            android:title="Add Receipt without Photo" />
+        <item
+            android:id="@+id/add_subscription"
+            android:icon="@drawable/ic_settings"
+            android:title="Add Subscription" />
+    </group>
+</menu>

@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">SRO</string>
+    <string name="title_activity_main_left_navigation_drawer">MainLeftNavigationDrawer</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_add">Add New Item</string>
+    <string name="main_app_title">Smart Receipt Organizer</string>
 </resources>

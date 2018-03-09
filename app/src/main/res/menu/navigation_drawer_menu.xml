@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_existing_receipt"
+            android:icon="@drawable/ic_search"
+            android:title="Manage Existing Receipts" />
+        <item
+            android:id="@+id/nav_existing_subscription"
+            android:icon="@drawable/ic_subscription"
+            android:title="Manage Existing Subscription" />
+        <item
+            android:id="@+id/nav_setting"
+            android:icon="@drawable/ic_settings"
+            android:title="Settings" />
+    </group>
+</menu>
