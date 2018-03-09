@@ -26,45 +26,7 @@ public class MainActivity extends AppCompatActivity {
         actionbar.setHomeAsUpIndicator(R.drawable.ic_view_headline_black_24dp);
         actionbar.setDisplayShowCustomEnabled(true);
 
-        mDrawerLayout = findViewById(R.id.drawer_layout);
-
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        NavigationView addView = findViewById(R.id.add_view);
-
-        navigationView.setNavigationItemSelectedListener(
-            new NavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(MenuItem menuItem) {
-                    // set item as selected to persist highlight
-                    menuItem.setChecked(true);
-                    // close drawer when item is tapped
-                    mDrawerLayout.closeDrawers();
-
-                    // Add code here to update the UI based on the item selected
-                    // For example, swap UI fragments here
-
-                    return true;
-                }
-            }
-        );
-
-        addView.setNavigationItemSelectedListener(
-            new NavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(MenuItem menuItem) {
-                    // set item as selected to persist highlight
-                    menuItem.setChecked(true);
-                    // close drawer when item is tapped
-                    mDrawerLayout.closeDrawers();
-
-                    // Add code here to update the UI based on the item selected
-                    // For example, swap UI fragments here
-
-                    return true;
-                }
-            }
-        );
-
+        initializeDrawers();
     }
 
     @Override
@@ -86,5 +48,74 @@ public class MainActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void initializeDrawers() {
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+
+        initializeNavigationView();
+        initializeAddView();
+    }
+
+    private void initializeNavigationView() {
+        NavigationView navigationView = findViewById(R.id.nav_view);
+
+        navigationView.setNavigationItemSelectedListener(
+            new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(MenuItem menuItem) {
+                    // set item as selected to persist highlight
+                    menuItem.setChecked(true);
+                    // close drawer when item is tapped
+                    mDrawerLayout.closeDrawers();
+
+                    switch (menuItem.getItemId()) {
+                        case R.id.nav_existing_receipt:
+
+                            return true;
+
+                        case R.id.nav_existing_subscription:
+
+                            return true;
+
+                        case R.id.nav_setting:
+
+                            return true;
+                    }
+                    return true;
+                }
+            }
+        );
+    }
+
+    private void initializeAddView() {
+        NavigationView addView = findViewById(R.id.add_view);
+
+        addView.setNavigationItemSelectedListener(
+            new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(MenuItem menuItem) {
+                    // set item as selected to persist highlight
+                    menuItem.setChecked(true);
+                    // close drawer when item is tapped
+                    mDrawerLayout.closeDrawers();
+
+                    switch (menuItem.getItemId()) {
+                        case R.id.add_photo_receipt:
+
+                            return true;
+
+                        case R.id.add_nophoto_receipt:
+
+                            return true;
+
+                        case R.id.add_subscription:
+
+                            return true;
+                    }
+                    return true;
+                }
+            }
+        );
     }
 }
