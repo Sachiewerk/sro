@@ -16,9 +16,11 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 
 public class PhotoReceiptAddActivity extends AppCompatActivity {
 
@@ -31,22 +33,30 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
     // very frequently.
     private int mShortAnimationDuration;
 
+    // Receipt Image file received from the MainActivity
+    File mImageFile;
+
+    // The UUID of this receipt, which is also part of the image file name
+    UUID mUUID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_receipt_add);
 
-        File imageFile =
+        mImageFile =
                 (File)getIntent().getSerializableExtra(MainActivity.MY_IMAGE_FILE_INTENT_IDENTIFIER);
+
+        mUUID = (UUID)getIntent().getSerializableExtra(MainActivity.MY_UUID_INTENT_IDENTIFIER);
+
 
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
 
-
         // Hook up clicks on the thumbnail views.
-        Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath(),bmOptions);
+        Bitmap bitmap = BitmapFactory.decodeFile(mImageFile.getAbsolutePath(),bmOptions);
 
         try {
-            final Bitmap mBitmap = modifyOrientation(bitmap, imageFile.getAbsolutePath());
+            final Bitmap mBitmap = modifyOrientation(bitmap, mImageFile.getAbsolutePath());
 
 
             final ImageButton imageButton = findViewById(R.id.photo_receipt_add_image_button);
@@ -64,13 +74,29 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
             mShortAnimationDuration = getResources().getInteger(
                     android.R.integer.config_shortAnimTime);
         } catch(IOException e) {
-            //TODO
+            Toast.makeText(
+                    this,
+                    "Error reading receipt image file",
+                    Toast.LENGTH_LONG).show();
+
+            //TODO Use the default image
         }
-
-
     }
 
 
+    /**
+     * Originally, I had the issue where the orientation of the thumbnail and enlarged image did
+     * not match the camera orientation and saved image orientation. This method is for fixing
+     * the orientation issue.
+     *
+     * This code was copied and pasted from https://github.com/google/cameraview/issues/84
+     *
+     * - Michael Park -
+     * @param bitmap Bitmap
+     * @param image_absolute_path String
+     * @return Bitmap corrected Bitmap
+     * @throws IOException
+     */
     public static Bitmap modifyOrientation(Bitmap bitmap, String image_absolute_path) throws IOException {
         ExifInterface ei = new ExifInterface(image_absolute_path);
         int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
@@ -96,22 +122,53 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Originally, I had the issue where the orientation of the thumbnail and enlarged image did
+     * not match the camera orientation and saved image orientation. This method is for fixing
+     * the orientation issue.
+     *
+     * This code was copied and pasted from https://github.com/google/cameraview/issues/84
+     *
+     * - Michael Park -
+     * @param bitmap Bitmap
+     * @param degrees float
+     * @return Bitmap
+     */
     public static Bitmap rotate(Bitmap bitmap, float degrees) {
         Matrix matrix = new Matrix();
         matrix.postRotate(degrees);
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
+    /**
+     * Originally, I had the issue where the orientation of the thumbnail and enlarged image did
+     * not match the camera orientation and saved image orientation. This method is for fixing
+     * the orientation issue.
+     *
+     * This code was copied and pasted from https://github.com/google/cameraview/issues/84
+     *
+     * - Michael Park -
+     * @param bitmap Bitmap
+     * @param horizontal boolean
+     * @param vertical boolean
+     * @return Bitmap
+     */
     public static Bitmap flip(Bitmap bitmap, boolean horizontal, boolean vertical) {
         Matrix matrix = new Matrix();
         matrix.preScale(horizontal ? -1 : 1, vertical ? -1 : 1);
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
-
-
-
-
+    /**
+     * This is a method for zooming out when user clicks the thumbnail.
+     * This was copied and pasted from https://developer.android.com/training/animation/zoom.html.
+     * We do not need to look too much into this method.
+     *
+     *  - Michael Park -
+     *
+     * @param thumbView View
+     * @param bm Bitmap
+     */
     private void zoomImageFromThumb(final View thumbView, Bitmap bm) {
         // If there's an animation in progress, cancel it
         // immediately and proceed with this one.
@@ -251,5 +308,4 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
             }
         });
     }
-
 }

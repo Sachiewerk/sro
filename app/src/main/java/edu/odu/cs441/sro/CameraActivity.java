@@ -57,7 +57,6 @@ public class CameraActivity extends AppCompatActivity {
             mCamera.release();
             Intent returnData = new Intent();
             returnData.putExtra(MainActivity.MY_UUID_INTENT_IDENTIFIER, uuid);
-            returnData.putExtra(MainActivity.MY_DATE_INTENT_IDENTIFIER, date);
             returnData.putExtra(MainActivity.MY_IMAGE_FILE_INTENT_IDENTIFIER, pictureFile);
             setResult(RESULT_OK, returnData);
             finish();
