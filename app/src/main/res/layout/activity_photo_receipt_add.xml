@@ -1,0 +1,76 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/photo_receipt_add_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/photo_receipt_add_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimaryDark"
+            android:layout_alignParentTop="true"
+            app:titleTextColor="@android:color/white">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/photo_receipt_add_toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/activity_photo_receipt_add_title_text"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:layout_centerInParent="true"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+            </RelativeLayout>
+
+        </android.support.v7.widget.Toolbar>
+
+        <TextView
+            android:id="@+id/photo_receipt_add_receipt_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textAlignment="center"
+            android:layout_below="@+id/photo_receipt_add_toolbar"
+            android:textSize="@dimen/main_app_title_text_size"
+
+            android:maxLines="1"
+            android:layout_centerInParent="true"
+            android:ellipsize="end"
+            android:text="Receipt Title" />
+
+        <ImageButton
+            android:id="@+id/photo_receipt_add_image_button"
+            android:layout_width="75dp"
+            android:layout_height="100dp"
+            android:layout_below="@+id/photo_receipt_add_receipt_title"
+            android:scaleType="centerCrop"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/activity_photo_receipt_add_imagebutton_description" />
+
+    </RelativeLayout>
+
+    <!-- This initially-hidden ImageView will hold the expanded/zoomed version of
+         the images above. Without transformations applied, it takes up the entire
+         screen. To achieve the "zoom" animation, this view's bounds are animated
+         from the bounds of the thumbnail button above, to its final laid-out
+         bounds.
+         -->
+
+    <ImageView
+        android:id="@+id/photo_receipt_add_expanded_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        android:contentDescription="@string/activity_photo_receipt_add_imageview_description" />
+
+</FrameLayout>
