@@ -18,7 +18,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -28,13 +27,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
-
 import edu.odu.cs441.sro.metadata.Category;
 import edu.odu.cs441.sro.metadata.DateTime;
 import edu.odu.cs441.sro.metadata.Location;
@@ -526,28 +523,5 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
                 mCurrentAnimator = set;
             }
         });
-    }
-
-
-    public static ViewGroup getParent(View view) {
-        return (ViewGroup)view.getParent();
-    }
-
-    public static void removeView(View view) {
-        ViewGroup parent = getParent(view);
-        if(parent != null) {
-            parent.removeView(view);
-        }
-    }
-
-    public static void replaceView(View currentView, View newView) {
-        ViewGroup parent = getParent(currentView);
-        if(parent == null) {
-            return;
-        }
-        final int index = parent.indexOfChild(currentView);
-        removeView(currentView);
-        removeView(newView);
-        parent.addView(newView, index);
     }
 }
