@@ -44,6 +44,16 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
     }
 
     /**
+     * Create this DateTime object with the given Date
+     * @param uuid
+     * @param date
+     */
+    public DateTime(UUID uuid, Date date) {
+        super(uuid);
+        DATE = date;
+    }
+
+    /**
      * Create this DateTime object with the specified date and time.
      * @param uuid UUID
      * @param year int

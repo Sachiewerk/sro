@@ -20,6 +20,10 @@ import java.io.File;
 import java.util.Date;
 import java.util.UUID;
 
+import edu.odu.cs441.sro.metadata.Category;
+import edu.odu.cs441.sro.metadata.Location;
+import edu.odu.cs441.sro.metadata.Method;
+
 /**
  * This is the main Activity of this application.
  */
@@ -40,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String MY_UUID_INTENT_IDENTIFIER = "UUID";
     public static final String MY_DATE_INTENT_IDENTIFIER = "DATE";
     public static final String MY_IMAGE_FILE_INTENT_IDENTIFIER = "IMAGE_FILE";
+    public static final String MY_RECEIPT_OBJECTS_INTENT_IDENTIFIER = "RECEIPT_OBJECT";
 
     // File Directory names
     public static final String MY_SRO_MAIN_DIRECTORY = "SRO";
@@ -73,6 +78,29 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize Custom Navigation Drawers
         initializeDrawers();
+
+        initializeReceipts();
+    }
+
+    private void initializeReceipts() {
+        Category.addCategory("Grocery");
+        Category.addCategory("Electronics");
+        Category.addCategory("Furniture");
+        Category.addCategory("Restaurant");
+        Category.addCategory("Entertainment");
+
+        Location.addLocation("Walmart");
+        Location.addLocation("Pizzahut");
+        Location.addLocation("Lowe's");
+        Location.addLocation("McDonald's");
+        Location.addLocation("Foodlion");
+
+        Method.addMethod("Cash");
+        Method.addMethod("Credit Card");
+        Method.addMethod("Money Order");
+        Method.addMethod("Check");
+        Method.addMethod("Debit Card");
+        Method.addMethod("Paypal");
     }
 
     /**
@@ -190,6 +218,8 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * When a action bar menu is selected open the corresponding nagivation drawer
+     * Courtesy of https://developer.android.com/training/implementing-navigation/nav-drawer.html
+     *
      * @param item MenuItem
      * @return boolean true
      */

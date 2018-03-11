@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -13,23 +14,37 @@ import android.graphics.Rect;
 import android.media.ExifInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.UUID;
 
+import edu.odu.cs441.sro.metadata.Category;
+import edu.odu.cs441.sro.metadata.DateTime;
 import edu.odu.cs441.sro.metadata.Location;
+import edu.odu.cs441.sro.metadata.Method;
+import edu.odu.cs441.sro.record.Receipt;
 import edu.odu.cs441.sro.utility.NumberTextWatcher;
 
+/**
+ *
+ */
 public class PhotoReceiptAddActivity extends AppCompatActivity {
 
     // Hold a reference to the current animator,
@@ -47,59 +62,136 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
     // The UUID of this receipt, which is also part of the image file name
     UUID mUUID;
 
+    // Contains this receipt and any other split receipts
+    private ArrayList<Receipt> mReceipts;
+
     private ArrayList<String> mLocationList;
     private ArrayList<String> mPriceList;
+    private ArrayList<String> mCategoryList;
+    private ArrayList<String> mMethodList;
 
     private ArrayAdapter<String> mLocationAutoCompleteAdapter;
     private ArrayAdapter<String> mPriceAutoCompleteAdapter;
+    private ArrayAdapter<String> mCategoryAutoCompleteAdapter;
+    private ArrayAdapter<String> mMethodAutoCompleteAdapter;
 
+    private Date mDate;
+    private EditText mTitleEditText;
     private AutoCompleteTextView mLocationAutoCompleteTextView;
     private AutoCompleteTextView mPriceAutoCompleteTextView;
+    private AutoCompleteTextView mCategoryAutoCompleteTextView;
+    private AutoCompleteTextView mMethodAutoCompleteTextView;
+    private EditText mCommentEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_receipt_add);
 
-        // Obtain image files and UUID from the calling MainMethod
+        // Obtain image files and UUID from the calling MainMethod and set the current date/time
         mImageFile =
                 (File)getIntent().getSerializableExtra(MainActivity.MY_IMAGE_FILE_INTENT_IDENTIFIER);
 
         mUUID = (UUID)getIntent().getSerializableExtra(MainActivity.MY_UUID_INTENT_IDENTIFIER);
 
+        mDate = new Date();
+
+        mReceipts = new ArrayList<Receipt> ();
 
         // Initialize other private variables
         mLocationList = Location.getLocations();
+        mCategoryList = Category.getCategories();
+        mMethodList = Method.getMethods();
 
-
+        mTitleEditText = findViewById(R.id.photo_receipt_add_edittext_title);
         mLocationAutoCompleteTextView =
                 (AutoCompleteTextView) findViewById(
                         R.id.photo_receipt_add_autoCompleteTextview_location);
         mPriceAutoCompleteTextView =
                 (AutoCompleteTextView) findViewById(
                         R.id.photo_receipt_add_autoCompleteTextview_price);
+        mCategoryAutoCompleteTextView =
+                (AutoCompleteTextView) findViewById(
+                        R.id.photo_receipt_add_autoCompleteTextview_category);
+        mMethodAutoCompleteTextView =
+                (AutoCompleteTextView) findViewById(
+                        R.id.photo_receipt_add_autoCompleteTextview_method);
+        mCommentEditText = findViewById(R.id.photo_receipt_add_edittext_comment);
 
 
-        mLocationAutoCompleteAdapter = new ArrayAdapter<String>(
-                        this,android.R.layout.select_dialog_singlechoice, mLocationList);
+        mLocationAutoCompleteAdapter = new ArrayAdapter<>(
+                this,android.R.layout.select_dialog_singlechoice, mLocationList);
+        mCategoryAutoCompleteAdapter = new ArrayAdapter<>(
+                this, android.R.layout.select_dialog_singlechoice, mCategoryList);
+        mMethodAutoCompleteAdapter = new ArrayAdapter<>(
+                this, android.R.layout.select_dialog_singlechoice, mMethodList);
+
 
         setThumbnailImage();
+        setReceiptDate();
+        initializeTitleViews();
         initializeAutoCompleteTextViews();
+        initializeButtonEventListener();
+    }
+
+    private void setReceiptDate() {
+        TextView dateView = findViewById(R.id.photo_receipt_add_textview_date);
+
+        // Create a temporary DateTime for date formatting
+        DateTime dateTime = new DateTime(mUUID, mDate);
+        dateView.setText(dateTime.toString());
+    }
+
+    private void initializeTitleViews() {
+        final TextView titleView = findViewById(R.id.photo_receipt_add_receipt_title);
+
+        mTitleEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                titleView.setText(mTitleEditText.getText().toString());
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Nothing Necessary here
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                titleView.setText(mTitleEditText.getText().toString());
+            }
+        });
     }
 
     private void initializeAutoCompleteTextViews() {
 
-        // Initialize the location AutoCompleteTextView
-        initializeAutoCompleteTextView
-                (
-                        mLocationAutoCompleteTextView,
-                        mLocationAutoCompleteAdapter,
-                        mLocationList
-                );
-
         // Add the currency TextWatcher for the price AutoCompleteTextView
         mPriceAutoCompleteTextView.addTextChangedListener
                 (new NumberTextWatcher(mPriceAutoCompleteTextView));
+
+        // Initialize the location AutoCompleteTextView
+        initializeAutoCompleteTextView
+                (
+                    mLocationAutoCompleteTextView,
+                    mLocationAutoCompleteAdapter,
+                    mLocationList
+                );
+
+        // Initialize the Category AutoCompleteTextView
+        initializeAutoCompleteTextView
+                (
+                    mCategoryAutoCompleteTextView,
+                    mCategoryAutoCompleteAdapter,
+                    mCategoryList
+                );
+
+        // Initialize the Method AutoCompleteTextView
+        initializeAutoCompleteTextView
+                (
+                    mMethodAutoCompleteTextView,
+                    mMethodAutoCompleteAdapter,
+                    mMethodList
+                );
     }
 
     private void initializeAutoCompleteTextView
@@ -108,10 +200,9 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
              ArrayList<String> list) {
 
         acTextView.setOnTouchListener(new View.OnTouchListener() {
-            @SuppressLint("ClickableViewAccessibility")
             @Override
+            @SuppressLint("ClickableViewAccessibility")
             public boolean onTouch(View paramView, MotionEvent paramMotionEvent) {
-                // TODO Auto-generated method stub
                 acTextView.showDropDown();
                 acTextView.requestFocus();
                 return false;
@@ -120,6 +211,59 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
 
         acTextView.setThreshold(1);
         acTextView.setAdapter(adapter);
+    }
+
+    private void initializeButtonEventListener() {
+        final Button saveButton = findViewById(R.id.photo_receipt_add_Button_Save);
+        final Button splitButton = findViewById(R.id.photo_receipt_add_Button_Split);
+        final Button discardButton = findViewById(R.id.photo_receipt_add_Button_Discard);
+
+
+        // What should happen when user clicks "Save" button
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //TODO Add the Receipt object created from this Activity
+
+                Intent data = new Intent();
+                data.putExtra(MainActivity.MY_RECEIPT_OBJECTS_INTENT_IDENTIFIER, mReceipts);
+                setResult(RESULT_OK, data);
+                finish();
+            }
+        });
+
+        // What should happen when user clicks "Split" button
+        splitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //TODO Duplicate the image file, assign a different name with different UUID
+                //TODO and create another instance of this Activity. Use the same request code as
+                //TODO in the MainActivity - MY_PHOTO_RECEIPT_ADD_ACTIVITY_REQUEST_CODE
+            }
+        });
+
+        // What should happen when user clicks "Discard" button
+        discardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // Delete the image file of this activity
+                mImageFile.delete();
+
+                // User may be discarding the receipt created by this Activity, but there
+                // may be child activities from other instances of this Activity. Save them.
+                Intent data = new Intent();
+                data.putExtra(MainActivity.MY_RECEIPT_OBJECTS_INTENT_IDENTIFIER, mReceipts);
+
+                // Set the result to canceled
+                setResult(RESULT_CANCELED, data);
+
+                // Close this activty and return to parent activity
+                finish();
+            }
+        });
     }
 
     /**
@@ -382,5 +526,28 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
                 mCurrentAnimator = set;
             }
         });
+    }
+
+
+    public static ViewGroup getParent(View view) {
+        return (ViewGroup)view.getParent();
+    }
+
+    public static void removeView(View view) {
+        ViewGroup parent = getParent(view);
+        if(parent != null) {
+            parent.removeView(view);
+        }
+    }
+
+    public static void replaceView(View currentView, View newView) {
+        ViewGroup parent = getParent(currentView);
+        if(parent == null) {
+            return;
+        }
+        final int index = parent.indexOfChild(currentView);
+        removeView(currentView);
+        removeView(newView);
+        parent.addView(newView, index);
     }
 }

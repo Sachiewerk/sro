@@ -1,28 +1,18 @@
 package edu.odu.cs441.sro.utility;
 
-/**
- * Created by michael on 3/9/18.
- */
-
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.hardware.Camera;
-import android.os.Build;
 import android.util.Log;
-import android.view.Display;
-import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.WindowManager;
-
 import java.io.IOException;
 
-import edu.odu.cs441.sro.MainActivity;
-
-import static android.content.Context.WINDOW_SERVICE;
-
-/** A basic Camera preview class */
+/**
+ * Created by michael on 3/9/18.
+ * A basic camera preview class
+ * Most codes are from https://developer.android.com/guide/topics/media/camera.html
+ */
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
     private SurfaceHolder mHolder;
     private Camera mCamera;
@@ -38,8 +28,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         // underlying surface is created and destroyed.
         mHolder = getHolder();
         mHolder.addCallback(this);
-
-
     }
 
     public void surfaceCreated(SurfaceHolder holder) {

@@ -21,6 +21,14 @@ public class Category extends Tag implements Serializable, Comparable<Category> 
     private String SELECTED_CATEGORY;
 
     /**
+     * Return the shallow copy of the list of categories
+     * @return ArrayList
+     */
+    public static ArrayList<String> getCategories() {
+        return CATEGORIES;
+    }
+
+    /**
      * Static method to add the given category to the global category list or if the category
      * already exists, do nothing
      * @param category String

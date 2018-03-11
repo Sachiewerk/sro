@@ -18,6 +18,14 @@ public class Method extends Tag implements Serializable, Comparable<Method> {
     private String SELECTED_METHOD;
 
     /**
+     * Return a shallow copy of the method list
+     * @return ArrayList
+     */
+    public static ArrayList<String> getMethods() {
+        return METHODS;
+    }
+
+    /**
      * Static method to add the given method to the global method list or if the method
      * already exists, do nothing
      * @param method String
