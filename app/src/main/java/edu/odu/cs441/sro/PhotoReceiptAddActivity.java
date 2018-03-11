@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -12,15 +13,22 @@ import android.graphics.Rect;
 import android.media.ExifInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.UUID;
+
+import edu.odu.cs441.sro.metadata.Location;
+import edu.odu.cs441.sro.utility.NumberTextWatcher;
 
 public class PhotoReceiptAddActivity extends AppCompatActivity {
 
@@ -39,17 +47,85 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
     // The UUID of this receipt, which is also part of the image file name
     UUID mUUID;
 
+    private ArrayList<String> mLocationList;
+    private ArrayList<String> mPriceList;
+
+    private ArrayAdapter<String> mLocationAutoCompleteAdapter;
+    private ArrayAdapter<String> mPriceAutoCompleteAdapter;
+
+    private AutoCompleteTextView mLocationAutoCompleteTextView;
+    private AutoCompleteTextView mPriceAutoCompleteTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_receipt_add);
 
+        // Obtain image files and UUID from the calling MainMethod
         mImageFile =
                 (File)getIntent().getSerializableExtra(MainActivity.MY_IMAGE_FILE_INTENT_IDENTIFIER);
 
         mUUID = (UUID)getIntent().getSerializableExtra(MainActivity.MY_UUID_INTENT_IDENTIFIER);
 
 
+        // Initialize other private variables
+        mLocationList = Location.getLocations();
+
+
+        mLocationAutoCompleteTextView =
+                (AutoCompleteTextView) findViewById(
+                        R.id.photo_receipt_add_autoCompleteTextview_location);
+        mPriceAutoCompleteTextView =
+                (AutoCompleteTextView) findViewById(
+                        R.id.photo_receipt_add_autoCompleteTextview_price);
+
+
+        mLocationAutoCompleteAdapter = new ArrayAdapter<String>(
+                        this,android.R.layout.select_dialog_singlechoice, mLocationList);
+
+        setThumbnailImage();
+        initializeAutoCompleteTextViews();
+    }
+
+    private void initializeAutoCompleteTextViews() {
+
+        // Initialize the location AutoCompleteTextView
+        initializeAutoCompleteTextView
+                (
+                        mLocationAutoCompleteTextView,
+                        mLocationAutoCompleteAdapter,
+                        mLocationList
+                );
+
+        // Add the currency TextWatcher for the price AutoCompleteTextView
+        mPriceAutoCompleteTextView.addTextChangedListener
+                (new NumberTextWatcher(mPriceAutoCompleteTextView));
+    }
+
+    private void initializeAutoCompleteTextView
+            (final AutoCompleteTextView acTextView,
+             ArrayAdapter<String> adapter,
+             ArrayList<String> list) {
+
+        acTextView.setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("ClickableViewAccessibility")
+            @Override
+            public boolean onTouch(View paramView, MotionEvent paramMotionEvent) {
+                // TODO Auto-generated method stub
+                acTextView.showDropDown();
+                acTextView.requestFocus();
+                return false;
+            }
+        });
+
+        acTextView.setThreshold(1);
+        acTextView.setAdapter(adapter);
+    }
+
+    /**
+     * Method to set the thumbnail and enlarged image
+     */
+    private void setThumbnailImage() {
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
 
         // Hook up clicks on the thumbnail views.
@@ -82,7 +158,6 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
             //TODO Use the default image
         }
     }
-
 
     /**
      * Originally, I had the issue where the orientation of the thumbnail and enlarged image did

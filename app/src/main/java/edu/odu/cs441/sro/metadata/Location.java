@@ -18,6 +18,14 @@ public class Location extends Tag implements Serializable, Comparable<Location> 
     private String SELECTED_LOCATION;
 
     /**
+     * Return the shallow copy of the static location list
+     * @return ArrayList LOCATIONS
+     */
+    public static ArrayList<String> getLocations() {
+        return LOCATIONS;
+    }
+
+    /**
      * Static method to add the given location to the global location list or if the location
      * already exists, do nothing
      * @param location String
