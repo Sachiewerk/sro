@@ -1,4 +1,4 @@
-package edu.odu.cs441.sro.metadata;
+package edu.odu.cs441.sro.model.metadata;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,6 +31,15 @@ public class Method extends Tag implements Serializable, Comparable<Method> {
      * @param method String
      */
     public static void addMethod(String method) {
+
+        if(method == null) {
+            return;
+        }
+
+        if(method.trim().isEmpty()) {
+            return;
+        }
+
         if(!exists(method)) {
             METHODS.add(method.trim());
         }
@@ -41,6 +50,15 @@ public class Method extends Tag implements Serializable, Comparable<Method> {
      * @param method String
      */
     public static void removeMethod(String method) {
+
+        if(method == null) {
+            return;
+        }
+
+        if(method.trim().isEmpty()) {
+            return;
+        }
+
         if(exists(method)) {
             METHODS.remove(indexOf(method));
         }
@@ -61,6 +79,14 @@ public class Method extends Tag implements Serializable, Comparable<Method> {
      */
     public static boolean exists(String method) {
 
+        if(method == null) {
+            return false;
+        }
+
+        if(method.trim().isEmpty()) {
+            return false;
+        }
+
         if(indexOf(method) < 0) {
             return false;
         }
@@ -75,6 +101,14 @@ public class Method extends Tag implements Serializable, Comparable<Method> {
      * @return int index of the given method or -1 if not found
      */
     private static int indexOf(String method) {
+
+        if(method == null) {
+            return -1;
+        }
+
+        if(method.trim().isEmpty()) {
+            return -1;
+        }
 
         for(int i = 0; i < METHODS.size(); i++) {
             if(METHODS.get(i).trim().toUpperCase().equals(method.trim().toUpperCase())) {
@@ -101,17 +135,60 @@ public class Method extends Tag implements Serializable, Comparable<Method> {
     public Method(UUID uuid, String method) {
         super(uuid);
 
-        int index = indexOf(method);
+        if(method == null) {
+            SELECTED_METHOD = NOT_SPECIFIED_LITERAL;
+            return;
+        }
 
-        addMethod(method);
+        if(method.trim().isEmpty()) {
+            SELECTED_METHOD = NOT_SPECIFIED_LITERAL;
+            return;
+        }
+
+        Method.addMethod(method);
         SELECTED_METHOD = METHODS.get(indexOf(method));
+    }
+
+    /**
+     * Set this method as the given string
+     * @param method String
+     */
+    public void setSelectedMethod(String method) {
+        if(method == null) {
+            SELECTED_METHOD = NOT_SPECIFIED_LITERAL;
+            return;
+        }
+
+        if(method.trim().isEmpty()) {
+            SELECTED_METHOD = NOT_SPECIFIED_LITERAL;
+            return;
+        }
+
+        Method.addMethod(method);
+        SELECTED_METHOD = METHODS.get(indexOf(method));
+    }
+
+    /**
+     * Return the selected method as string literal
+     * @return String
+     */
+    public String getSelectedMethod() {
+        return SELECTED_METHOD;
     }
 
     /**
      * Set the selected method to "Not Specified"
      */
-    public void clearSelectedMethod() {
+    public void setUnspecified() {
         SELECTED_METHOD = NOT_SPECIFIED_LITERAL;
+    }
+
+    /**
+     * Return true if this method is unspecified
+     * @return boolean
+     */
+    public boolean isUnspecified() {
+        return SELECTED_METHOD.equals(NOT_SPECIFIED_LITERAL);
     }
 
     /**

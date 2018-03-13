@@ -1,10 +1,12 @@
-package edu.odu.cs441.sro.metadata;
+package edu.odu.cs441.sro.model.metadata;
+
+import android.support.annotation.Nullable;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
-
-import edu.odu.cs441.sro.metadata.Tag;
 
 /**
  * Created by michael on 2/17/18.
@@ -34,6 +36,15 @@ public class Category extends Tag implements Serializable, Comparable<Category> 
      * @param category String
      */
     public static void addCategory(String category) {
+
+        if(category == null) {
+            return;
+        }
+
+        if(category.trim().isEmpty()) {
+            return;
+        }
+
         if(!exists(category)) {
             CATEGORIES.add(category.trim());
         }
@@ -44,6 +55,15 @@ public class Category extends Tag implements Serializable, Comparable<Category> 
      * @param category String
      */
     public static void removeCategory(String category) {
+
+        if(category == null) {
+            return;
+        }
+
+        if(category.trim().isEmpty()) {
+            return;
+        }
+
         if(exists(category)) {
             CATEGORIES.remove(indexOf(category));
         }
@@ -64,6 +84,14 @@ public class Category extends Tag implements Serializable, Comparable<Category> 
      */
     public static boolean exists(String category) {
 
+        if(category == null) {
+            return false;
+        }
+
+        if(category.trim().isEmpty()) {
+            return false;
+        }
+
         if(indexOf(category) < 0) {
             return false;
         }
@@ -78,6 +106,14 @@ public class Category extends Tag implements Serializable, Comparable<Category> 
      * @return int index of the given category or -1 if not found
      */
     private static int indexOf(String category) {
+
+        if(category == null) {
+            return -1;
+        }
+
+        if(category.trim().isEmpty()) {
+            return -1;
+        }
 
         for(int i = 0; i < CATEGORIES.size(); i++) {
             if(CATEGORIES.get(i).trim().toUpperCase().equals(category.trim().toUpperCase())) {
@@ -106,7 +142,15 @@ public class Category extends Tag implements Serializable, Comparable<Category> 
     public Category(UUID uuid, String category) {
         super(uuid);
 
-        int index = indexOf(category);
+        if(category == null) {
+            SELECTED_CATEGORY = NOT_SPECIFIED_LITERAL;
+            return;
+        }
+
+        if(category.trim().isEmpty()) {
+            SELECTED_CATEGORY = NOT_SPECIFIED_LITERAL;
+            return;
+        }
 
         addCategory(category);
         SELECTED_CATEGORY = CATEGORIES.get(indexOf(category));
@@ -115,8 +159,44 @@ public class Category extends Tag implements Serializable, Comparable<Category> 
     /**
      * Set the selected category to "Not Specified"
      */
-    public void clearSelectedCategory() {
+    public void setUnspecified() {
         SELECTED_CATEGORY = NOT_SPECIFIED_LITERAL;
+    }
+
+    /**
+     * Return the string literal of current selected category
+     * @return String selected category
+     */
+    public String getSelectedCategory() {
+        return SELECTED_CATEGORY;
+    }
+
+    /**
+     * Set the selected category to the given category
+     * @param category String
+     */
+    public void setSelectedCategory(String category) {
+
+        if(category == null) {
+            SELECTED_CATEGORY = NOT_SPECIFIED_LITERAL;
+            return;
+        }
+
+        if(category.trim().isEmpty()) {
+            SELECTED_CATEGORY = NOT_SPECIFIED_LITERAL;
+            return;
+        }
+
+        addCategory(category);
+        SELECTED_CATEGORY = CATEGORIES.get(indexOf(category));
+    }
+
+    /**
+     * Returns true if this category is unspecified
+     * @return boolean
+     */
+    public boolean isUnspecified() {
+        return SELECTED_CATEGORY.equals(NOT_SPECIFIED_LITERAL);
     }
 
     /**

@@ -1,4 +1,4 @@
-package edu.odu.cs441.sro.metadata;
+package edu.odu.cs441.sro.model.metadata;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,6 +31,15 @@ public class Location extends Tag implements Serializable, Comparable<Location> 
      * @param location String
      */
     public static void addLocation(String location) {
+
+        if(location == null) {
+            return;
+        }
+
+        if(location.trim().isEmpty()) {
+            return;
+        }
+
         if(!exists(location)) {
             LOCATIONS.add(location.trim());
         }
@@ -41,6 +50,15 @@ public class Location extends Tag implements Serializable, Comparable<Location> 
      * @param location String
      */
     public static void removeLocation(String location) {
+
+        if(location == null) {
+            return;
+        }
+
+        if(location.trim().isEmpty()) {
+            return;
+        }
+
         if(exists(location)) {
             LOCATIONS.remove(indexOf(location));
         }
@@ -61,7 +79,15 @@ public class Location extends Tag implements Serializable, Comparable<Location> 
      */
     public static boolean exists(String location) {
 
-        if(indexOf(location) < 0) {
+        if(location == null) {
+            return false;
+        }
+
+        if(location.trim().isEmpty()) {
+            return false;
+        }
+
+        if(indexOf(location.trim()) < 0) {
             return false;
         }
 
@@ -75,6 +101,14 @@ public class Location extends Tag implements Serializable, Comparable<Location> 
      * @return int index of the given location or -1 if not found
      */
     private static int indexOf(String location) {
+
+        if(location == null) {
+            return -1;
+        }
+
+        if(location.trim().isEmpty()) {
+            return -1;
+        }
 
         for(int i = 0; i < LOCATIONS.size(); i++) {
             if(LOCATIONS.get(i).trim().toUpperCase().equals(location.trim().toUpperCase())) {
@@ -101,17 +135,56 @@ public class Location extends Tag implements Serializable, Comparable<Location> 
     public Location(UUID uuid, String location) {
         super(uuid);
 
-        int index = indexOf(location);
+        if(location == null) {
+            SELECTED_LOCATION = NOT_SPECIFIED_LITERAL;
+            return;
+        }
+        else if(location.trim().isEmpty()) {
+            SELECTED_LOCATION = NOT_SPECIFIED_LITERAL;
+            return;
+        } else {
+            Location.addLocation(location);
+            SELECTED_LOCATION = LOCATIONS.get(indexOf(location));
+        }
+    }
 
-        addLocation(location);
+    public String getSelectedLocation() {
+        return SELECTED_LOCATION;
+    }
+
+    /**
+     * Set the selected location to the given category
+     * @param location String
+     */
+    public void setSelectedLocation(String location) {
+
+        if(location == null) {
+            SELECTED_LOCATION = NOT_SPECIFIED_LITERAL;
+            return;
+        }
+
+        if(location.trim().isEmpty()) {
+            SELECTED_LOCATION = NOT_SPECIFIED_LITERAL;
+            return;
+        }
+
+        Location.addLocation(location);
         SELECTED_LOCATION = LOCATIONS.get(indexOf(location));
     }
 
     /**
      * Set the selected location to "Not Specified"
      */
-    public void clearSelectedLocation() {
+    public void setUnspecified() {
         SELECTED_LOCATION = NOT_SPECIFIED_LITERAL;
+    }
+
+    /**
+     * Return true if this location is unspecified
+     * @return boolean
+     */
+    public boolean isUnspecified() {
+        return SELECTED_LOCATION.equals(NOT_SPECIFIED_LITERAL);
     }
 
     /**

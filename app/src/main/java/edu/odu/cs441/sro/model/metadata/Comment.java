@@ -1,4 +1,4 @@
-package edu.odu.cs441.sro.metadata;
+package edu.odu.cs441.sro.model.metadata;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -28,7 +28,20 @@ public class Comment extends Tag implements Serializable {
      */
     public Comment(UUID uuid, String comment) {
         super(uuid);
-        COMMENT = comment.trim();
+
+        if(comment == null) {
+            COMMENT = "";
+        }else{
+            COMMENT = comment.trim();
+        }
+    }
+
+    /**
+     * Return true if the comment is empty
+     * @return boolean
+     */
+    public boolean isEmpty() {
+        return COMMENT.isEmpty();
     }
 
     /**
@@ -44,7 +57,11 @@ public class Comment extends Tag implements Serializable {
      * @param comment String
      */
     public void setComment(String comment) {
-        COMMENT = comment.trim();
+        if(comment == null) {
+            COMMENT = "";
+        }else{
+            COMMENT = comment.trim();
+        }
     }
 
     /**

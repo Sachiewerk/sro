@@ -1,4 +1,4 @@
-package edu.odu.cs441.sro.metadata;
+package edu.odu.cs441.sro.model.metadata;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -29,7 +29,20 @@ public class Title extends Tag implements Serializable {
      */
     public Title(UUID uuid, String title) {
         super(uuid);
-        TITLE = title;
+
+        if(title == null || title.trim().isEmpty()) {
+            TITLE = "";
+        } else {
+            TITLE = title.trim();
+        }
+    }
+
+    /**
+     * Return true if the title is empty
+     * @return boolean
+     */
+    public boolean isEmpty() {
+        return TITLE.isEmpty();
     }
 
     /**
@@ -45,7 +58,12 @@ public class Title extends Tag implements Serializable {
      * @param title String
      */
     public void setTitle(String title) {
-        TITLE = title;
+
+        if(title == null || title.trim().isEmpty()) {
+            TITLE = "";
+        } else {
+            TITLE = title.trim();
+        }
     }
 
     /**

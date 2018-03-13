@@ -1,4 +1,4 @@
-package edu.odu.cs441.sro.metadata;
+package edu.odu.cs441.sro.model.metadata;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -76,9 +76,16 @@ public class Price extends Tag implements Serializable, Comparable<Price> {
      */
     public Price(UUID uuid, String value) {
         super(uuid);
-        VALUE = new BigDecimal(value);
+
         CURRENCY = Currency.getInstance("USD");
         LOCALE = Locale.US;
+
+        if(value.contains(CURRENCY.getSymbol(LOCALE))) {
+            value = value.replace(CURRENCY.getSymbol(LOCALE), "");
+        }
+
+        value = value.trim();
+        VALUE = new BigDecimal(value);
     }
 
     /**
@@ -118,6 +125,12 @@ public class Price extends Tag implements Serializable, Comparable<Price> {
      * @param value String
      */
     public void setValue(String value) {
+        if(value.contains(CURRENCY.getSymbol(LOCALE))) {
+            value = value.replace(CURRENCY.getSymbol(LOCALE), "");
+        }
+
+        value = value.trim();
+
         VALUE = new BigDecimal(value);
     }
 
@@ -162,6 +175,14 @@ public class Price extends Tag implements Serializable, Comparable<Price> {
                 VALUE.setScale(CURRENCY.getDefaultFractionDigits(), RoundingMode.HALF_EVEN);
 
         return displayValue.toPlainString();
+    }
+
+    /**
+     * Return true if the value is zero (unspecified)
+     * @return boolean
+     */
+    public boolean isUnspecified() {
+        return VALUE.equals(BigDecimal.ZERO);
     }
 
     /**

@@ -13,21 +13,23 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import java.io.File;
-import java.util.Date;
 import java.util.UUID;
 
-import edu.odu.cs441.sro.metadata.Category;
-import edu.odu.cs441.sro.metadata.Location;
-import edu.odu.cs441.sro.metadata.Method;
+import edu.odu.cs441.sro.controller.MetadataController;
+import edu.odu.cs441.sro.model.metadata.Category;
+import edu.odu.cs441.sro.model.metadata.Location;
+import edu.odu.cs441.sro.model.metadata.Method;
 
 /**
  * This is the main Activity of this application.
  */
 public class MainActivity extends AppCompatActivity {
+
+    // Controllers
+    MetadataController mMetaDataController;
 
     // Navigation Drawer
     private DrawerLayout mDrawerLayout;
@@ -45,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String MY_DATE_INTENT_IDENTIFIER = "DATE";
     public static final String MY_IMAGE_FILE_INTENT_IDENTIFIER = "IMAGE_FILE";
     public static final String MY_RECEIPT_OBJECTS_INTENT_IDENTIFIER = "RECEIPT_OBJECT";
+    public static final String MY_METADATA_CONTROLLER_OBJECT_INTENT_IDENTIFIER =
+            "METADATA_CONTROLLER";
 
     // File Directory names
     public static final String MY_SRO_MAIN_DIRECTORY = "SRO";
@@ -60,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mMetaDataController = new MetadataController();
 
         // Add predefined toolbar layout that has the App title and Drawer buttons
         // as the action bar
@@ -83,24 +89,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeReceipts() {
-        Category.addCategory("Grocery");
-        Category.addCategory("Electronics");
-        Category.addCategory("Furniture");
-        Category.addCategory("Restaurant");
-        Category.addCategory("Entertainment");
+        mMetaDataController.addCategory("Grocery");
+        mMetaDataController.addCategory("Electronics");
+        mMetaDataController.addCategory("Furniture");
+        mMetaDataController.addCategory("Restaurant");
+        mMetaDataController.addCategory("Entertainment");
 
-        Location.addLocation("Walmart");
-        Location.addLocation("Pizzahut");
-        Location.addLocation("Lowe's");
-        Location.addLocation("McDonald's");
-        Location.addLocation("Foodlion");
+        mMetaDataController.addLocation("Walmart");
+        mMetaDataController.addLocation("Pizzahut");
+        mMetaDataController.addLocation("Lowe's");
+        mMetaDataController.addLocation("McDonald's");
+        mMetaDataController.addLocation("Foodlion");
 
-        Method.addMethod("Cash");
-        Method.addMethod("Credit Card");
-        Method.addMethod("Money Order");
-        Method.addMethod("Check");
-        Method.addMethod("Debit Card");
-        Method.addMethod("Paypal");
+        mMetaDataController.addMethod("Cash");
+        mMetaDataController.addMethod("Credit Card");
+        mMetaDataController.addMethod("Money Order");
+        mMetaDataController.addMethod("Check");
+        mMetaDataController.addMethod("Debit Card");
+        mMetaDataController.addMethod("Paypal");
     }
 
     /**
@@ -273,6 +279,8 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, PhotoReceiptAddActivity.class);
                 intent.putExtra(MY_IMAGE_FILE_INTENT_IDENTIFIER, imageFile);
                 intent.putExtra(MY_UUID_INTENT_IDENTIFIER, uuid);
+                intent.putExtra
+                        (MY_METADATA_CONTROLLER_OBJECT_INTENT_IDENTIFIER, mMetaDataController);
 
                 // Start PhotoReceiptAddActivity
                 startActivityForResult(intent, MY_PHOTO_RECEIPT_ADD_ACTIVITY_REQUEST_CODE);

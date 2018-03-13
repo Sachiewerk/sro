@@ -1,4 +1,4 @@
-package edu.odu.cs441.sro.metadata;
+package edu.odu.cs441.sro.model.metadata;
 
 
 import java.io.Serializable;
@@ -85,6 +85,14 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
     public DateTime(UUID uuid, int year, int month, int dayOfMonth) {
         super(uuid);
         DATE = new Date(year - 1900, month - 1, dayOfMonth, 0, 0);
+    }
+
+    /**
+     * Return a deep copy of this date object
+     * @return Date date
+     */
+    public Date getDateTime() {
+        return (Date)DATE.clone();
     }
 
     /**
@@ -325,7 +333,6 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
      * @param newDate LocalDateTime
      */
     public void setDateTime(Date newDate){
-        newDate.setYear(newDate.getYear() - 1900);
         DATE = newDate;
     }
 

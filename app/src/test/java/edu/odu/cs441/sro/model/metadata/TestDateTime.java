@@ -1,15 +1,14 @@
-package edu.odu.cs441.sro.metadata;
+package edu.odu.cs441.sro.model.metadata;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
 /**
  * Created by michael on 2/16/18.
- * Test edu.odu.cs441.sro.metadata.DateTime
+ * Test edu.odu.cs441.sro.Model.metadata.DateTime
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
@@ -200,7 +199,7 @@ public class TestDateTime {
         // 9-10-1989
         // 4:30:08AM
         Date newDateTime = new Date(
-                1989,
+                89,
                 9 - 1,
                 10,
                 4,

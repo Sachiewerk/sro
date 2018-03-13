@@ -32,17 +32,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
-import edu.odu.cs441.sro.metadata.Category;
-import edu.odu.cs441.sro.metadata.DateTime;
-import edu.odu.cs441.sro.metadata.Location;
-import edu.odu.cs441.sro.metadata.Method;
-import edu.odu.cs441.sro.record.Receipt;
+
+import edu.odu.cs441.sro.controller.MetadataController;
+import edu.odu.cs441.sro.model.metadata.Category;
+import edu.odu.cs441.sro.model.metadata.DateTime;
+import edu.odu.cs441.sro.model.metadata.Location;
+import edu.odu.cs441.sro.model.metadata.Method;
+import edu.odu.cs441.sro.model.record.Receipt;
 import edu.odu.cs441.sro.utility.NumberTextWatcher;
 
 /**
  *
  */
 public class PhotoReceiptAddActivity extends AppCompatActivity {
+
+    // Controllers
+    MetadataController mMetadataController;
 
     // Hold a reference to the current animator,
     // so that it can be canceled mid-way.
@@ -90,15 +95,18 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
                 (File)getIntent().getSerializableExtra(MainActivity.MY_IMAGE_FILE_INTENT_IDENTIFIER);
 
         mUUID = (UUID)getIntent().getSerializableExtra(MainActivity.MY_UUID_INTENT_IDENTIFIER);
+        mMetadataController =
+                (MetadataController)getIntent().getSerializableExtra
+                        (MainActivity.MY_METADATA_CONTROLLER_OBJECT_INTENT_IDENTIFIER);
 
         mDate = new Date();
 
         mReceipts = new ArrayList<Receipt> ();
 
         // Initialize other private variables
-        mLocationList = Location.getLocations();
-        mCategoryList = Category.getCategories();
-        mMethodList = Method.getMethods();
+        mLocationList = mMetadataController.getLocationList();
+        mCategoryList = mMetadataController.getCategoryList();
+        mMethodList = mMetadataController.getMethodList();
 
         mTitleEditText = findViewById(R.id.photo_receipt_add_edittext_title);
         mLocationAutoCompleteTextView =

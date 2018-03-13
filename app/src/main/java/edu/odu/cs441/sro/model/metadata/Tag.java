@@ -1,4 +1,4 @@
-package edu.odu.cs441.sro.metadata;
+package edu.odu.cs441.sro.model.metadata;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -15,6 +15,14 @@ public abstract class Tag implements Serializable {
 
     // Unique Identifier of the record holding this tag
     private final UUID UNIQUE_IDENTIFIER;
+
+    /**
+     * Return the string literal for unspecified tags
+     * @return String literal
+     */
+    public static String getNotSpecifiedLiteral() {
+        return NOT_SPECIFIED_LITERAL;
+    }
 
     /**
      * Set the UUID of the record holding this tag

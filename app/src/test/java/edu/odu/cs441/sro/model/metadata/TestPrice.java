@@ -1,4 +1,4 @@
-package edu.odu.cs441.sro.metadata;
+package edu.odu.cs441.sro.model.metadata;
 
 import org.junit.Test;
 import java.util.UUID;
@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 
 /**
  * Created by michael on 2/16/18.
- * Test edu.odu.cs441.sro.metadata.Price
+ * Test edu.odu.cs441.sro.Model.metadata.Price
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
