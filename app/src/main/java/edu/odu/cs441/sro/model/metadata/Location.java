@@ -1,21 +1,30 @@
 package edu.odu.cs441.sro.model.metadata;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
+
+import edu.odu.cs441.sro.MainActivity;
 
 /**
  * Created by michael on 2/16/18.
  *
  * Location class represents the location of the transaction
  */
-public class Location extends Tag implements Serializable, Comparable<Location> {
+public class Location implements Serializable, Comparable<Location>, Parcelable {
+
+    private static final long serialVersionUID = 4L;
 
     // This location list is shared by all instances of Location class
     private static ArrayList<String> LOCATIONS = new ArrayList<String> ();
 
     // The selected location string literal of this location object
     private String SELECTED_LOCATION;
+
+    private String mUUID;
 
     /**
      * Return the shallow copy of the static location list
@@ -69,7 +78,7 @@ public class Location extends Tag implements Serializable, Comparable<Location> 
      */
     public static void clearLocations() {
         LOCATIONS = new ArrayList<String> ();
-        LOCATIONS.add(NOT_SPECIFIED_LITERAL);
+        LOCATIONS.add(MainActivity.NOT_SPECIFIED_LITERAL);
     }
 
     /**
@@ -119,12 +128,17 @@ public class Location extends Tag implements Serializable, Comparable<Location> 
         return -1;
     }
 
+
+    public Location() {
+        mUUID = UUID.randomUUID().toString();
+    }
+
     /**
      * Default Constructor to create Location object with unspecified location
      */
-    public Location(UUID uuid) {
-        super(uuid);
-        SELECTED_LOCATION = NOT_SPECIFIED_LITERAL;
+    public Location(String uuid) {
+        mUUID = uuid;
+        SELECTED_LOCATION = MainActivity.NOT_SPECIFIED_LITERAL;
     }
 
     /**
@@ -132,15 +146,15 @@ public class Location extends Tag implements Serializable, Comparable<Location> 
      * if the given location does not exist in the global, it is added to the list.
      * @param location String
      */
-    public Location(UUID uuid, String location) {
-        super(uuid);
+    public Location(String uuid, String location) {
+        mUUID = uuid;
 
         if(location == null) {
-            SELECTED_LOCATION = NOT_SPECIFIED_LITERAL;
+            SELECTED_LOCATION = MainActivity.NOT_SPECIFIED_LITERAL;
             return;
         }
         else if(location.trim().isEmpty()) {
-            SELECTED_LOCATION = NOT_SPECIFIED_LITERAL;
+            SELECTED_LOCATION = MainActivity.NOT_SPECIFIED_LITERAL;
             return;
         } else {
             Location.addLocation(location);
@@ -159,12 +173,12 @@ public class Location extends Tag implements Serializable, Comparable<Location> 
     public void setSelectedLocation(String location) {
 
         if(location == null) {
-            SELECTED_LOCATION = NOT_SPECIFIED_LITERAL;
+            SELECTED_LOCATION = MainActivity.NOT_SPECIFIED_LITERAL;
             return;
         }
 
         if(location.trim().isEmpty()) {
-            SELECTED_LOCATION = NOT_SPECIFIED_LITERAL;
+            SELECTED_LOCATION = MainActivity.NOT_SPECIFIED_LITERAL;
             return;
         }
 
@@ -176,7 +190,7 @@ public class Location extends Tag implements Serializable, Comparable<Location> 
      * Set the selected location to "Not Specified"
      */
     public void setUnspecified() {
-        SELECTED_LOCATION = NOT_SPECIFIED_LITERAL;
+        SELECTED_LOCATION = MainActivity.NOT_SPECIFIED_LITERAL;
     }
 
     /**
@@ -184,7 +198,7 @@ public class Location extends Tag implements Serializable, Comparable<Location> 
      * @return boolean
      */
     public boolean isUnspecified() {
-        return SELECTED_LOCATION.equals(NOT_SPECIFIED_LITERAL);
+        return SELECTED_LOCATION.equals(MainActivity.NOT_SPECIFIED_LITERAL);
     }
 
     /**
@@ -206,4 +220,31 @@ public class Location extends Tag implements Serializable, Comparable<Location> 
     public String toString() {
         return SELECTED_LOCATION;
     }
+
+    protected Location(Parcel in) {
+        SELECTED_LOCATION = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(SELECTED_LOCATION);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Location> CREATOR = new Parcelable.Creator<Location>() {
+        @Override
+        public Location createFromParcel(Parcel in) {
+            return new Location(in);
+        }
+
+        @Override
+        public Location[] newArray(int size) {
+            return new Location[size];
+        }
+    };
 }

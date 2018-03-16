@@ -13,26 +13,37 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.UUID;
-
 import edu.odu.cs441.sro.controller.MetadataController;
-import edu.odu.cs441.sro.model.metadata.Category;
-import edu.odu.cs441.sro.model.metadata.Location;
-import edu.odu.cs441.sro.model.metadata.Method;
+import edu.odu.cs441.sro.controller.ReceiptController;
+import edu.odu.cs441.sro.model.record.Receipt;
+import edu.odu.cs441.sro.utility.CustomBaseAdapter;
 
 /**
  * This is the main Activity of this application.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     // Controllers
     MetadataController mMetaDataController;
+    ReceiptController mReceiptController;
 
     // Navigation Drawer
     private DrawerLayout mDrawerLayout;
+
+    // Custom BaseAdapter
+    CustomBaseAdapter mAdapter;
+
+    // Receipt ListView
+    ListView mListView;
 
     // Request codes for user permissions
     private final int MY_CAMERA_REQUEST_CODE = 100;
@@ -55,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String MY_IMAGE_DIRECTORY = "Images";
     public static final String MY_RECEIPT_DIRECTORY = "Data";
 
+    // Tag Not Specified Literal
+    public static final String NOT_SPECIFIED_LITERAL = "[Not Specified]";
 
     /**
      * This method is invoked when this Activity is first created.
@@ -66,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mMetaDataController = new MetadataController();
+        mReceiptController = new ReceiptController();
 
         // Add predefined toolbar layout that has the App title and Drawer buttons
         // as the action bar
@@ -82,10 +96,20 @@ public class MainActivity extends AppCompatActivity {
         actionbar.setHomeAsUpIndicator(R.drawable.ic_view_headline_black_24dp);
         actionbar.setDisplayShowCustomEnabled(true);
 
+        // Initialize the listView
+        initializeListView();
+
         // Initialize Custom Navigation Drawers
         initializeDrawers();
 
         initializeReceipts();
+    }
+
+    private void initializeListView() {
+        mListView = findViewById(R.id.main_listView);
+        mAdapter = new CustomBaseAdapter(this, mReceiptController.getReceipts());
+        mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(this);
     }
 
     private void initializeReceipts() {
@@ -244,6 +268,11 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position,
+                            long id) {
+
+    }
 
     public void startCameraActivity() {
 
@@ -295,6 +324,16 @@ public class MainActivity extends AppCompatActivity {
         // Check if the request code is for the PhotoReceiptAddActivity
         if(requestCode == MY_PHOTO_RECEIPT_ADD_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
+
+                mMetaDataController.save();
+                mReceiptController.refresh();
+                mAdapter.notifyDataSetChanged();
+
+                Log.d("NUMBER!!!!!!", "The number is " + mReceiptController.getReceipts().size());
+
+                for(Receipt receipt : mReceiptController.getReceipts()) {
+                    Log.d("UUID Message","UUID of " + receipt.getTitle() + " is " + receipt.getUUID());
+                }
                 //TODO Receive the Receipt object and save the receipt
             }
         }

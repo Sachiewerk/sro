@@ -1,21 +1,30 @@
 package edu.odu.cs441.sro.model.metadata;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
+
+import edu.odu.cs441.sro.MainActivity;
 
 /**
  * Created by michael on 2/17/18.
  *
  * Method class represents the payment method of a transaction
  */
-public class Method extends Tag implements Serializable, Comparable<Method> {
-    
+public class Method implements Serializable, Comparable<Method>, Parcelable {
+
+    private static final long serialVersionUID = 5L;
+
     // This method list is shared by all instances of Method class
     private static ArrayList<String> METHODS = new ArrayList<String> ();
 
     // The selected method string literal of this method object
     private String SELECTED_METHOD;
+
+    private String mUUID;
 
     /**
      * Return a shallow copy of the method list
@@ -69,7 +78,7 @@ public class Method extends Tag implements Serializable, Comparable<Method> {
      */
     public static void clearMethods() {
         METHODS = new ArrayList<String> ();
-        METHODS.add(NOT_SPECIFIED_LITERAL);
+        METHODS.add(MainActivity.NOT_SPECIFIED_LITERAL);
     }
 
     /**
@@ -119,12 +128,17 @@ public class Method extends Tag implements Serializable, Comparable<Method> {
         return -1;
     }
 
+
+    public Method() {
+        mUUID = UUID.randomUUID().toString();
+    }
+
     /**
      * Default Constructor to create Method object with unspecified method
      */
-    public Method(UUID uuid) {
-        super(uuid);
-        SELECTED_METHOD = NOT_SPECIFIED_LITERAL;
+    public Method(String uuid) {
+        mUUID = uuid;
+        SELECTED_METHOD = MainActivity.NOT_SPECIFIED_LITERAL;
     }
 
     /**
@@ -132,16 +146,16 @@ public class Method extends Tag implements Serializable, Comparable<Method> {
      * if the given method does not exist in the global, it is added to the list.
      * @param method String
      */
-    public Method(UUID uuid, String method) {
-        super(uuid);
+    public Method(String uuid, String method) {
+        mUUID = uuid;
 
         if(method == null) {
-            SELECTED_METHOD = NOT_SPECIFIED_LITERAL;
+            SELECTED_METHOD = MainActivity.NOT_SPECIFIED_LITERAL;
             return;
         }
 
         if(method.trim().isEmpty()) {
-            SELECTED_METHOD = NOT_SPECIFIED_LITERAL;
+            SELECTED_METHOD = MainActivity.NOT_SPECIFIED_LITERAL;
             return;
         }
 
@@ -155,12 +169,12 @@ public class Method extends Tag implements Serializable, Comparable<Method> {
      */
     public void setSelectedMethod(String method) {
         if(method == null) {
-            SELECTED_METHOD = NOT_SPECIFIED_LITERAL;
+            SELECTED_METHOD = MainActivity.NOT_SPECIFIED_LITERAL;
             return;
         }
 
         if(method.trim().isEmpty()) {
-            SELECTED_METHOD = NOT_SPECIFIED_LITERAL;
+            SELECTED_METHOD = MainActivity.NOT_SPECIFIED_LITERAL;
             return;
         }
 
@@ -180,7 +194,7 @@ public class Method extends Tag implements Serializable, Comparable<Method> {
      * Set the selected method to "Not Specified"
      */
     public void setUnspecified() {
-        SELECTED_METHOD = NOT_SPECIFIED_LITERAL;
+        SELECTED_METHOD = MainActivity.NOT_SPECIFIED_LITERAL;
     }
 
     /**
@@ -188,7 +202,7 @@ public class Method extends Tag implements Serializable, Comparable<Method> {
      * @return boolean
      */
     public boolean isUnspecified() {
-        return SELECTED_METHOD.equals(NOT_SPECIFIED_LITERAL);
+        return SELECTED_METHOD.equals(MainActivity.NOT_SPECIFIED_LITERAL);
     }
 
     /**
@@ -210,4 +224,31 @@ public class Method extends Tag implements Serializable, Comparable<Method> {
     public String toString() {
         return SELECTED_METHOD;
     }
+
+    protected Method(Parcel in) {
+        SELECTED_METHOD = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(SELECTED_METHOD);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Method> CREATOR = new Parcelable.Creator<Method>() {
+        @Override
+        public Method createFromParcel(Parcel in) {
+            return new Method(in);
+        }
+
+        @Override
+        public Method[] newArray(int size) {
+            return new Method[size];
+        }
+    };
 }

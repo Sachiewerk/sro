@@ -1,5 +1,7 @@
 package edu.odu.cs441.sro.model.record;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import java.io.File;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -16,13 +18,14 @@ import edu.odu.cs441.sro.model.metadata.Title;
 /**
  * Created by michael on 2/17/18.
  */
-public class Receipt extends Record implements Comparable<Receipt>, Serializable, Cloneable {
+public class Receipt implements Comparable<Receipt>, Serializable, Cloneable, Parcelable {
+    private static final long serialVersionUID = 6529685098267757690L;
+
+    private String mUUID;
     private boolean mPhotoAvailable;
     private boolean mFromSubscription;
-    private UUID mSubscriptionUUID;
-
-    private File mImageFile;
-
+    private String mSubscriptionUUID;
+    private String mImageFile;
     private DateTime mDateTime;
     private Title mTitle;
     private Location mLocation;
@@ -31,15 +34,18 @@ public class Receipt extends Record implements Comparable<Receipt>, Serializable
     private Method mMethod;
     private Comment mComment;
 
-    public Receipt(UUID uuid, Date date, File imageFile) {
+    public Receipt() {
+        mUUID = UUID.randomUUID().toString();
+    }
 
-        super(uuid);
+    public Receipt(String uuid, Date date, File imageFile) {
+        mUUID = uuid;
 
         mFromSubscription = false;
         mSubscriptionUUID = null;
 
         if(imageFile != null && imageFile.exists()) {
-            mImageFile = imageFile;
+            mImageFile = imageFile.getAbsolutePath();
             mPhotoAvailable = true;
         }
         else {
@@ -56,13 +62,30 @@ public class Receipt extends Record implements Comparable<Receipt>, Serializable
         mTitle = new Title(uuid);
     }
 
+    public Receipt(Receipt receipt) {
+        mUUID = receipt.mUUID;
+        mPhotoAvailable = receipt.mPhotoAvailable;
+        mFromSubscription = receipt.mFromSubscription;
+        mSubscriptionUUID = receipt.mSubscriptionUUID;
+
+        mImageFile = receipt.mImageFile;
+
+        mDateTime = receipt.mDateTime;
+        mTitle = receipt.mTitle;
+        mLocation = receipt.mLocation;
+        mPrice = receipt.mPrice;
+        mCategory = receipt.mCategory;
+        mMethod = receipt.mMethod;
+        mComment = receipt.mComment;
+    }
+
     public boolean isPhotoAvailable() {
         return mPhotoAvailable;
     }
 
     public void setImageFile(File file) {
         if(file != null) {
-            mImageFile = file;
+            mImageFile = file.getAbsolutePath();
             mPhotoAvailable = true;
         }
         else {
@@ -72,7 +95,7 @@ public class Receipt extends Record implements Comparable<Receipt>, Serializable
     }
 
     public File getImageFile() {
-        return mImageFile;
+        return new File(mImageFile);
     }
 
     public void setPrice(String value) {
@@ -144,6 +167,14 @@ public class Receipt extends Record implements Comparable<Receipt>, Serializable
     }
 
 
+    public String getUUID() {
+        return mUUID;
+    }
+
+    public void setUUID(String uuid) {
+        mUUID = uuid;
+    }
+
     public boolean containsDeprecatedTag() {
         return containsDeprecatedCategory() ||
                 containsDeprecatedLocation() ||
@@ -185,7 +216,7 @@ public class Receipt extends Record implements Comparable<Receipt>, Serializable
         return mFromSubscription;
     }
 
-    public UUID getSubscriptionUUID() {
+    public String getSubscriptionUUID() {
         if(mFromSubscription) {
             return mSubscriptionUUID;
         } else {
@@ -196,4 +227,77 @@ public class Receipt extends Record implements Comparable<Receipt>, Serializable
     public int compareTo(Receipt receipt) {
         return this.getUUID().compareTo(receipt.getUUID());
     }
+
+    public int hashCode() {
+        return this.mUUID.hashCode();
+    }
+
+    public boolean equals(Object obj) {
+
+        if(obj == null) {
+            return false;
+        }
+
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof Receipt)) {
+            return false;
+        }
+
+        Receipt receipt = (Receipt) obj;
+
+        return this.mUUID.equals(receipt.mUUID);
+    }
+
+
+    protected Receipt(Parcel in) {
+        mUUID = in.readString();
+        mPhotoAvailable = in.readByte() != 0x00;
+        mFromSubscription = in.readByte() != 0x00;
+        mSubscriptionUUID = in.readString();
+        mImageFile = in.readString();
+        mDateTime = (DateTime) in.readValue(DateTime.class.getClassLoader());
+        mTitle = (Title) in.readValue(Title.class.getClassLoader());
+        mLocation = (Location) in.readValue(Location.class.getClassLoader());
+        mPrice = (Price) in.readValue(Price.class.getClassLoader());
+        mCategory = (Category) in.readValue(Category.class.getClassLoader());
+        mMethod = (Method) in.readValue(Method.class.getClassLoader());
+        mComment = (Comment) in.readValue(Comment.class.getClassLoader());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mUUID);
+        dest.writeByte((byte) (mPhotoAvailable ? 0x01 : 0x00));
+        dest.writeByte((byte) (mFromSubscription ? 0x01 : 0x00));
+        dest.writeString(mSubscriptionUUID);
+        dest.writeString(mImageFile);
+        dest.writeValue(mDateTime);
+        dest.writeValue(mTitle);
+        dest.writeValue(mLocation);
+        dest.writeValue(mPrice);
+        dest.writeValue(mCategory);
+        dest.writeValue(mMethod);
+        dest.writeValue(mComment);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Receipt> CREATOR = new Parcelable.Creator<Receipt>() {
+        @Override
+        public Receipt createFromParcel(Parcel in) {
+            return new Receipt(in);
+        }
+
+        @Override
+        public Receipt[] newArray(int size) {
+            return new Receipt[size];
+        }
+    };
 }

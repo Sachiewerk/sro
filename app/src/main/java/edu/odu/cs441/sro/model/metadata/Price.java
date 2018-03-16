@@ -1,5 +1,8 @@
 package edu.odu.cs441.sro.model.metadata;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -15,19 +18,26 @@ import java.util.UUID;
  * The default currency is USD and the default locale is US.
  * The currency and the locale can be explicitly set.
  */
-public class Price extends Tag implements Serializable, Comparable<Price> {
+public class Price implements Serializable, Comparable<Price>, Parcelable {
+
+    private static final long serialVersionUID = 6L;
 
     private BigDecimal VALUE;
     private Currency CURRENCY;
     private Locale LOCALE;
+    private String mUUID;
+
+    public Price() {
+        mUUID = UUID.randomUUID().toString();
+    }
 
     /**
      * Default Constructor with the default currency and locale -
      * the amount is set to zero
      * @param uuid UUID
      */
-    public Price(UUID uuid){
-        super(uuid);
+    public Price(String uuid){
+        mUUID = uuid;
         VALUE = new BigDecimal("0.00");
         CURRENCY = Currency.getInstance("USD");
         LOCALE = Locale.US;
@@ -38,8 +48,8 @@ public class Price extends Tag implements Serializable, Comparable<Price> {
      * @param value double
      * @param uuid UUID
      */
-    public Price(UUID uuid, double value) {
-        super(uuid);
+    public Price(String uuid, double value) {
+        mUUID = uuid;
         VALUE = new BigDecimal(String.valueOf(value));
         CURRENCY = Currency.getInstance("USD");
         LOCALE = Locale.US;
@@ -50,8 +60,8 @@ public class Price extends Tag implements Serializable, Comparable<Price> {
      * @param uuid UUID
      * @param value float
      */
-    public Price(UUID uuid, float value) {
-        super(uuid);
+    public Price(String uuid, float value) {
+        mUUID = uuid;
         VALUE = new BigDecimal(String.valueOf(value));
         CURRENCY = Currency.getInstance("USD");
         LOCALE = Locale.US;
@@ -62,8 +72,8 @@ public class Price extends Tag implements Serializable, Comparable<Price> {
      * @param uuid UUID
      * @param value int
      */
-    public Price(UUID uuid, int value) {
-        super(uuid);
+    public Price(String uuid, int value) {
+        mUUID = uuid;
         VALUE = new BigDecimal(String.valueOf(value) + ".00");
         CURRENCY = Currency.getInstance("USD");
         LOCALE = Locale.US;
@@ -74,8 +84,8 @@ public class Price extends Tag implements Serializable, Comparable<Price> {
      * @param uuid UUID
      * @param value String
      */
-    public Price(UUID uuid, String value) {
-        super(uuid);
+    public Price(String uuid, String value) {
+        mUUID = uuid;
 
         CURRENCY = Currency.getInstance("USD");
         LOCALE = Locale.US;
@@ -125,6 +135,10 @@ public class Price extends Tag implements Serializable, Comparable<Price> {
      * @param value String
      */
     public void setValue(String value) {
+        if(value == null || value.trim().isEmpty()) {
+            return;
+        }
+
         if(value.contains(CURRENCY.getSymbol(LOCALE))) {
             value = value.replace(CURRENCY.getSymbol(LOCALE), "");
         }
@@ -209,4 +223,35 @@ public class Price extends Tag implements Serializable, Comparable<Price> {
         return usdCostFormat.format(displayValue.doubleValue());
     }
 
+
+    protected Price(Parcel in) {
+        VALUE = (BigDecimal) in.readValue(BigDecimal.class.getClassLoader());
+        CURRENCY = (Currency) in.readValue(Currency.class.getClassLoader());
+        LOCALE = (Locale) in.readValue(Locale.class.getClassLoader());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(VALUE);
+        dest.writeValue(CURRENCY);
+        dest.writeValue(LOCALE);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Price> CREATOR = new Parcelable.Creator<Price>() {
+        @Override
+        public Price createFromParcel(Parcel in) {
+            return new Price(in);
+        }
+
+        @Override
+        public Price[] newArray(int size) {
+            return new Price[size];
+        }
+    };
 }

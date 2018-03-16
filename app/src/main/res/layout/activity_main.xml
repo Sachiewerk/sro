@@ -19,6 +19,7 @@
             android:id="@+id/main_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:layout_alignParentTop="true"
             android:background="@color/colorPrimaryDark"
             app:titleTextColor="@android:color/white">
 
@@ -38,6 +39,24 @@
             </RelativeLayout>
 
         </android.support.v7.widget.Toolbar>
+
+        <TextView
+            android:id="@+id/main_listViewLabel"
+            android:labelFor="@+id/main_listView"
+            android:layout_below="@+id/main_toolbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Recently Added"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"/>
+
+        <ListView
+            android:id="@+id/main_listView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/main_listViewLabel" />
 
     </RelativeLayout>
 

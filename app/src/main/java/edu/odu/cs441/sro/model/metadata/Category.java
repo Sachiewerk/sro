@@ -1,5 +1,7 @@
 package edu.odu.cs441.sro.model.metadata;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
 import org.jetbrains.annotations.NotNull;
@@ -8,19 +10,24 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import edu.odu.cs441.sro.MainActivity;
+
 /**
  * Created by michael on 2/17/18.
  *
  * Category class represents the category of the transaction.
  * The category can be grocery, meal, electronics, furniture, and etc.
  */
-public class Category extends Tag implements Serializable, Comparable<Category> {
+public class Category implements Serializable, Comparable<Category>, Parcelable {
+
+    private static final long serialVersionUID = 1L;
 
     // This location list is shared by all instances of Category class
     private static ArrayList<String> CATEGORIES = new ArrayList<String> ();
 
     // The selected category string literal of this location object
     private String SELECTED_CATEGORY;
+    private String mUUID;
 
     /**
      * Return the shallow copy of the list of categories
@@ -74,7 +81,7 @@ public class Category extends Tag implements Serializable, Comparable<Category> 
      */
     public static void clearCategories() {
         CATEGORIES = new ArrayList<String> ();
-        CATEGORIES.add(NOT_SPECIFIED_LITERAL);
+        CATEGORIES.add(MainActivity.NOT_SPECIFIED_LITERAL);
     }
 
     /**
@@ -124,13 +131,17 @@ public class Category extends Tag implements Serializable, Comparable<Category> 
         return -1;
     }
 
+    public Category() {
+        mUUID = UUID.randomUUID().toString();
+    }
+
     /**
      * Default Constructor to create Category object with unspecified category
      * @param uuid UUID
      */
-    public Category(UUID uuid) {
-        super(uuid);
-        SELECTED_CATEGORY = NOT_SPECIFIED_LITERAL;
+    public Category(String uuid) {
+        mUUID = uuid;
+        SELECTED_CATEGORY = MainActivity.NOT_SPECIFIED_LITERAL;
     }
 
     /**
@@ -139,16 +150,16 @@ public class Category extends Tag implements Serializable, Comparable<Category> 
      * @param uuid UUID
      * @param category String
      */
-    public Category(UUID uuid, String category) {
-        super(uuid);
+    public Category(String uuid, String category) {
+        mUUID = uuid;
 
         if(category == null) {
-            SELECTED_CATEGORY = NOT_SPECIFIED_LITERAL;
+            SELECTED_CATEGORY = MainActivity.NOT_SPECIFIED_LITERAL;
             return;
         }
 
         if(category.trim().isEmpty()) {
-            SELECTED_CATEGORY = NOT_SPECIFIED_LITERAL;
+            SELECTED_CATEGORY = MainActivity.NOT_SPECIFIED_LITERAL;
             return;
         }
 
@@ -160,7 +171,7 @@ public class Category extends Tag implements Serializable, Comparable<Category> 
      * Set the selected category to "Not Specified"
      */
     public void setUnspecified() {
-        SELECTED_CATEGORY = NOT_SPECIFIED_LITERAL;
+        SELECTED_CATEGORY = MainActivity.NOT_SPECIFIED_LITERAL;
     }
 
     /**
@@ -178,12 +189,12 @@ public class Category extends Tag implements Serializable, Comparable<Category> 
     public void setSelectedCategory(String category) {
 
         if(category == null) {
-            SELECTED_CATEGORY = NOT_SPECIFIED_LITERAL;
+            SELECTED_CATEGORY = MainActivity.NOT_SPECIFIED_LITERAL;
             return;
         }
 
         if(category.trim().isEmpty()) {
-            SELECTED_CATEGORY = NOT_SPECIFIED_LITERAL;
+            SELECTED_CATEGORY = MainActivity.NOT_SPECIFIED_LITERAL;
             return;
         }
 
@@ -196,7 +207,7 @@ public class Category extends Tag implements Serializable, Comparable<Category> 
      * @return boolean
      */
     public boolean isUnspecified() {
-        return SELECTED_CATEGORY.equals(NOT_SPECIFIED_LITERAL);
+        return SELECTED_CATEGORY.equals(MainActivity.NOT_SPECIFIED_LITERAL);
     }
 
     /**
@@ -218,4 +229,31 @@ public class Category extends Tag implements Serializable, Comparable<Category> 
     public String toString() {
         return SELECTED_CATEGORY;
     }
+
+    protected Category(Parcel in) {
+        SELECTED_CATEGORY = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(SELECTED_CATEGORY);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Category> CREATOR = new Parcelable.Creator<Category>() {
+        @Override
+        public Category createFromParcel(Parcel in) {
+            return new Category(in);
+        }
+
+        @Override
+        public Category[] newArray(int size) {
+            return new Category[size];
+        }
+    };
 }

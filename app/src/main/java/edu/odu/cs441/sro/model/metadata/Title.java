@@ -1,5 +1,8 @@
 package edu.odu.cs441.sro.model.metadata;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -9,16 +12,24 @@ import java.util.UUID;
  * By default, the title of any saved receipt is the location that
  * the receipt was obtained from unless user specifies the title.
  */
-public class Title extends Tag implements Serializable {
+public class Title implements Serializable, Parcelable {
+
+    private static final long serialVersionUID = 7L;
 
     private String TITLE;
+    private String mUUID;
+
+
+    public Title() {
+        mUUID = UUID.randomUUID().toString();
+    }
 
     /**
      * Default Constructor
      * @param uuid UUID
      */
-    public Title(UUID uuid) {
-        super(uuid);
+    public Title(String uuid) {
+        mUUID = uuid;
         TITLE = "";
     }
 
@@ -27,8 +38,8 @@ public class Title extends Tag implements Serializable {
      * @param uuid UUID
      * @param title String
      */
-    public Title(UUID uuid, String title) {
-        super(uuid);
+    public Title(String uuid, String title) {
+        mUUID = uuid;
 
         if(title == null || title.trim().isEmpty()) {
             TITLE = "";
@@ -74,4 +85,31 @@ public class Title extends Tag implements Serializable {
     public String toString() {
         return TITLE;
     }
+
+    protected Title(Parcel in) {
+        TITLE = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(TITLE);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Title> CREATOR = new Parcelable.Creator<Title>() {
+        @Override
+        public Title createFromParcel(Parcel in) {
+            return new Title(in);
+        }
+
+        @Override
+        public Title[] newArray(int size) {
+            return new Title[size];
+        }
+    };
 }

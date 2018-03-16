@@ -1,6 +1,9 @@
 package edu.odu.cs441.sro.model.metadata;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,19 +14,25 @@ import java.util.UUID;
  * Created by michael on 2/16/18.
  * DateTime class represents the created date of any transactions.
  */
-public class DateTime extends Tag implements Serializable, Comparable<DateTime>, Cloneable {
+public class DateTime implements Serializable, Comparable<DateTime>, Cloneable, Parcelable {
 
     private Date DATE;
+    private static final long serialVersionUID = 3L;
+    private String mUUID;
 
+    public DateTime() {
+        mUUID = UUID.randomUUID().toString();
+        DATE = new Date();
+    }
 
     /**
      * Default Constructor. The date is set to the time when this DateTime object
      * is instantiated.
      * @param uuid UUID
      */
-    public DateTime(UUID uuid) {
+    public DateTime(String uuid) {
         // Create this date with the current date and time.
-        super(uuid);
+        mUUID = uuid;
         DATE = new Date();
     }
 
@@ -32,7 +41,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
      * @param toCopy DateTime
      */
     public DateTime(DateTime toCopy) {
-        super(toCopy.getUUID());
+        mUUID = toCopy.mUUID;
         DATE = new Date(
                 toCopy.getIntYear(),
                 toCopy.getIntMonth(),
@@ -48,8 +57,8 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
      * @param uuid
      * @param date
      */
-    public DateTime(UUID uuid, Date date) {
-        super(uuid);
+    public DateTime(String uuid, Date date) {
+        mUUID = uuid;
         DATE = date;
     }
 
@@ -64,14 +73,14 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
      * @param second int
      */
     public DateTime(
-            UUID uuid,
+            String uuid,
             int year,
             int month,
             int dayOfMonth,
             int hour,
             int minute,
             int second){
-        super(uuid);
+        mUUID = uuid;
         DATE = new Date(year - 1900, month - 1, dayOfMonth, hour, minute, second);
     }
 
@@ -82,8 +91,8 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
      * @param month int
      * @param dayOfMonth int
      */
-    public DateTime(UUID uuid, int year, int month, int dayOfMonth) {
-        super(uuid);
+    public DateTime(String uuid, int year, int month, int dayOfMonth) {
+        mUUID = uuid;
         DATE = new Date(year - 1900, month - 1, dayOfMonth, 0, 0);
     }
 
@@ -368,7 +377,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
             int year,
             int month,
             int dayOfMonth
-            ) {
+    ) {
 
         DATE = new Date(year - 1900, month - 1, dayOfMonth,
                 DATE.getHours(), DATE.getMinutes(), DATE.getSeconds());
@@ -391,7 +400,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
 
         DateTime dateTime = (DateTime) obj;
 
-        return this.getUUID().equals(dateTime.getUUID()) &&
+        return this.mUUID.equals(dateTime.mUUID) &&
                 this.DATE.equals(dateTime.DATE);
     }
 
@@ -401,7 +410,7 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
      */
     @Override
     public int hashCode() {
-        return Objects.hash(getUUID(), DATE);
+        return Objects.hash(mUUID, DATE);
     }
 
     /**
@@ -437,4 +446,32 @@ public class DateTime extends Tag implements Serializable, Comparable<DateTime>,
                 new SimpleDateFormat ("MM-dd-yyyy 'at' hh:mm:ss a");
         return ft.format(DATE);
     }
+
+    protected DateTime(Parcel in) {
+        long tmpDATE = in.readLong();
+        DATE = tmpDATE != -1 ? new Date(tmpDATE) : null;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(DATE != null ? DATE.getTime() : -1L);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<DateTime> CREATOR = new Parcelable.Creator<DateTime>() {
+        @Override
+        public DateTime createFromParcel(Parcel in) {
+            return new DateTime(in);
+        }
+
+        @Override
+        public DateTime[] newArray(int size) {
+            return new DateTime[size];
+        }
+    };
 }

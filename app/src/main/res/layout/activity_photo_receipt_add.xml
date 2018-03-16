@@ -111,7 +111,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/photo_receipt_add_textview_location"
                     android:inputType="text"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    android:imeOptions="actionNext" />
 
                 <TextView
                     android:id="@+id/photo_receipt_add_textview_price"
@@ -129,7 +130,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/photo_receipt_add_textview_price"
                     android:inputType="numberDecimal"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    android:imeOptions="actionNext" />
 
                 <TextView
                     android:id="@+id/photo_receipt_add_textview_category"
@@ -147,7 +149,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/photo_receipt_add_textview_category"
                     android:inputType="text"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    android:imeOptions="actionNext" />
 
                 <TextView
                     android:id="@+id/photo_receipt_add_textview_method"
@@ -165,7 +168,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/photo_receipt_add_textview_method"
                     android:inputType="text"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    android:imeOptions="actionNext" />
 
                 <TextView
                     android:id="@+id/photo_receipt_add_textview_comment"
@@ -183,7 +187,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/photo_receipt_add_textview_comment"
                     android:hint="Enter any comments here."
-                    android:inputType="textMultiLine" />
+                    android:inputType="textMultiLine"
+                    android:imeOptions="actionDone"/>
 
                 <Button
                     android:id="@+id/photo_receipt_add_Button_Save"

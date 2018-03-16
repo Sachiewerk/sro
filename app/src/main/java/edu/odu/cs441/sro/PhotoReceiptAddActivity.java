@@ -32,12 +32,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
-
 import edu.odu.cs441.sro.controller.MetadataController;
-import edu.odu.cs441.sro.model.metadata.Category;
+import edu.odu.cs441.sro.controller.ReceiptController;
 import edu.odu.cs441.sro.model.metadata.DateTime;
-import edu.odu.cs441.sro.model.metadata.Location;
-import edu.odu.cs441.sro.model.metadata.Method;
 import edu.odu.cs441.sro.model.record.Receipt;
 import edu.odu.cs441.sro.utility.NumberTextWatcher;
 
@@ -48,6 +45,7 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
 
     // Controllers
     MetadataController mMetadataController;
+    private ReceiptController mReceiptController;
 
     // Hold a reference to the current animator,
     // so that it can be canceled mid-way.
@@ -64,8 +62,6 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
     // The UUID of this receipt, which is also part of the image file name
     UUID mUUID;
 
-    // Contains this receipt and any other split receipts
-    private ArrayList<Receipt> mReceipts;
 
     private ArrayList<String> mLocationList;
     private ArrayList<String> mPriceList;
@@ -101,7 +97,7 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
 
         mDate = new Date();
 
-        mReceipts = new ArrayList<Receipt> ();
+        mReceiptController = new ReceiptController();
 
         // Initialize other private variables
         mLocationList = mMetadataController.getLocationList();
@@ -143,7 +139,7 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
         TextView dateView = findViewById(R.id.photo_receipt_add_textview_date);
 
         // Create a temporary DateTime for date formatting
-        DateTime dateTime = new DateTime(mUUID, mDate);
+        DateTime dateTime = new DateTime(mUUID.toString(), mDate);
         dateView.setText(dateTime.toString());
     }
 
@@ -204,12 +200,11 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
              ArrayAdapter<String> adapter,
              ArrayList<String> list) {
 
-        acTextView.setOnTouchListener(new View.OnTouchListener() {
+        acTextView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            @SuppressLint("ClickableViewAccessibility")
-            public boolean onTouch(View paramView, MotionEvent paramMotionEvent) {
-                acTextView.showDropDown();
-                acTextView.requestFocus();
+            public boolean onLongClick(View paramView) {
+                    acTextView.showDropDown();
+
                 return false;
             }
         });
@@ -231,9 +226,16 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
 
                 //TODO Add the Receipt object created from this Activity
 
-                Intent data = new Intent();
-                data.putExtra(MainActivity.MY_RECEIPT_OBJECTS_INTENT_IDENTIFIER, mReceipts);
-                setResult(RESULT_OK, data);
+                Receipt receipt = new Receipt(mUUID.toString(), mDate, mImageFile);
+                receipt.setTitle(mTitleEditText.getText().toString());
+                receipt.setCategory(mCategoryAutoCompleteTextView.getText().toString());
+                receipt.setLocation(mLocationAutoCompleteTextView.getText().toString());
+                receipt.setMethod(mMethodAutoCompleteTextView.getText().toString());
+                receipt.setPrice(mPriceAutoCompleteTextView.getText().toString());
+                receipt.setComment(mCommentEditText.getText().toString());
+                mReceiptController.addReceipt(receipt);
+
+                setResult(RESULT_OK);
                 finish();
             }
         });
@@ -260,7 +262,7 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
                 // User may be discarding the receipt created by this Activity, but there
                 // may be child activities from other instances of this Activity. Save them.
                 Intent data = new Intent();
-                data.putExtra(MainActivity.MY_RECEIPT_OBJECTS_INTENT_IDENTIFIER, mReceipts);
+                data.putExtra(MainActivity.MY_RECEIPT_OBJECTS_INTENT_IDENTIFIER, mReceiptController.getReceipts());
 
                 // Set the result to canceled
                 setResult(RESULT_CANCELED, data);

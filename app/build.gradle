@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
 
+
 android {
+
     compileSdkVersion 26
     defaultConfig {
         applicationId "edu.odu.cs441.sro"
@@ -27,4 +29,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compile 'org.jetbrains:annotations-java5:15.0'
+
 }
