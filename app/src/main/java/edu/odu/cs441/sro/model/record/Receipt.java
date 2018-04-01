@@ -60,6 +60,8 @@ public class Receipt implements Comparable<Receipt>, Serializable, Cloneable, Pa
         mMethod = new Method(uuid);
         mComment = new Comment(uuid);
         mTitle = new Title(uuid);
+
+
     }
 
     public Receipt(Receipt receipt) {
