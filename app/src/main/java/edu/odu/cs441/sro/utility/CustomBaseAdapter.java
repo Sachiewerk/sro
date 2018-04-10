@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,7 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import edu.odu.cs441.sro.R;
-import edu.odu.cs441.sro.model.record.Receipt;
+import edu.odu.cs441.sro.entity.record.Receipt;
 
 /**
  * Created by michael on 3/15/18.

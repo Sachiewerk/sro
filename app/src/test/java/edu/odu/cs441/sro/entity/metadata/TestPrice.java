@@ -1,9 +1,7 @@
-package edu.odu.cs441.sro.model.metadata;
+package edu.odu.cs441.sro.entity.metadata;
 
 import org.junit.Test;
 import java.util.UUID;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by michael on 2/16/18.

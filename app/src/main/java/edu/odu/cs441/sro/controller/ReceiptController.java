@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import edu.odu.cs441.sro.model.record.Receipt;
+import edu.odu.cs441.sro.entity.record.Receipt;
 import edu.odu.cs441.sro.repository.ReceiptRepository;
 
 /**

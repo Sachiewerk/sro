@@ -20,11 +20,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.UUID;
 import edu.odu.cs441.sro.controller.MetadataController;
 import edu.odu.cs441.sro.controller.ReceiptController;
-import edu.odu.cs441.sro.model.record.Receipt;
+import edu.odu.cs441.sro.entity.record.Receipt;
 import edu.odu.cs441.sro.utility.CustomBaseAdapter;
 
 /**

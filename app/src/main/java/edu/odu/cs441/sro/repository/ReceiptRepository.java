@@ -16,10 +16,9 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Comparator;
 
 import edu.odu.cs441.sro.MainActivity;
-import edu.odu.cs441.sro.model.record.Receipt;
+import edu.odu.cs441.sro.entity.record.Receipt;
 
 /**
  * Created by michael on 3/12/18.

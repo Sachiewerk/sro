@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ArrayAdapter;
@@ -34,8 +32,7 @@ import java.util.Date;
 import java.util.UUID;
 import edu.odu.cs441.sro.controller.MetadataController;
 import edu.odu.cs441.sro.controller.ReceiptController;
-import edu.odu.cs441.sro.model.metadata.DateTime;
-import edu.odu.cs441.sro.model.record.Receipt;
+import edu.odu.cs441.sro.entity.record.Receipt;
 import edu.odu.cs441.sro.utility.NumberTextWatcher;
 
 /**
@@ -139,7 +136,7 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
         TextView dateView = findViewById(R.id.photo_receipt_add_textview_date);
 
         // Create a temporary DateTime for date formatting
-        DateTime dateTime = new DateTime(mUUID.toString(), mDate);
+        Date dateTime = new Date();
         dateView.setText(dateTime.toString());
     }
 

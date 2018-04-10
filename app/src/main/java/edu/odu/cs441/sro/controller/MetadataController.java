@@ -19,9 +19,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import edu.odu.cs441.sro.MainActivity;
-import edu.odu.cs441.sro.model.metadata.Category;
-import edu.odu.cs441.sro.model.metadata.Location;
-import edu.odu.cs441.sro.model.metadata.Method;
+import edu.odu.cs441.sro.entity.metadata.Category;
+import edu.odu.cs441.sro.entity.metadata.Location;
+import edu.odu.cs441.sro.entity.metadata.Method;
 
 /**
  * Created by michael on 3/12/18.
