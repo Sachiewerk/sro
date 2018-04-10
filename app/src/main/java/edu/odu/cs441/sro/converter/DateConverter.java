@@ -1,4 +1,4 @@
-package edu.odu.cs441.sro.utility.converter;
+package edu.odu.cs441.sro.converter;
 
 import android.arch.persistence.room.TypeConverter;
 import java.util.Date;

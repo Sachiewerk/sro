@@ -19,7 +19,7 @@ public class Method {
     private String method;
 
     public Method(@NonNull String method) {
-        this.method = method;
+        this.method = method.toUpperCase();
     }
 
     @NonNull
@@ -28,6 +28,6 @@ public class Method {
     }
 
     public void setMethod(@NonNull String method) {
-        this.method = method;
+        this.method = method.toUpperCase();
     }
 }

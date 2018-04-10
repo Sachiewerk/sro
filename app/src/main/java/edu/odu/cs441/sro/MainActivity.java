@@ -21,8 +21,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import java.io.File;
 import java.util.UUID;
-import edu.odu.cs441.sro.controller.MetadataController;
-import edu.odu.cs441.sro.controller.ReceiptController;
+import edu.odu.cs441.sro.dao.metadata.CategoryDao;
+import edu.odu.cs441.sro.dao.record.ReceiptDao;
 import edu.odu.cs441.sro.entity.record.Receipt;
 import edu.odu.cs441.sro.utility.CustomBaseAdapter;
 
@@ -32,8 +32,8 @@ import edu.odu.cs441.sro.utility.CustomBaseAdapter;
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     // Controllers
-    MetadataController mMetaDataController;
-    ReceiptController mReceiptController;
+    CategoryDao mMetaDataController;
+    ReceiptDao mReceiptController;
 
     // Navigation Drawer
     private DrawerLayout mDrawerLayout;
@@ -77,8 +77,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mMetaDataController = new MetadataController();
-        mReceiptController = new ReceiptController();
+        mMetaDataController = new CategoryDao();
+        mReceiptController = new ReceiptDao();
 
         // Add predefined toolbar layout that has the App title and Drawer buttons
         // as the action bar

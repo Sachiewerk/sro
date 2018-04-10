@@ -2,9 +2,12 @@ package edu.odu.cs441.sro.entity.record;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
-
+import edu.odu.cs441.sro.entity.metadata.Category;
+import edu.odu.cs441.sro.entity.metadata.Location;
+import edu.odu.cs441.sro.entity.metadata.Method;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
@@ -12,7 +15,31 @@ import java.util.UUID;
 /**
  * Created by michael on 2/17/18.
  */
-@Entity(tableName = "receipt")
+@Entity(
+        tableName = "receipt",
+        foreignKeys = {
+                @ForeignKey(
+                        entity = Category.class,
+                        parentColumns = "category",
+                        childColumns = "category",
+                        onUpdate = ForeignKey.CASCADE,
+                        onDelete = ForeignKey.SET_NULL
+                ),
+                @ForeignKey(
+                        entity = Location.class,
+                        parentColumns = "location",
+                        childColumns = "location",
+                        onUpdate = ForeignKey.CASCADE,
+                        onDelete = ForeignKey.SET_NULL
+                ),
+                @ForeignKey(
+                        entity = Method.class,
+                        parentColumns = "method",
+                        childColumns = "method",
+                        onUpdate = ForeignKey.CASCADE,
+                        onDelete = ForeignKey.SET_NULL
+                )
+        })
 public class Receipt {
 
     @PrimaryKey
@@ -124,7 +151,7 @@ public class Receipt {
     }
 
     public void setLocation(String location) {
-        this.location = location;
+        this.location = location.toUpperCase();
     }
 
     public BigDecimal getPrice() {
@@ -140,7 +167,7 @@ public class Receipt {
     }
 
     public void setCategory(String category) {
-        this.category = category;
+        this.category = category.toUpperCase();
     }
 
     public String getMethod() {
@@ -148,7 +175,7 @@ public class Receipt {
     }
 
     public void setMethod(String method) {
-        this.method = method;
+        this.method = method.toUpperCase();
     }
 
     public String getComment() {

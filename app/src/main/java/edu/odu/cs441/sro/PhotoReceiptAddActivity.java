@@ -30,8 +30,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
-import edu.odu.cs441.sro.controller.MetadataController;
-import edu.odu.cs441.sro.controller.ReceiptController;
+import edu.odu.cs441.sro.dao.metadata.CategoryDao;
+import edu.odu.cs441.sro.dao.record.ReceiptDao;
 import edu.odu.cs441.sro.entity.record.Receipt;
 import edu.odu.cs441.sro.utility.NumberTextWatcher;
 
@@ -41,8 +41,8 @@ import edu.odu.cs441.sro.utility.NumberTextWatcher;
 public class PhotoReceiptAddActivity extends AppCompatActivity {
 
     // Controllers
-    MetadataController mMetadataController;
-    private ReceiptController mReceiptController;
+    CategoryDao mMetadataController;
+    private ReceiptDao mReceiptController;
 
     // Hold a reference to the current animator,
     // so that it can be canceled mid-way.
@@ -89,12 +89,12 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
 
         mUUID = (UUID)getIntent().getSerializableExtra(MainActivity.MY_UUID_INTENT_IDENTIFIER);
         mMetadataController =
-                (MetadataController)getIntent().getSerializableExtra
+                (CategoryDao)getIntent().getSerializableExtra
                         (MainActivity.MY_METADATA_CONTROLLER_OBJECT_INTENT_IDENTIFIER);
 
         mDate = new Date();
 
-        mReceiptController = new ReceiptController();
+        mReceiptController = new ReceiptDao();
 
         // Initialize other private variables
         mLocationList = mMetadataController.getLocationList();

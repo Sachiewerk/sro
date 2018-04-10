@@ -6,7 +6,9 @@ package edu.odu.cs441.sro.entity.record;
 
 public class Subscription {
 
-    public Subscription(String uuid) {
+    private String subscriptionKey;
+
+    public Subscription(String subscriptionKey) {
 
     }
 }

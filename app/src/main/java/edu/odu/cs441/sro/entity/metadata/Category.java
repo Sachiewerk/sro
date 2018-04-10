@@ -20,7 +20,7 @@ public class Category {
     private String category;
 
     public Category(@NonNull String category) {
-        this.category = category;
+        this.category = category.toUpperCase();
     }
 
     @NonNull
@@ -29,6 +29,6 @@ public class Category {
     }
 
     public void setCategory(@NonNull String category) {
-        this.category = category;
+        this.category = category.toUpperCase();
     }
 }

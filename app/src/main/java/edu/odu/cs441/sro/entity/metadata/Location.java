@@ -19,7 +19,7 @@ public class Location {
     private String location;
 
     public Location(@NonNull String location) {
-        this.location = location;
+        this.location = location.toUpperCase();
     }
 
     @NonNull
@@ -28,6 +28,6 @@ public class Location {
     }
 
     public void setLocation(@NonNull String location) {
-        this.location = location;
+        this.location = location.toUpperCase();
     }
 }
