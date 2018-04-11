@@ -17,7 +17,7 @@ import edu.odu.cs441.sro.entity.record.Receipt;
 @Dao
 public interface ReceiptDao {
 
-    @Query("SELECT * FROM receipt ORDER BY created_date ASC")
+    @Query("SELECT * FROM receipt ORDER BY created_date DESC")
     LiveData<List<Receipt>> findAll();
 
     @Insert

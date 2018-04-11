@@ -39,6 +39,7 @@ import edu.odu.cs441.sro.entity.metadata.Location;
 import edu.odu.cs441.sro.entity.metadata.Method;
 import edu.odu.cs441.sro.entity.record.Receipt;
 import edu.odu.cs441.sro.utility.NumberTextWatcher;
+import edu.odu.cs441.sro.utility.StringPriceParser;
 import edu.odu.cs441.sro.viewmodel.metadata.CategoryViewModel;
 import edu.odu.cs441.sro.viewmodel.metadata.LocationViewModel;
 import edu.odu.cs441.sro.viewmodel.metadata.MethodViewModel;
@@ -271,22 +272,19 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
                 String price = mPriceAutoCompleteTextView.getText().toString();
                 String comment = mCommentEditText.getText().toString();
 
-                price = price.replace("$", "").trim();
-                Double doublePrice = Double.valueOf(price);
-                BigDecimal bdPrice = BigDecimal.valueOf(doublePrice);
+                categoryViewModel.insert(new Category(category));
+                locationViewModel.insert(new Location(location));
+                methodViewModel.insert(new Method(method));
 
                 Receipt receipt = new Receipt(mUUID.toString(), mDate, mImageFile.getAbsolutePath());
                 receipt.setTitle(title);
                 receipt.setCategory(category);
                 receipt.setLocation(location);
                 receipt.setMethod(method);
-                receipt.setPrice(bdPrice);
+                receipt.setPrice(new StringPriceParser(price).getDecimalValue());
                 receipt.setComment(comment);
 
                 receiptViewModel.insert(receipt);
-                categoryViewModel.insert(new Category(category));
-                locationViewModel.insert(new Location(location));
-                methodViewModel.insert(new Method(method));
 
                 setResult(RESULT_OK);
                 finish();

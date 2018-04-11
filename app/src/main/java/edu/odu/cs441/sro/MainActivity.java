@@ -28,7 +28,7 @@ import java.util.UUID;
 import edu.odu.cs441.sro.entity.metadata.Location;
 import edu.odu.cs441.sro.entity.metadata.Method;
 import edu.odu.cs441.sro.entity.record.Receipt;
-import edu.odu.cs441.sro.utility.ReceiptBaseAdapter;
+import edu.odu.cs441.sro.utility.view.ReceiptBaseAdapter;
 import edu.odu.cs441.sro.viewmodel.metadata.CategoryViewModel;
 import edu.odu.cs441.sro.viewmodel.metadata.LocationViewModel;
 import edu.odu.cs441.sro.viewmodel.metadata.MethodViewModel;
@@ -118,7 +118,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
         mListView.setAdapter(mAdapter);
-        mListView.setOnItemClickListener(this);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // TODO Receipt is clicked
+            }
+        });
 
         // Initialize Custom Navigation Drawers
         initializeDrawers();

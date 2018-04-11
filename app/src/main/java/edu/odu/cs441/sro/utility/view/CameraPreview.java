@@ -1,4 +1,4 @@
-package edu.odu.cs441.sro.utility;
+package edu.odu.cs441.sro.utility.view;
 
 import android.app.Activity;
 import android.content.Context;

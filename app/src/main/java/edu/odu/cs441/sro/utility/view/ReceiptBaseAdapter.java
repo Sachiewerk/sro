@@ -1,4 +1,4 @@
-package edu.odu.cs441.sro.utility;
+package edu.odu.cs441.sro.utility.view;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,12 +15,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import edu.odu.cs441.sro.R;
 import edu.odu.cs441.sro.entity.record.Receipt;
+import edu.odu.cs441.sro.utility.StringPriceParser;
 
 /**
  * Created by michael on 3/15/18.
@@ -72,7 +74,7 @@ public class ReceiptBaseAdapter extends BaseAdapter {
 
         holder.txtDate.setText(MY_DATE_LABEL + receipt.getCreatedDate());
         holder.txtTitle.setText(receipt.getTitle());
-        holder.txtPrice.setText(MY_PRICE_LABEL + receipt.getPrice());
+        holder.txtPrice.setText(MY_PRICE_LABEL + new StringPriceParser(receipt.getPrice()).getStringValue());
         holder.txtLocation.setText(MY_LOCATION_LABEL + receipt.getLocation());
 
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();

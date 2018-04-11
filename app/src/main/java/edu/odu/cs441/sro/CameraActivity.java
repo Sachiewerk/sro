@@ -14,7 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.UUID;
-import edu.odu.cs441.sro.utility.CameraPreview;
+import edu.odu.cs441.sro.utility.view.CameraPreview;
 import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
 
 /**

@@ -15,31 +15,7 @@ import java.util.UUID;
 /**
  * Created by michael on 2/17/18.
  */
-@Entity(
-        tableName = "receipt",
-        foreignKeys = {
-                @ForeignKey(
-                        entity = Category.class,
-                        parentColumns = "category",
-                        childColumns = "category",
-                        onUpdate = ForeignKey.CASCADE,
-                        onDelete = ForeignKey.SET_NULL
-                ),
-                @ForeignKey(
-                        entity = Location.class,
-                        parentColumns = "location",
-                        childColumns = "location",
-                        onUpdate = ForeignKey.CASCADE,
-                        onDelete = ForeignKey.SET_NULL
-                ),
-                @ForeignKey(
-                        entity = Method.class,
-                        parentColumns = "method",
-                        childColumns = "method",
-                        onUpdate = ForeignKey.CASCADE,
-                        onDelete = ForeignKey.SET_NULL
-                )
-        })
+@Entity(tableName = "receipt")
 public class Receipt {
 
     @PrimaryKey
