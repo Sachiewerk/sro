@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import edu.odu.cs441.sro.R;
 import edu.odu.cs441.sro.entity.record.Receipt;
@@ -24,17 +26,17 @@ import edu.odu.cs441.sro.entity.record.Receipt;
  * Created by michael on 3/15/18.
  */
 
-public class CustomBaseAdapter extends BaseAdapter {
+public class ReceiptBaseAdapter extends BaseAdapter {
     private final String MY_LOCATION_LABEL = "Location: ";
     private final String MY_PRICE_LABEL = "Subtotal: ";
     private final String MY_DATE_LABEL = "Date: ";
 
     private Context mContext;
-    private ArrayList<Receipt> mReceiptCollection;
+    private List<Receipt> mReceiptCollection;
 
-    public CustomBaseAdapter(Context context, ArrayList<Receipt> receiptCollection) {
+    public ReceiptBaseAdapter(Context context) {
+        mReceiptCollection = new ArrayList<>();
         mContext = context;
-        mReceiptCollection = receiptCollection;
     }
 
     /*private view holder class*/
@@ -68,18 +70,18 @@ public class CustomBaseAdapter extends BaseAdapter {
 
         Receipt receipt = (Receipt) getItem(position);
 
-        holder.txtDate.setText(MY_DATE_LABEL + receipt.getDateTimeFormattedString());
+        holder.txtDate.setText(MY_DATE_LABEL + receipt.getCreatedDate());
         holder.txtTitle.setText(receipt.getTitle());
-        holder.txtPrice.setText(MY_PRICE_LABEL + receipt.getPriceWithCurrencySymbol());
+        holder.txtPrice.setText(MY_PRICE_LABEL + receipt.getPrice());
         holder.txtLocation.setText(MY_LOCATION_LABEL + receipt.getLocation());
 
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
 
         // Hook up clicks on the thumbnail views.
-        Bitmap bitmap = BitmapFactory.decodeFile(receipt.getImageFile().getAbsolutePath(),bmOptions);
+        Bitmap bitmap = BitmapFactory.decodeFile(receipt.getImageFilePath(), bmOptions);
 
         try {
-            final Bitmap mBitmap = modifyOrientation(bitmap, receipt.getImageFile().getAbsolutePath());
+            final Bitmap mBitmap = modifyOrientation(bitmap, receipt.getImageFilePath());
 
 
             holder.imageView.setImageBitmap(mBitmap);
@@ -94,6 +96,11 @@ public class CustomBaseAdapter extends BaseAdapter {
         }
 
         return convertView;
+    }
+
+    public void setItems(List<Receipt> receipts) {
+        mReceiptCollection.clear();
+        mReceiptCollection.addAll(receipts);
     }
 
     @Override

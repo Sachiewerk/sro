@@ -4,13 +4,15 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.content.Intent;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.media.ExifInterface;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -27,22 +29,31 @@ import android.widget.TextView;
 import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
-import edu.odu.cs441.sro.dao.metadata.CategoryDao;
-import edu.odu.cs441.sro.dao.record.ReceiptDao;
+import edu.odu.cs441.sro.entity.metadata.Category;
+import edu.odu.cs441.sro.entity.metadata.Location;
+import edu.odu.cs441.sro.entity.metadata.Method;
 import edu.odu.cs441.sro.entity.record.Receipt;
 import edu.odu.cs441.sro.utility.NumberTextWatcher;
+import edu.odu.cs441.sro.viewmodel.metadata.CategoryViewModel;
+import edu.odu.cs441.sro.viewmodel.metadata.LocationViewModel;
+import edu.odu.cs441.sro.viewmodel.metadata.MethodViewModel;
+import edu.odu.cs441.sro.viewmodel.record.ReceiptViewModel;
 
 /**
  *
  */
 public class PhotoReceiptAddActivity extends AppCompatActivity {
 
-    // Controllers
-    CategoryDao mMetadataController;
-    private ReceiptDao mReceiptController;
+    // ViewModels
+    ReceiptViewModel receiptViewModel;
+    LocationViewModel locationViewModel;
+    CategoryViewModel categoryViewModel;
+    MethodViewModel methodViewModel;
 
     // Hold a reference to the current animator,
     // so that it can be canceled mid-way.
@@ -88,18 +99,50 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
                 (File)getIntent().getSerializableExtra(MainActivity.MY_IMAGE_FILE_INTENT_IDENTIFIER);
 
         mUUID = (UUID)getIntent().getSerializableExtra(MainActivity.MY_UUID_INTENT_IDENTIFIER);
-        mMetadataController =
-                (CategoryDao)getIntent().getSerializableExtra
-                        (MainActivity.MY_METADATA_CONTROLLER_OBJECT_INTENT_IDENTIFIER);
 
         mDate = new Date();
 
-        mReceiptController = new ReceiptDao();
+        receiptViewModel = ViewModelProviders.of(this).get(ReceiptViewModel.class);
+        locationViewModel = ViewModelProviders.of(this).get(LocationViewModel.class);
+        categoryViewModel = ViewModelProviders.of(this).get(CategoryViewModel.class);
+        methodViewModel = ViewModelProviders.of(this).get(MethodViewModel.class);
 
-        // Initialize other private variables
-        mLocationList = mMetadataController.getLocationList();
-        mCategoryList = mMetadataController.getCategoryList();
-        mMethodList = mMetadataController.getMethodList();
+
+
+        mLocationList = new ArrayList<> ();
+        locationViewModel.findAll().observe(this, new Observer<List<Location>>() {
+            @Override
+            public void onChanged(@Nullable List<Location> locations) {
+                mLocationList.clear();
+                for(Location location : locations) {
+                    mLocationList.add(location.getLocation());
+                }
+            }
+        });
+
+        mCategoryList = new ArrayList<> ();
+        categoryViewModel.findAll().observe(this, new Observer<List<Category>>() {
+            @Override
+            public void onChanged(@Nullable List<Category> categories) {
+                mCategoryList.clear();
+                for(Category category : categories) {
+                    mCategoryList.add(category.getCategory());
+                }
+            }
+        });
+
+
+        mMethodList = new ArrayList<> ();
+        methodViewModel.findAll().observe(this, new Observer<List<Method>>() {
+            @Override
+            public void onChanged(@Nullable List<Method> methods) {
+                mMethodList.clear();
+                for(Method method : methods) {
+                    mMethodList.add(method.getMethod());
+                }
+            }
+        });
+
 
         mTitleEditText = findViewById(R.id.photo_receipt_add_edittext_title);
         mLocationAutoCompleteTextView =
@@ -123,7 +166,6 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
                 this, android.R.layout.select_dialog_singlechoice, mCategoryList);
         mMethodAutoCompleteAdapter = new ArrayAdapter<>(
                 this, android.R.layout.select_dialog_singlechoice, mMethodList);
-
 
         setThumbnailImage();
         setReceiptDate();
@@ -222,15 +264,29 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 //TODO Add the Receipt object created from this Activity
+                String title = mTitleEditText.getText().toString();
+                String category = mCategoryAutoCompleteTextView.getText().toString();
+                String location = mLocationAutoCompleteTextView.getText().toString();
+                String method = mMethodAutoCompleteTextView.getText().toString();
+                String price = mPriceAutoCompleteTextView.getText().toString();
+                String comment = mCommentEditText.getText().toString();
 
-                Receipt receipt = new Receipt(mUUID.toString(), mDate, mImageFile);
-                receipt.setTitle(mTitleEditText.getText().toString());
-                receipt.setCategory(mCategoryAutoCompleteTextView.getText().toString());
-                receipt.setLocation(mLocationAutoCompleteTextView.getText().toString());
-                receipt.setMethod(mMethodAutoCompleteTextView.getText().toString());
-                receipt.setPrice(mPriceAutoCompleteTextView.getText().toString());
-                receipt.setComment(mCommentEditText.getText().toString());
-                mReceiptController.addReceipt(receipt);
+                price = price.replace("$", "").trim();
+                Double doublePrice = Double.valueOf(price);
+                BigDecimal bdPrice = BigDecimal.valueOf(doublePrice);
+
+                Receipt receipt = new Receipt(mUUID.toString(), mDate, mImageFile.getAbsolutePath());
+                receipt.setTitle(title);
+                receipt.setCategory(category);
+                receipt.setLocation(location);
+                receipt.setMethod(method);
+                receipt.setPrice(bdPrice);
+                receipt.setComment(comment);
+
+                receiptViewModel.insert(receipt);
+                categoryViewModel.insert(new Category(category));
+                locationViewModel.insert(new Location(location));
+                methodViewModel.insert(new Method(method));
 
                 setResult(RESULT_OK);
                 finish();
@@ -256,13 +312,8 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
                 // Delete the image file of this activity
                 mImageFile.delete();
 
-                // User may be discarding the receipt created by this Activity, but there
-                // may be child activities from other instances of this Activity. Save them.
-                Intent data = new Intent();
-                data.putExtra(MainActivity.MY_RECEIPT_OBJECTS_INTENT_IDENTIFIER, mReceiptController.getReceipts());
-
                 // Set the result to canceled
-                setResult(RESULT_CANCELED, data);
+                setResult(RESULT_CANCELED);
 
                 // Close this activty and return to parent activity
                 finish();

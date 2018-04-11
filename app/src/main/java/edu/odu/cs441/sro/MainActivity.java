@@ -1,9 +1,12 @@
 package edu.odu.cs441.sro;
 
 import android.Manifest;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -13,33 +16,41 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import java.io.File;
+import java.util.List;
 import java.util.UUID;
-import edu.odu.cs441.sro.dao.metadata.CategoryDao;
-import edu.odu.cs441.sro.dao.record.ReceiptDao;
+
+import edu.odu.cs441.sro.entity.metadata.Location;
+import edu.odu.cs441.sro.entity.metadata.Method;
 import edu.odu.cs441.sro.entity.record.Receipt;
-import edu.odu.cs441.sro.utility.CustomBaseAdapter;
+import edu.odu.cs441.sro.utility.ReceiptBaseAdapter;
+import edu.odu.cs441.sro.viewmodel.metadata.CategoryViewModel;
+import edu.odu.cs441.sro.viewmodel.metadata.LocationViewModel;
+import edu.odu.cs441.sro.viewmodel.metadata.MethodViewModel;
+import edu.odu.cs441.sro.viewmodel.record.ReceiptViewModel;
+import edu.odu.cs441.sro.entity.metadata.Category;
 
 /**
  * This is the main Activity of this application.
  */
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
-    // Controllers
-    CategoryDao mMetaDataController;
-    ReceiptDao mReceiptController;
+    // ViewModels
+    ReceiptViewModel receiptViewModel;
+    LocationViewModel locationViewModel;
+    CategoryViewModel categoryViewModel;
+    MethodViewModel methodViewModel;
 
     // Navigation Drawer
     private DrawerLayout mDrawerLayout;
 
     // Custom BaseAdapter
-    CustomBaseAdapter mAdapter;
+    ReceiptBaseAdapter mAdapter;
 
     // Receipt ListView
     ListView mListView;
@@ -77,9 +88,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mMetaDataController = new CategoryDao();
-        mReceiptController = new ReceiptDao();
-
         // Add predefined toolbar layout that has the App title and Drawer buttons
         // as the action bar
         setSupportActionBar((Toolbar)findViewById(R.id.main_toolbar));
@@ -95,8 +103,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         actionbar.setHomeAsUpIndicator(R.drawable.ic_view_headline_black_24dp);
         actionbar.setDisplayShowCustomEnabled(true);
 
-        // Initialize the listView
-        initializeListView();
+        receiptViewModel = ViewModelProviders.of(this).get(ReceiptViewModel.class);
+        locationViewModel = ViewModelProviders.of(this).get(LocationViewModel.class);
+        categoryViewModel = ViewModelProviders.of(this).get(CategoryViewModel.class);
+        methodViewModel = ViewModelProviders.of(this).get(MethodViewModel.class);
+
+        mListView = findViewById(R.id.main_listView);
+        mAdapter = new ReceiptBaseAdapter(this);
+        receiptViewModel.findAll().observe(this, new Observer<List<Receipt>>() {
+            @Override
+            public void onChanged(@Nullable List<Receipt> receipts) {
+                mAdapter.setItems(receipts);
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+        mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(this);
 
         // Initialize Custom Navigation Drawers
         initializeDrawers();
@@ -104,32 +126,26 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         initializeReceipts();
     }
 
-    private void initializeListView() {
-        mListView = findViewById(R.id.main_listView);
-        mAdapter = new CustomBaseAdapter(this, mReceiptController.getReceipts());
-        mListView.setAdapter(mAdapter);
-        mListView.setOnItemClickListener(this);
-    }
 
     private void initializeReceipts() {
-        mMetaDataController.addCategory("Grocery");
-        mMetaDataController.addCategory("Electronics");
-        mMetaDataController.addCategory("Furniture");
-        mMetaDataController.addCategory("Restaurant");
-        mMetaDataController.addCategory("Entertainment");
+        categoryViewModel.insert(new Category("Grocery"));
+        categoryViewModel.insert(new Category("Electronics"));
+        categoryViewModel.insert(new Category("Furniture"));
+        categoryViewModel.insert(new Category("Restaurant"));
+        categoryViewModel.insert(new Category("Entertainment"));
 
-        mMetaDataController.addLocation("Walmart");
-        mMetaDataController.addLocation("Pizzahut");
-        mMetaDataController.addLocation("Lowe's");
-        mMetaDataController.addLocation("McDonald's");
-        mMetaDataController.addLocation("Foodlion");
+        locationViewModel.insert(new Location("Walmart"));
+        locationViewModel.insert(new Location("Pizzahut"));
+        locationViewModel.insert(new Location("Lowe's"));
+        locationViewModel.insert(new Location("McDonald's"));
+        locationViewModel.insert(new Location("Foodlion"));
 
-        mMetaDataController.addMethod("Cash");
-        mMetaDataController.addMethod("Credit Card");
-        mMetaDataController.addMethod("Money Order");
-        mMetaDataController.addMethod("Check");
-        mMetaDataController.addMethod("Debit Card");
-        mMetaDataController.addMethod("Paypal");
+        methodViewModel.insert(new Method("Cash"));
+        methodViewModel.insert(new Method("Credit Card"));
+        methodViewModel.insert(new Method("Money Order"));
+        methodViewModel.insert(new Method("Check"));
+        methodViewModel.insert(new Method("Debit Card"));
+        methodViewModel.insert(new Method("Paypal"));
     }
 
     /**
@@ -307,8 +323,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 Intent intent = new Intent(this, PhotoReceiptAddActivity.class);
                 intent.putExtra(MY_IMAGE_FILE_INTENT_IDENTIFIER, imageFile);
                 intent.putExtra(MY_UUID_INTENT_IDENTIFIER, uuid);
-                intent.putExtra
-                        (MY_METADATA_CONTROLLER_OBJECT_INTENT_IDENTIFIER, mMetaDataController);
 
                 // Start PhotoReceiptAddActivity
                 startActivityForResult(intent, MY_PHOTO_RECEIPT_ADD_ACTIVITY_REQUEST_CODE);
@@ -323,17 +337,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // Check if the request code is for the PhotoReceiptAddActivity
         if(requestCode == MY_PHOTO_RECEIPT_ADD_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-
-                mMetaDataController.save();
-                mReceiptController.refresh();
-                mAdapter.notifyDataSetChanged();
-
-                Log.d("NUMBER!!!!!!", "The number is " + mReceiptController.getReceipts().size());
-
-                for(Receipt receipt : mReceiptController.getReceipts()) {
-                    Log.d("UUID Message","UUID of " + receipt.getTitle() + " is " + receipt.getUUID());
-                }
-                //TODO Receive the Receipt object and save the receipt
+                //TODO
             }
         }
     }

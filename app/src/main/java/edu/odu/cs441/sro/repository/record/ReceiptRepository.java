@@ -16,7 +16,7 @@ public class ReceiptRepository {
     private ReceiptDao receiptDao;
     private LiveData<List<Receipt>> allReceipts;
 
-    ReceiptRepository(Application application) {
+    public ReceiptRepository(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
         receiptDao = db.receiptDao();
         allReceipts = receiptDao.findAll();
