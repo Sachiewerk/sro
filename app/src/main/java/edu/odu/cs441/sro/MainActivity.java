@@ -195,6 +195,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                 return true;
 
                             case R.id.nav_setting:
+                               startSettingsActivty();
 
                                 return true;
                         }
@@ -302,6 +303,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             Intent intent = new Intent(this, CameraActivity.class);
             startActivityForResult(intent, MY_CAMERA_ACTIVITY_REQUEST_CODE);
         }
+    }
+
+    public void startSettingsActivty(){
+        Intent settingsIntent = new Intent(this,SettingsActivity.class);
+        startActivity(settingsIntent);
     }
 
 
