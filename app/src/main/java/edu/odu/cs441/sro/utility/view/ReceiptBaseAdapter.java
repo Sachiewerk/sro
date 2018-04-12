@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.joda.time.format.DateTimeFormat;
+
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -72,7 +74,7 @@ public class ReceiptBaseAdapter extends BaseAdapter {
 
         Receipt receipt = (Receipt) getItem(position);
 
-        holder.txtDate.setText(MY_DATE_LABEL + receipt.getCreatedDate());
+        holder.txtDate.setText(MY_DATE_LABEL + receipt.getCreatedDate().toString(DateTimeFormat.shortDateTime()));
         holder.txtTitle.setText(receipt.getTitle());
         holder.txtPrice.setText(MY_PRICE_LABEL + new StringPriceParser(receipt.getPrice()).getStringValue());
         holder.txtLocation.setText(MY_LOCATION_LABEL + receipt.getLocation());

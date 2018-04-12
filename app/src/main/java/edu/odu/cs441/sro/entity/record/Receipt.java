@@ -5,6 +5,9 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
+
+import org.joda.time.DateTime;
+
 import edu.odu.cs441.sro.entity.metadata.Category;
 import edu.odu.cs441.sro.entity.metadata.Location;
 import edu.odu.cs441.sro.entity.metadata.Method;
@@ -30,7 +33,7 @@ public class Receipt {
     private String imageFilePath;
 
     @ColumnInfo(name = "created_date")
-    private Date createdDate;
+    private DateTime createdDate;
 
     @ColumnInfo(name = "title")
     private String title;
@@ -54,7 +57,7 @@ public class Receipt {
         receiptKey = UUID.randomUUID().toString();
     }
 
-    public Receipt(@NonNull String receiptKey, Date date, String imageFilePath) {
+    public Receipt(@NonNull String receiptKey, DateTime date, String imageFilePath) {
         this.receiptKey = receiptKey;
         createdDate = date;
         subscriptionKey = null;
@@ -68,7 +71,7 @@ public class Receipt {
         title = null;
     }
 
-    public Receipt(@NonNull String receiptKey, String subscriptionKey, Date date, String imageFilePath) {
+    public Receipt(@NonNull String receiptKey, String subscriptionKey, DateTime date, String imageFilePath) {
         this.receiptKey = receiptKey;
         this.subscriptionKey = subscriptionKey;
         this.imageFilePath = imageFilePath;
@@ -106,11 +109,11 @@ public class Receipt {
         this.imageFilePath = imageFilePath;
     }
 
-    public Date getCreatedDate() {
+    public DateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(DateTime createdDate) {
         this.createdDate = createdDate;
     }
 

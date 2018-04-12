@@ -21,10 +21,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 import java.io.File;
 import java.util.List;
 import java.util.UUID;
-
 import edu.odu.cs441.sro.entity.metadata.Location;
 import edu.odu.cs441.sro.entity.metadata.Method;
 import edu.odu.cs441.sro.entity.record.Receipt;
@@ -38,22 +38,22 @@ import edu.odu.cs441.sro.entity.metadata.Category;
 /**
  * This is the main Activity of this application.
  */
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class MainActivity extends AppCompatActivity {
 
     // ViewModels
-    ReceiptViewModel receiptViewModel;
-    LocationViewModel locationViewModel;
-    CategoryViewModel categoryViewModel;
-    MethodViewModel methodViewModel;
+    private ReceiptViewModel receiptViewModel;
+    private LocationViewModel locationViewModel;
+    private CategoryViewModel categoryViewModel;
+    private MethodViewModel methodViewModel;
 
     // Navigation Drawer
     private DrawerLayout mDrawerLayout;
 
-    // Custom BaseAdapter
-    ReceiptBaseAdapter mAdapter;
+    // Receipt BaseAdapter
+    private ReceiptBaseAdapter mAdapter;
 
     // Receipt ListView
-    ListView mListView;
+    private ListView mListView;
 
     // Request codes for user permissions
     private final int MY_CAMERA_REQUEST_CODE = 100;
@@ -61,23 +61,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     // Request code for child activity
     private final int MY_CAMERA_ACTIVITY_REQUEST_CODE = 1000;
-    private final int MY_PHOTO_RECEIPT_ADD_ACTIVITY_REQUEST_CODE = 2000;
 
     // Identifiers for Intent data
     public static final String MY_UUID_INTENT_IDENTIFIER = "UUID";
-    public static final String MY_DATE_INTENT_IDENTIFIER = "DATE";
     public static final String MY_IMAGE_FILE_INTENT_IDENTIFIER = "IMAGE_FILE";
-    public static final String MY_RECEIPT_OBJECTS_INTENT_IDENTIFIER = "RECEIPT_OBJECT";
-    public static final String MY_METADATA_CONTROLLER_OBJECT_INTENT_IDENTIFIER =
-            "METADATA_CONTROLLER";
 
     // File Directory names
     public static final String MY_SRO_MAIN_DIRECTORY = "SRO";
     public static final String MY_IMAGE_DIRECTORY = "Images";
     public static final String MY_RECEIPT_DIRECTORY = "Data";
-
-    // Tag Not Specified Literal
-    public static final String NOT_SPECIFIED_LITERAL = "[Not Specified]";
 
     /**
      * This method is invoked when this Activity is first created.
@@ -103,12 +95,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         actionbar.setHomeAsUpIndicator(R.drawable.ic_view_headline_black_24dp);
         actionbar.setDisplayShowCustomEnabled(true);
 
+        // Instantiate the View Models
         receiptViewModel = ViewModelProviders.of(this).get(ReceiptViewModel.class);
         locationViewModel = ViewModelProviders.of(this).get(LocationViewModel.class);
         categoryViewModel = ViewModelProviders.of(this).get(CategoryViewModel.class);
         methodViewModel = ViewModelProviders.of(this).get(MethodViewModel.class);
 
         mListView = findViewById(R.id.main_listView);
+
         mAdapter = new ReceiptBaseAdapter(this);
         receiptViewModel.findAll().observe(this, new Observer<List<Receipt>>() {
             @Override
@@ -121,18 +115,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // TODO Receipt is clicked
+                Receipt receipt = receiptViewModel.findAll().getValue().get(position);
+                startReceiptViewActivity(receipt);
             }
         });
 
         // Initialize Custom Navigation Drawers
         initializeDrawers();
 
-        initializeReceipts();
+        initializeMetadata();
     }
 
-
-    private void initializeReceipts() {
+    /**
+     * If there is no base metadata, create basic metadata information
+     */
+    private void initializeMetadata() {
         categoryViewModel.insert(new Category("Grocery"));
         categoryViewModel.insert(new Category("Electronics"));
         categoryViewModel.insert(new Category("Furniture"));
@@ -232,8 +229,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             case R.id.add_photo_receipt:
                                 if(checkCameraHardware(getApplicationContext())) {
                                     startCameraActivity();
-
-
                                 } else {
                                     //TODO Camera was not found on this device. Create no photo
                                     //TODO receipt instead
@@ -288,12 +283,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position,
-                            long id) {
-
-    }
-
+    /**
+     * Start the camera activity for taking a photo of a receipt
+     */
     public void startCameraActivity() {
 
         // Start the Camera activity after Camera and Write External Storage permissions
@@ -304,6 +296,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    /**
+     * Open Receipt Information
+     * @param receipt Receipt
+     */
+    private void startReceiptViewActivity(Receipt receipt) {
+        Intent intent = new Intent(this, ReceiptViewActivity.class);
+        intent.putExtra(ReceiptViewActivity.RECEIPT_UNIQUE_IDENTIFIER, receipt.getReceiptKey());
+        startActivity(intent);
+    }
 
     /**
      * This method is invoked when an Activity started for result returns a result
@@ -330,19 +331,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 intent.putExtra(MY_UUID_INTENT_IDENTIFIER, uuid);
 
                 // Start PhotoReceiptAddActivity
-                startActivityForResult(intent, MY_PHOTO_RECEIPT_ADD_ACTIVITY_REQUEST_CODE);
+                startActivity(intent);
             }
             // Unsuccessful Result
             else {
-                //TODO what should we do if the CameraActivity returns bad result?
-                //TODO Maybe image file was not successfully saved or camera stopped working.
-            }
-        }
-
-        // Check if the request code is for the PhotoReceiptAddActivity
-        if(requestCode == MY_PHOTO_RECEIPT_ADD_ACTIVITY_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                //TODO
+                Toast.makeText(this, R.string.camera_preview_error, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -404,7 +397,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     startCameraActivity();
 
                 } else {
-                    //TODO Permission is denied. You are not able to save any data on user's SD card.
+                    //TODO Permission is denied. You are not able to save any photo.
                     //TODO Go ahead and store all information in its own private internal storage.
                 }
 

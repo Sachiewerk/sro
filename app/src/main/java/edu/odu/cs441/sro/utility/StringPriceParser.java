@@ -35,6 +35,6 @@ public class StringPriceParser {
         if(decimalPrice != null) {
             stringPrice = decimalPrice.setScale(2).toString();
         }
-        return stringPrice;
+        return "$" + stringPrice;
     }
 }

@@ -38,8 +38,9 @@ public class ReceiptRepository {
         new UpdateAsyncTask(receiptDao).execute(receipt);
     }
 
-
-
+    public Receipt findByKey(String receiptKey) {
+        return receiptDao.findByKey(receiptKey);
+    }
 
     private static class InsertAsyncTask extends AsyncTask<Receipt, Void, Void> {
         private ReceiptDao receiptDao;
