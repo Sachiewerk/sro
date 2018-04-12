@@ -78,8 +78,6 @@ public class ReceiptViewActivity extends AppCompatActivity {
         TextView priceTextView = findViewById(R.id.receipt_view_textview_value_price);
         TextView commentTextView = findViewById(R.id.receipt_view_textview_value_comment);
 
-
-
         titleTextView.setText(receipt.getTitle());
         dateTextView.setText(receipt.getCreatedDate().toString(DateTimeFormat.shortDateTime()));
         categoryTextView.setText(receipt.getCategory());

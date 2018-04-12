@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -12,7 +12,6 @@
             android:id="@+id/photo_receipt_add_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:layout_alignParentTop="true"
             android:background="@color/colorPrimaryDark"
             app:titleTextColor="@android:color/white">
 
@@ -38,45 +37,41 @@
             android:id="@+id/photo_receipt_add_receipt_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/photo_receipt_add_toolbar"
-            android:layout_centerInParent="true"
+            android:layout_gravity="center"
             android:layout_marginBottom="20dp"
             android:layout_marginTop="20dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textAlignment="center"
-            android:textSize="@dimen/main_app_title_text_size" />
+            android:textSize="@dimen/main_app_title_text_size"
+            android:text="TEST"/>
 
         <TextView
             android:id="@+id/photo_receipt_add_textview_date"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/photo_receipt_add_receipt_title"
             android:text="Date:"
-            android:textAlignment="center"
+            android:layout_gravity="center"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
         <ImageButton
             android:id="@+id/photo_receipt_add_image_button"
             android:layout_width="100dp"
             android:layout_height="150dp"
-            android:layout_below="@+id/photo_receipt_add_textview_date"
-            android:layout_centerInParent="true"
+            android:layout_gravity="center"
             android:layout_marginBottom="20dp"
             android:contentDescription="@string/activity_photo_receipt_add_imagebutton_description"
             android:scaleType="centerCrop" />
 
-
         <ScrollView
             android:id="@+id/photo_receipt_add_scrollview"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/photo_receipt_add_image_button"
             android:fillViewport="true">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/photo_receipt_add_textview_title"
@@ -91,7 +86,6 @@
                     android:id="@+id/photo_receipt_add_edittext_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/photo_receipt_add_textview_title"
                     android:inputType="text"
                     android:maxLines="1" />
 
@@ -99,7 +93,6 @@
                     android:id="@+id/photo_receipt_add_textview_location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/photo_receipt_add_edittext_title"
                     android:layout_marginTop="20dp"
                     android:labelFor="@+id/photo_receipt_add_autoCompleteTextview_location"
                     android:text="Location:"
@@ -109,7 +102,6 @@
                     android:id="@+id/photo_receipt_add_autoCompleteTextview_location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/photo_receipt_add_textview_location"
                     android:inputType="text"
                     android:maxLines="1"
                     android:imeOptions="actionNext" />
@@ -118,7 +110,6 @@
                     android:id="@+id/photo_receipt_add_textview_price"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/photo_receipt_add_autoCompleteTextview_location"
                     android:layout_marginTop="20dp"
                     android:labelFor="@+id/photo_receipt_add_autoCompleteTextview_price"
                     android:text="Price:"
@@ -128,7 +119,6 @@
                     android:id="@+id/photo_receipt_add_autoCompleteTextview_price"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/photo_receipt_add_textview_price"
                     android:inputType="numberDecimal"
                     android:maxLines="1"
                     android:imeOptions="actionNext" />
@@ -137,7 +127,6 @@
                     android:id="@+id/photo_receipt_add_textview_category"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/photo_receipt_add_autoCompleteTextview_price"
                     android:layout_marginTop="20dp"
                     android:labelFor="@+id/photo_receipt_add_autoCompleteTextview_category"
                     android:text="Category:"
@@ -147,7 +136,6 @@
                     android:id="@+id/photo_receipt_add_autoCompleteTextview_category"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/photo_receipt_add_textview_category"
                     android:inputType="text"
                     android:maxLines="1"
                     android:imeOptions="actionNext" />
@@ -156,7 +144,6 @@
                     android:id="@+id/photo_receipt_add_textview_method"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/photo_receipt_add_autoCompleteTextview_category"
                     android:layout_marginTop="20dp"
                     android:labelFor="@+id/photo_receipt_add_autoCompleteTextview_method"
                     android:text="Payment Method:"
@@ -166,7 +153,6 @@
                     android:id="@+id/photo_receipt_add_autoCompleteTextview_method"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/photo_receipt_add_textview_method"
                     android:inputType="text"
                     android:maxLines="1"
                     android:imeOptions="actionNext" />
@@ -175,7 +161,6 @@
                     android:id="@+id/photo_receipt_add_textview_comment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/photo_receipt_add_autoCompleteTextview_method"
                     android:layout_marginTop="20dp"
                     android:labelFor="@+id/photo_receipt_add_edittext_comment"
                     android:text="Comment:"
@@ -185,37 +170,32 @@
                     android:id="@+id/photo_receipt_add_edittext_comment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/photo_receipt_add_textview_comment"
                     android:hint="Enter any comments here."
                     android:inputType="textMultiLine"
                     android:imeOptions="actionDone"/>
-
-                <Button
-                    android:id="@+id/photo_receipt_add_Button_Save"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_below="@+id/photo_receipt_add_edittext_comment"
-                    android:text="Save" />
+                    android:orientation="horizontal"
+                    android:layout_gravity="center">
 
-                <Button
-                    android:id="@+id/photo_receipt_add_Button_Split"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/photo_receipt_add_edittext_comment"
-                    android:layout_centerInParent="true"
-                    android:text="Split" />
 
-                <Button
-                    android:id="@+id/photo_receipt_add_Button_Discard"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_below="@+id/photo_receipt_add_edittext_comment"
-                    android:text="Discard" />
-            </RelativeLayout>
+                    <Button
+                        android:id="@+id/photo_receipt_add_Button_Save"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="30dp"
+                        android:text="Save" />
+
+                    <Button
+                        android:id="@+id/photo_receipt_add_Button_Discard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Discard" />
+                </LinearLayout>
+            </LinearLayout>
         </ScrollView>
-    </RelativeLayout>
+    </LinearLayout>
 
     <!-- This initially-hidden ImageView will hold the expanded/zoomed version of
          the images above. Without transformations applied, it takes up the entire
