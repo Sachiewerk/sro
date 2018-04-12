@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,17 +13,20 @@ import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.media.ExifInterface;
+import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.joda.time.format.DateTimeFormat;
-
 import java.io.File;
 import java.io.IOException;
 import edu.odu.cs441.sro.entity.record.Receipt;
@@ -32,6 +36,8 @@ import edu.odu.cs441.sro.viewmodel.record.ReceiptViewModel;
 public class ReceiptViewActivity extends AppCompatActivity {
 
     public static String RECEIPT_UNIQUE_IDENTIFIER = "RECEIPT_PRIMARY_KEY";
+
+    private String emailAddress;
 
     private Receipt receipt;
     private ReceiptViewModel receiptViewModel;
@@ -65,11 +71,12 @@ public class ReceiptViewActivity extends AppCompatActivity {
 
         mImageFile = new File(receipt.getImageFilePath());
 
-        initializeViews();
+        initializeTextViews();
+        initializeButtons();
         setThumbnailImage();
     }
 
-    private void initializeViews() {
+    private void initializeTextViews() {
         TextView titleTextView = findViewById(R.id.receipt_view_receipt_title);
         TextView dateTextView = findViewById(R.id.receipt_view_textview_date);
         TextView categoryTextView = findViewById(R.id.receipt_view_textview_value_category);
@@ -85,6 +92,88 @@ public class ReceiptViewActivity extends AppCompatActivity {
         methodTextView.setText(receipt.getMethod());
         priceTextView.setText(new StringPriceParser(receipt.getPrice()).getStringValue());
         commentTextView.setText(receipt.getComment());
+    }
+
+    private void initializeButtons() {
+        Button closeButton = findViewById(R.id.receipt_view_button_close);
+        Button sendButton = findViewById(R.id.receipt_view_button_send);
+        Button splitButton = findViewById(R.id.receipt_view_button_split);
+        Button editButton = findViewById(R.id.receipt_view_button_edit);
+
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendEmailAttachment();
+            }
+        });
+
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
+    private void sendEmailAttachment() {
+        LayoutInflater li = LayoutInflater.from(this);
+        View promptsView = li.inflate(R.layout.input_prompt_email_address, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                this);
+
+        // set prompts.xml to alertdialog builder
+        alertDialogBuilder.setView(promptsView);
+
+        final EditText userInput = promptsView.findViewById(R.id.input_prompt_email_address_edittext);
+        // set dialog message
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                // get user input and set it to result
+                                // edit text
+                                emailAddress = userInput.getText().toString();
+                                startEmailIntent();
+                            }
+                        })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                emailAddress = null;
+                                dialog.cancel();
+                            }
+                        });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+    }
+
+    private void startEmailIntent() {
+        if(emailAddress != null && !emailAddress.isEmpty()) {
+            Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+            emailIntent.setType("application/image");
+            emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{emailAddress});
+            emailIntent.putExtra(
+                    android.content.Intent.EXTRA_SUBJECT,
+                    "Receipt Photo from SRO: " + receipt.getTitle());
+            emailIntent.putExtra(
+                    android.content.Intent.EXTRA_TEXT,
+                    "Here is the photo of receipt: " + receipt.getTitle());
+            emailIntent.putExtra(
+                    Intent.EXTRA_STREAM,
+                    FileProvider.getUriForFile(
+                            this,
+                            "edu.odu.cs441.sro",
+                            new File(receipt.getImageFilePath())
+                    )
+            );
+            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+        }
     }
 
     /**

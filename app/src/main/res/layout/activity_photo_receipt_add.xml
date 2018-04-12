@@ -42,8 +42,7 @@
             android:layout_marginTop="20dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textSize="@dimen/main_app_title_text_size"
-            android:text="TEST"/>
+            android:textSize="@dimen/main_app_title_text_size" />
 
         <TextView
             android:id="@+id/photo_receipt_add_textview_date"
