@@ -20,6 +20,9 @@ public interface CategoryDao {
     @Query("SELECT * FROM category ORDER BY category ASC")
     LiveData<List<Category>> findAll();
 
+    @Query("SELECT COUNT(*) FROM category")
+    int getCount();
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Category category);
 

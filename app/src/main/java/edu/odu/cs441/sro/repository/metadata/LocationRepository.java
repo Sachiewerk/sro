@@ -35,6 +35,10 @@ public class LocationRepository {
         new UpdateAsyncTask(locationDao).execute(location);
     }
 
+    public int getCount() {
+        return locationDao.getCount();
+    }
+
     private static class InsertAsyncTask extends AsyncTask<Location, Void, Void> {
         private LocationDao locationDao;
 

@@ -15,6 +15,9 @@ public interface MethodDao {
     @Query("SELECT * FROM method ORDER BY method ASC")
     LiveData<List<Method>> findAll();
 
+    @Query("SELECT COUNT(*) from method")
+    int getCount();
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Method method);
 

@@ -34,4 +34,6 @@ public class LocationViewModel extends AndroidViewModel {
         locationRepository.delete(locations);
     }
 
+    public int getCount() { return locationRepository.getCount(); }
+
 }

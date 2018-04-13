@@ -35,6 +35,10 @@ public class MethodRepository {
         new UpdateAsyncTask(methodDao).execute(method);
     }
 
+    public int getCount() {
+        return methodDao.getCount();
+    }
+
     private static class InsertAsyncTask extends AsyncTask<Method, Void, Void> {
         private MethodDao methodDao;
 
