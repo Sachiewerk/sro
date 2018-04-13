@@ -221,7 +221,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (!methodEntryBox.getText().toString().isEmpty()) {
                     ///add the text from the box to the list
-                    ///create a new Method and add it to the data base
+                    ///create a new Method and add it to the data base 
                 }
             }
         });
