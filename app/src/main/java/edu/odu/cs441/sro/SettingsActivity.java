@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -65,6 +66,14 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //Toast.makeText(SettingsActivity.this,"Location",Toast.LENGTH_LONG).show();
                 addOrDeleteLocation();
+            }
+        });
+
+        Button addCategoryButton = (Button)findViewById(R.id.addCategoryButton);
+        addCategoryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addOrDeleteCategory();
             }
         });
 
@@ -154,6 +163,8 @@ public class SettingsActivity extends AppCompatActivity {
         Button addMethodButton = (Button) mView.findViewById(R.id.addSomethingButton);
         ListView addMethodListView = (ListView) mView.findViewById(R.id.addSomethingListview);
         final EditText methodEntryBox = (EditText) mView.findViewById(R.id.addMethodBox);
+        final TextView LocationLabel = (TextView)mView.findViewById(R.id.addMethodLabel);
+        LocationLabel.setText("Method");
         addMethodButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -185,6 +196,8 @@ public class SettingsActivity extends AppCompatActivity {
         Button addMethodButton = (Button) mView.findViewById(R.id.addSomethingButton);
         ListView addMethodListView = (ListView) mView.findViewById(R.id.addSomethingListview);
         final EditText methodEntryBox = (EditText) mView.findViewById(R.id.addMethodBox);
+        final TextView LocationLabel = (TextView)mView.findViewById(R.id.addMethodLabel);
+        LocationLabel.setText("Category");
         methodEntryBox.setHint("Enter the New Category Here");
         addMethodButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -215,13 +228,15 @@ public class SettingsActivity extends AppCompatActivity {
         Button addMethodButton = (Button) mView.findViewById(R.id.addSomethingButton);
         ListView addMethodListView = (ListView) mView.findViewById(R.id.addSomethingListview);
         final EditText methodEntryBox = (EditText) mView.findViewById(R.id.addMethodBox);
+        final TextView LocationLabel = (TextView)mView.findViewById(R.id.addMethodLabel);
+        LocationLabel.setText("Location");
         methodEntryBox.setHint("Enter the New Location Here");
         addMethodButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!methodEntryBox.getText().toString().isEmpty()) {
                     ///add the text from the box to the list
-                    ///create a new Method and add it to the data base 
+                    ///create a new Method and add it to the data base
                 }
             }
         });
