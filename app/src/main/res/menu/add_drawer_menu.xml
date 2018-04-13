@@ -4,14 +4,14 @@
         <item
             android:id="@+id/add_photo_receipt"
             android:icon="@drawable/ic_photo_camera"
-            android:title="Add Receipt with Photo" />
+            android:title="Receipt with Photo" />
         <item
             android:id="@+id/add_nophoto_receipt"
             android:icon="@drawable/ic_nonphoto_receipt"
-            android:title="Add Receipt without Photo" />
+            android:title="Receipt without Photo" />
         <item
             android:id="@+id/add_subscription"
             android:icon="@drawable/ic_subscription"
-            android:title="Add Subscription" />
+            android:title="Subscription" />
     </group>
 </menu>

@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         actionbar.setDisplayHomeAsUpEnabled(true);
 
         // Change the default icon of the home button to the predefined headline icon
-        actionbar.setHomeAsUpIndicator(R.drawable.ic_view_headline_black_24dp);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_view_headline_white_24dp);
         actionbar.setDisplayShowCustomEnabled(true);
 
         // Instantiate the View Models
