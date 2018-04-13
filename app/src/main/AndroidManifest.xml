@@ -28,7 +28,7 @@
                 android:resource="@xml/photo_file_path"/>
         </provider>
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,10 +36,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CameraActivity"
+            android:name=".activity.CameraActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".PhotoReceiptAddActivity" />
-        <activity android:name=".ReceiptViewActivity" />
+        <activity android:name=".activity.PhotoReceiptAddActivity" />
+        <activity android:name=".activity.ReceiptViewActivity" />
     </application>
 
 </manifest>

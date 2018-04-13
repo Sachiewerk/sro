@@ -1,4 +1,4 @@
-package edu.odu.cs441.sro.utility;
+package edu.odu.cs441.sro.utility.data;
 
 import java.math.BigDecimal;
 

@@ -17,14 +17,12 @@ import android.widget.Toast;
 import org.joda.time.format.DateTimeFormat;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import edu.odu.cs441.sro.R;
 import edu.odu.cs441.sro.entity.record.Receipt;
-import edu.odu.cs441.sro.utility.StringPriceParser;
+import edu.odu.cs441.sro.utility.data.StringPriceParser;
 
 /**
  * Created by michael on 3/15/18.
