@@ -1,4 +1,4 @@
-package edu.odu.cs441.sro.utility;
+package edu.odu.cs441.sro.utility.data;
 
 import java.math.BigDecimal;
 
@@ -35,6 +35,6 @@ public class StringPriceParser {
         if(decimalPrice != null) {
             stringPrice = decimalPrice.setScale(2).toString();
         }
-        return stringPrice;
+        return "$" + stringPrice;
     }
 }

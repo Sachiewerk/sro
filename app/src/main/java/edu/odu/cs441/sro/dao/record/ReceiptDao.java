@@ -20,6 +20,9 @@ public interface ReceiptDao {
     @Query("SELECT * FROM receipt ORDER BY created_date DESC")
     LiveData<List<Receipt>> findAll();
 
+    @Query("SELECT * FROM receipt WHERE receipt_key = :receiptKey")
+    Receipt findByKey(String receiptKey);
+
     @Insert
     void insert(Receipt receipt);
 

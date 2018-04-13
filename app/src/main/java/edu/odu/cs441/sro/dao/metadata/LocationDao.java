@@ -16,6 +16,9 @@ public interface LocationDao {
     @Query("SELECT * FROM location ORDER BY location ASC")
     LiveData<List<Location>> findAll();
 
+    @Query("SELECT COUNT(*) FROM location")
+    int getCount();
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Location location);
 

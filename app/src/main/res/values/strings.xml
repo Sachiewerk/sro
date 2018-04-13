@@ -1,14 +1,13 @@
 <resources>
     <string name="app_name">SRO</string>
     <string name="title_activity_main_left_navigation_drawer">MainLeftNavigationDrawer</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="action_add">Add New Item</string>
     <string name="main_app_title">Smart Receipt Organizer</string>
     <string name="activity_camera_capture_text">Capture</string>
     <string name="activity_photo_receipt_add_title_text">Add Receipt</string>
     <string name="activity_photo_receipt_add_imagebutton_description">Click to Enlarge</string>
     <string name="activity_photo_receipt_add_imageview_description">Touch Anywhere to Close</string>
+    <string name="camera_preview_error">Camera Error</string>
 </resources>

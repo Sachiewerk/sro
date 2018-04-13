@@ -1,9 +1,6 @@
-package edu.odu.cs441.sro;
+package edu.odu.cs441.sro.activity;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,11 +11,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
+import edu.odu.cs441.sro.R;
 import edu.odu.cs441.sro.entity.metadata.Category;
 import edu.odu.cs441.sro.entity.metadata.Location;
 import edu.odu.cs441.sro.entity.metadata.Method;
@@ -43,7 +40,7 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
 
-        receiptViewModel = ViewModelProviders.of(this).get(ReceiptViewModel.class);
+       /* receiptViewModel = ViewModelProviders.of(this).get(ReceiptViewModel.class);
         locationViewModel = ViewModelProviders.of(this).get(LocationViewModel.class);
         categoryViewModel = ViewModelProviders.of(this).get(CategoryViewModel.class);
         methodViewModel = ViewModelProviders.of(this).get(MethodViewModel.class);
@@ -83,7 +80,7 @@ public class SettingsActivity extends AppCompatActivity {
         //add ListView with onItemClickListeners
 
         //add backButton
-
+*/
     }
 
     public ArrayList<String> getMySortByList(ArrayList<String> myList) {
@@ -158,17 +155,27 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void addOrDeleteMethod() {
+        ArrayList methodList = new ArrayList() ;
+        ArrayAdapter myAdapter;
+        final ArrayList myMethodList = new ArrayList();
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(SettingsActivity.this);
         final View mView = getLayoutInflater().inflate(R.layout.addmethodlayout, null);
         Button addMethodButton = (Button) mView.findViewById(R.id.addSomethingButton);
-        ListView addMethodListView = (ListView) mView.findViewById(R.id.addSomethingListview);
+        final ListView addMethodListView = (ListView) mView.findViewById(R.id.addSomethingListview);
         final EditText methodEntryBox = (EditText) mView.findViewById(R.id.addMethodBox);
         final TextView LocationLabel = (TextView)mView.findViewById(R.id.addMethodLabel);
+
+        ArrayAdapter myMethodAdapter = new ArrayAdapter<>(
+                this, android.R.layout.select_dialog_singlechoice, methodList);
+                    addMethodListView.setAdapter(myMethodAdapter);
+
         LocationLabel.setText("Method");
         addMethodButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!methodEntryBox.getText().toString().isEmpty()) {
+                    myMethodList.add(methodEntryBox.getText().toString());
+                    addMethodListView.invalidateViews();
                     ///add the text from the box to the list
                     ///create a new Method and add it to the data base
                 }

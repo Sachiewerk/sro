@@ -22,6 +22,10 @@ public class ReceiptViewModel extends AndroidViewModel {
         return allReceipts;
     }
 
+    public Receipt findByKey(String receiptKey) {
+        return receiptRepository.findByKey(receiptKey);
+    }
+
     public void insert(Receipt receipt) {
         receiptRepository.insert(receipt);
     }

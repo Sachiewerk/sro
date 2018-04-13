@@ -14,15 +14,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.joda.time.format.DateTimeFormat;
+
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import edu.odu.cs441.sro.R;
 import edu.odu.cs441.sro.entity.record.Receipt;
-import edu.odu.cs441.sro.utility.StringPriceParser;
+import edu.odu.cs441.sro.utility.data.StringPriceParser;
 
 /**
  * Created by michael on 3/15/18.
@@ -32,6 +32,7 @@ public class ReceiptBaseAdapter extends BaseAdapter {
     private final String MY_LOCATION_LABEL = "Location: ";
     private final String MY_PRICE_LABEL = "Subtotal: ";
     private final String MY_DATE_LABEL = "Date: ";
+    private final String MY_CATEGORY_LABEL = "Category: ";
 
     private Context mContext;
     private List<Receipt> mReceiptCollection;
@@ -48,6 +49,7 @@ public class ReceiptBaseAdapter extends BaseAdapter {
         TextView txtDate;
         TextView txtPrice;
         TextView txtLocation;
+        TextView txtCategory;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -62,8 +64,8 @@ public class ReceiptBaseAdapter extends BaseAdapter {
             holder.txtTitle = (TextView) convertView.findViewById(R.id.custom_listview_row_item_receipt_title);
             holder.txtPrice = (TextView) convertView.findViewById(R.id.custom_listview_row_item_receipt_price);
             holder.txtLocation = (TextView) convertView.findViewById(R.id.custom_listview_row_item_receipt_location);
+            holder.txtCategory = (TextView) convertView.findViewById(R.id.custom_listview_row_item_receipt_category);
             holder.imageView = (ImageView) convertView.findViewById(R.id.custom_listview_row_item_icon);
-
             convertView.setTag(holder);
         }
         else {
@@ -72,10 +74,11 @@ public class ReceiptBaseAdapter extends BaseAdapter {
 
         Receipt receipt = (Receipt) getItem(position);
 
-        holder.txtDate.setText(MY_DATE_LABEL + receipt.getCreatedDate());
+        holder.txtDate.setText(MY_DATE_LABEL + receipt.getCreatedDate().toString(DateTimeFormat.shortDateTime()));
         holder.txtTitle.setText(receipt.getTitle());
         holder.txtPrice.setText(MY_PRICE_LABEL + new StringPriceParser(receipt.getPrice()).getStringValue());
         holder.txtLocation.setText(MY_LOCATION_LABEL + receipt.getLocation());
+        holder.txtCategory.setText(MY_CATEGORY_LABEL + receipt.getCategory());
 
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
 

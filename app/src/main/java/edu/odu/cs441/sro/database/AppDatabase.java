@@ -20,7 +20,7 @@ import edu.odu.cs441.sro.entity.metadata.Location;
 import edu.odu.cs441.sro.entity.metadata.Method;
 import edu.odu.cs441.sro.entity.record.Receipt;
 
-@Database(entities = {Receipt.class, Location.class, Category.class, Method.class}, version = 2)
+@Database(entities = {Receipt.class, Location.class, Category.class, Method.class}, version = 3)
 @TypeConverters({DateConverter.class, PriceConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 
