@@ -118,9 +118,13 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
                 for(Location location : locations) {
                     mLocationList.add(location.getLocation());
                 }
+
             }
         });
-
+        if(mLocationList.isEmpty())
+        {
+            Toast.makeText(this,"ERROR",Toast.LENGTH_LONG).show();
+        }
         mCategoryList = new ArrayList<> ();
         categoryViewModel.findAll().observe(this, new Observer<List<Category>>() {
             @Override
