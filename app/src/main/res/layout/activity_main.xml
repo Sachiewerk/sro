@@ -57,6 +57,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:choiceMode="singleChoice"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:listSelector="@android:color/holo_blue_dark"
             android:layout_below="@+id/main_listViewLabel" />
 

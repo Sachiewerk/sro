@@ -34,6 +34,7 @@ public class ReceiptBaseAdapter extends BaseAdapter {
     private final String MY_LOCATION_LABEL = "Location: ";
     private final String MY_PRICE_LABEL = "Subtotal: ";
     private final String MY_DATE_LABEL = "Date: ";
+    private final String MY_CATEGORY_LABEL = "Category: ";
 
     private Context mContext;
     private List<Receipt> mReceiptCollection;
@@ -50,6 +51,7 @@ public class ReceiptBaseAdapter extends BaseAdapter {
         TextView txtDate;
         TextView txtPrice;
         TextView txtLocation;
+        TextView txtCategory;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -64,8 +66,8 @@ public class ReceiptBaseAdapter extends BaseAdapter {
             holder.txtTitle = (TextView) convertView.findViewById(R.id.custom_listview_row_item_receipt_title);
             holder.txtPrice = (TextView) convertView.findViewById(R.id.custom_listview_row_item_receipt_price);
             holder.txtLocation = (TextView) convertView.findViewById(R.id.custom_listview_row_item_receipt_location);
+            holder.txtCategory = (TextView) convertView.findViewById(R.id.custom_listview_row_item_receipt_category);
             holder.imageView = (ImageView) convertView.findViewById(R.id.custom_listview_row_item_icon);
-
             convertView.setTag(holder);
         }
         else {
@@ -78,6 +80,7 @@ public class ReceiptBaseAdapter extends BaseAdapter {
         holder.txtTitle.setText(receipt.getTitle());
         holder.txtPrice.setText(MY_PRICE_LABEL + new StringPriceParser(receipt.getPrice()).getStringValue());
         holder.txtLocation.setText(MY_LOCATION_LABEL + receipt.getLocation());
+        holder.txtCategory.setText(MY_CATEGORY_LABEL + receipt.getCategory());
 
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
 

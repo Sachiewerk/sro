@@ -4,6 +4,7 @@ import android.Manifest;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.Nullable;
@@ -13,10 +14,14 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.view.ActionMode;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -28,6 +33,7 @@ import java.util.UUID;
 import edu.odu.cs441.sro.entity.metadata.Location;
 import edu.odu.cs441.sro.entity.metadata.Method;
 import edu.odu.cs441.sro.entity.record.Receipt;
+import edu.odu.cs441.sro.intent.EmailReceiptIntent;
 import edu.odu.cs441.sro.utility.view.ReceiptBaseAdapter;
 import edu.odu.cs441.sro.viewmodel.metadata.CategoryViewModel;
 import edu.odu.cs441.sro.viewmodel.metadata.LocationViewModel;
@@ -66,10 +72,12 @@ public class MainActivity extends AppCompatActivity {
     public static final String MY_UUID_INTENT_IDENTIFIER = "UUID";
     public static final String MY_IMAGE_FILE_INTENT_IDENTIFIER = "IMAGE_FILE";
 
+    // Variable to keep track of selected item index in the Receipt ListView
+    private int longSelectedItemIndex = -1;
+
     // File Directory names
     public static final String MY_SRO_MAIN_DIRECTORY = "SRO";
     public static final String MY_IMAGE_DIRECTORY = "Images";
-    public static final String MY_RECEIPT_DIRECTORY = "Data";
 
     /**
      * This method is invoked when this Activity is first created.
@@ -112,11 +120,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mListView.setAdapter(mAdapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Receipt receipt = receiptViewModel.findAll().getValue().get(position);
-                startReceiptViewActivity(receipt);
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                longSelectedItemIndex = position;
+                showMenu(view);
+                return false;
             }
         });
 
@@ -247,6 +257,67 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
+    }
+
+    /**
+     * Show Action Menu when user long clicks a Receipt in the ListView
+     * @param view
+     */
+    private void showMenu(View view) {
+        PopupMenu popup = new PopupMenu(this, view);
+
+        // This activity implements OnMenuItemClickListener
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Receipt receipt = receiptViewModel.findAll().getValue().get(longSelectedItemIndex);
+                switch (item.getItemId()) {
+                    case R.id.item_action_open:
+                        startReceiptViewActivity(receipt);
+                        return true;
+                    case R.id.item_action_edit:
+                        // Edit Receipt
+                        return true;
+                    case R.id.item_action_send:
+                        emailReceipt(receipt);
+                        return true;
+                    case R.id.item_action_delete:
+                        showDeleteConfirmation();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+        popup.inflate(R.menu.item_action_menu);
+        popup.show();
+    }
+
+    /**
+     * E-mail receipt
+     * @param receipt Receipt
+     */
+    private void emailReceipt(Receipt receipt) {
+        EmailReceiptIntent emailReceiptIntent = new EmailReceiptIntent(this);
+        emailReceiptIntent.sendEmail(receipt);
+    }
+
+    /**
+     * Show delete receipt confirmation popup when user selects to delete a receipt
+     */
+    private void showDeleteConfirmation() {
+        new AlertDialog.Builder(this)
+                .setTitle("Confirm")
+                .setMessage("Do you really want to delete the receipt?")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        Receipt receipt = receiptViewModel.findAll().getValue().get(longSelectedItemIndex);
+                        File file = new File(receipt.getImageFilePath());
+                        file.delete();
+                        receiptViewModel.delete(receipt);
+                    }})
+                .setNegativeButton(android.R.string.no, null).show();
     }
 
     /**

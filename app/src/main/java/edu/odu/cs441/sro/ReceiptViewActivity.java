@@ -30,6 +30,7 @@ import org.joda.time.format.DateTimeFormat;
 import java.io.File;
 import java.io.IOException;
 import edu.odu.cs441.sro.entity.record.Receipt;
+import edu.odu.cs441.sro.intent.EmailReceiptIntent;
 import edu.odu.cs441.sro.utility.StringPriceParser;
 import edu.odu.cs441.sro.viewmodel.record.ReceiptViewModel;
 
@@ -103,7 +104,7 @@ public class ReceiptViewActivity extends AppCompatActivity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendEmailAttachment();
+                emailReceipt();
             }
         });
 
@@ -115,65 +116,9 @@ public class ReceiptViewActivity extends AppCompatActivity {
         });
     }
 
-    private void sendEmailAttachment() {
-        LayoutInflater li = LayoutInflater.from(this);
-        View promptsView = li.inflate(R.layout.input_prompt_email_address, null);
-
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                this);
-
-        // set prompts.xml to alertdialog builder
-        alertDialogBuilder.setView(promptsView);
-
-        final EditText userInput = promptsView.findViewById(R.id.input_prompt_email_address_edittext);
-        // set dialog message
-        alertDialogBuilder
-                .setCancelable(false)
-                .setPositiveButton("OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
-                                // get user input and set it to result
-                                // edit text
-                                emailAddress = userInput.getText().toString();
-                                startEmailIntent();
-                            }
-                        })
-                .setNegativeButton("Cancel",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
-                                emailAddress = null;
-                                dialog.cancel();
-                            }
-                        });
-
-        // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
-
-        // show it
-        alertDialog.show();
-    }
-
-    private void startEmailIntent() {
-        if(emailAddress != null && !emailAddress.isEmpty()) {
-            Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-            emailIntent.setType("application/image");
-            emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{emailAddress});
-            emailIntent.putExtra(
-                    android.content.Intent.EXTRA_SUBJECT,
-                    "Receipt Photo from SRO: " + receipt.getTitle());
-            emailIntent.putExtra(
-                    android.content.Intent.EXTRA_TEXT,
-                    "Here is the photo of receipt: " + receipt.getTitle());
-            emailIntent.putExtra(
-                    Intent.EXTRA_STREAM,
-                    FileProvider.getUriForFile(
-                            this,
-                            "edu.odu.cs441.sro",
-                            new File(receipt.getImageFilePath())
-                    )
-            );
-            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
-        }
+    private void emailReceipt() {
+        EmailReceiptIntent emailReceiptIntent = new EmailReceiptIntent(this);
+        emailReceiptIntent.sendEmail(receipt);
     }
 
     /**
