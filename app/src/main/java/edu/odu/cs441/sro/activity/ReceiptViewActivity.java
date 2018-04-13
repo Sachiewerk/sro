@@ -71,7 +71,10 @@ public class ReceiptViewActivity extends AppCompatActivity {
 
         initializeTextViews();
         initializeButtons();
-        setThumbnailImage();
+
+        if(mImageFile != null) {
+            setThumbnailImage();
+        }
     }
 
     private void initializeTextViews() {
