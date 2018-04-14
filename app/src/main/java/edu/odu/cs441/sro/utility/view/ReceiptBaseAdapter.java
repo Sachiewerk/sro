@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +54,7 @@ public class ReceiptBaseAdapter extends BaseAdapter {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
+        ViewHolder holder;
 
         LayoutInflater mInflater = (LayoutInflater)
                 mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
@@ -79,27 +80,20 @@ public class ReceiptBaseAdapter extends BaseAdapter {
         holder.txtPrice.setText(MY_PRICE_LABEL + new StringPriceParser(receipt.getPrice()).getStringValue());
         holder.txtLocation.setText(MY_LOCATION_LABEL + receipt.getLocation());
         holder.txtCategory.setText(MY_CATEGORY_LABEL + receipt.getCategory());
+        holder.imageView.setImageBitmap(null);
 
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        String path = receipt.getImageFilePath();
+        if(path != null) {
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            Bitmap bitmap = BitmapFactory.decodeFile(path, bmOptions);
 
-        // Hook up clicks on the thumbnail views.
-        Bitmap bitmap = BitmapFactory.decodeFile(receipt.getImageFilePath(), bmOptions);
-
-        try {
-            final Bitmap mBitmap = modifyOrientation(bitmap, receipt.getImageFilePath());
-
-
-            holder.imageView.setImageBitmap(mBitmap);
-
-        } catch(IOException e) {
-            Toast.makeText(
-                    mContext,
-                    "Error reading receipt image file",
-                    Toast.LENGTH_LONG).show();
-
-            //TODO Use the default image
+            try {
+                final Bitmap mBitmap = modifyOrientation(bitmap, path);
+                holder.imageView.setImageBitmap(mBitmap);
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
         }
-
         return convertView;
     }
 

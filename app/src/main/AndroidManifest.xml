@@ -39,7 +39,8 @@
             android:screenOrientation="portrait" />
         <activity android:name=".activity.PhotoReceiptAddActivity" />
         <activity android:name=".activity.ReceiptViewActivity" />
-        <activity android:name=".activity.ReceiptEditActivity"></activity>
+        <activity android:name=".activity.ReceiptEditActivity" />
+        <activity android:name=".activity.NoPhotoReceiptAddActivity" />
     </application>
 
 </manifest>

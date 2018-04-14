@@ -239,13 +239,11 @@ public class MainActivity extends AppCompatActivity {
                                 if(checkCameraHardware(getApplicationContext())) {
                                     startCameraActivity();
                                 } else {
-                                    //TODO Camera was not found on this device. Create no photo
-                                    //TODO receipt instead
+                                    startNoPhotoReceiptAddActivity();
                                 }
                                 return true;
-
                             case R.id.add_nophoto_receipt:
-
+                                startNoPhotoReceiptAddActivity();
                                 return true;
 
                             case R.id.add_subscription:
@@ -312,8 +310,12 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         Receipt receipt = receiptViewModel.findAll().getValue().get(longSelectedItemIndex);
-                        File file = new File(receipt.getImageFilePath());
-                        file.delete();
+
+                        if(receipt.getImageFilePath() != null) {
+                            File file = new File(receipt.getImageFilePath());
+                            file.delete();
+                        }
+
                         receiptViewModel.delete(receipt);
                     }})
                 .setNegativeButton(android.R.string.no, null).show();
@@ -366,6 +368,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void startNoPhotoReceiptAddActivity() {
+        // Add UUID and Image file data to the intent
+        Intent intent = new Intent(this, NoPhotoReceiptAddActivity.class);
+        intent.putExtra(MY_UUID_INTENT_IDENTIFIER, UUID.randomUUID());
+
+        // Start PhotoReceiptAddActivity
+        startActivity(intent);
+    }
     /**
      * Open Receipt Information
      * @param receipt Receipt
@@ -459,8 +469,7 @@ public class MainActivity extends AppCompatActivity {
                     startCameraActivity();
 
                 } else {
-                    //TODO Permission is denied. You are not able to use the camera, so create
-                    //TODO a receipt with no photo.
+                    startNoPhotoReceiptAddActivity();
                 }
 
                 return;
@@ -477,11 +486,8 @@ public class MainActivity extends AppCompatActivity {
                     startCameraActivity();
 
                 } else {
-                    //TODO Permission is denied. You are not able to save any photo.
-                    //TODO Go ahead and store all information in its own private internal storage.
+                    startNoPhotoReceiptAddActivity();
                 }
-
-                return;
             }
         }
     }

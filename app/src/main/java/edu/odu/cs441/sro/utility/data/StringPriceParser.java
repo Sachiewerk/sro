@@ -31,7 +31,7 @@ public class StringPriceParser {
     }
 
     public String getStringValue() {
-        String stringPrice = null;
+        String stringPrice = "";
         if(decimalPrice != null) {
             stringPrice = decimalPrice.setScale(2).toString();
         }

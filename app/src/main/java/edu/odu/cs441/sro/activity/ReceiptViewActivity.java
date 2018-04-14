@@ -35,8 +35,6 @@ public class ReceiptViewActivity extends AppCompatActivity {
 
     public static String RECEIPT_UNIQUE_IDENTIFIER = "RECEIPT_PRIMARY_KEY";
 
-    private String emailAddress;
-
     private Receipt receipt;
     private ReceiptViewModel receiptViewModel;
 
@@ -67,12 +65,11 @@ public class ReceiptViewActivity extends AppCompatActivity {
             finish();
         }
 
-        mImageFile = new File(receipt.getImageFilePath());
-
         initializeTextViews();
         initializeButtons();
 
-        if(mImageFile != null) {
+        if(receipt.getImageFilePath() != null) {
+            mImageFile = new File(receipt.getImageFilePath());
             setThumbnailImage();
         }
     }

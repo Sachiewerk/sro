@@ -144,9 +144,8 @@ public class ReceiptEditActivity extends AppCompatActivity {
         mMethodAutoCompleteTextView = findViewById(R.id.receipt_edit_autoCompleteTextview_method);
         mCommentEditText = findViewById(R.id.receipt_edit_edittext_comment);
 
-        mImageFile = new File(receipt.getImageFilePath());
-
-        if(mImageFile != null) {
+        if(receipt.getImageFilePath() != null) {
+            mImageFile = new File(receipt.getImageFilePath());
             setThumbnailImage();
         }
 

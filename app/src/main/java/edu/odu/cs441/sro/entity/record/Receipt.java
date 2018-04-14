@@ -57,6 +57,19 @@ public class Receipt {
         receiptKey = UUID.randomUUID().toString();
     }
 
+    public Receipt(@NonNull String receiptKey, DateTime date) {
+        this.receiptKey = receiptKey;
+        createdDate = date;
+        subscriptionKey = null;
+        this.imageFilePath = null;
+        category = null;
+        location = null;
+        price = null;
+        method = null;
+        comment = null;
+        title = null;
+    }
+
     public Receipt(@NonNull String receiptKey, DateTime date, String imageFilePath) {
         this.receiptKey = receiptKey;
         createdDate = date;
@@ -71,10 +84,10 @@ public class Receipt {
         title = null;
     }
 
-    public Receipt(@NonNull String receiptKey, String subscriptionKey, DateTime date, String imageFilePath) {
+    public Receipt(@NonNull String receiptKey, String subscriptionKey, DateTime date) {
         this.receiptKey = receiptKey;
         this.subscriptionKey = subscriptionKey;
-        this.imageFilePath = imageFilePath;
+        this.imageFilePath = null;
 
         createdDate = date;
         category = null;
