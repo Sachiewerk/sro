@@ -27,6 +27,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import java.io.File;
 import java.io.IOException;
@@ -159,7 +161,7 @@ public class ReceiptEditActivity extends AppCompatActivity {
         TextView dateView = findViewById(R.id.receipt_edit_textview_date);
         TextView titleView = findViewById(R.id.receipt_edit_receipt_title);
 
-        dateView.setText(receipt.getCreatedDate().toString(DateTimeFormat.shortDateTime()));
+        dateView.setText(new DateTime(receipt.getCreatedDate()).toString(DateTimeFormat.shortDateTime()));
         titleView.setText(receipt.getTitle());
         mTitleEditText.setText(receipt.getTitle());
         mLocationAutoCompleteTextView.setText(receipt.getLocation());

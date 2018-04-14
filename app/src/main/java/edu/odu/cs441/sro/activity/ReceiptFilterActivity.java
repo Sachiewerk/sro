@@ -3,10 +3,12 @@ package edu.odu.cs441.sro.activity;
 import android.app.DatePickerDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -278,8 +280,30 @@ public class ReceiptFilterActivity extends AppCompatActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO
+                //TODO INPUT VALIDATION
+                startReceiptResultActivity();
             }
         });
+    }
+
+    private void startReceiptResultActivity() {
+        Intent intent = new Intent(this, ReceiptResultActivity.class);
+        intent.putExtra(ReceiptResultActivity.DATE_SPECIFIED, dateEnableCheckBox.isChecked());
+        intent.putExtra(ReceiptResultActivity.LOCATION_SPECIFIED, locationEnableCheckBox.isChecked());
+        intent.putExtra(ReceiptResultActivity.CATEGORY_SPECIFIED, categoryEnableCheckBox.isChecked());
+        intent.putExtra(ReceiptResultActivity.METHOD_SPECIFIED, methodEnableCheckBox.isChecked());
+        intent.putExtra(ReceiptResultActivity.PRICE_SPECIFIED, priceEnableCheckBox.isChecked());
+
+        if(dateEnableCheckBox.isChecked()) {
+            intent.putExtra(ReceiptResultActivity.AFTER_DATE, afterDateTime.toString());
+            intent.putExtra(ReceiptResultActivity.BEFORE_DATE, beforeDateTime.toString());
+        }
+
+        if(locationEnableCheckBox.isChecked()) {
+            Location selectedLocation = (Location) locationSpinner.getSelectedItem();
+            intent.putExtra(ReceiptResultActivity.SELECTED_LOCATION, selectedLocation.getLocation());
+        }
+
+        startActivity(intent);
     }
 }

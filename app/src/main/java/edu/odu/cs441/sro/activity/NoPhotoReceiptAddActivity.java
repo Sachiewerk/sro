@@ -233,7 +233,7 @@ public class NoPhotoReceiptAddActivity extends AppCompatActivity {
                 locationViewModel.insert(new Location(location));
                 methodViewModel.insert(new Method(method));
 
-                Receipt receipt = new Receipt(mUUID.toString(), mDate);
+                Receipt receipt = new Receipt(mUUID.toString(), mDate.getMillis());
                 receipt.setTitle(title);
                 receipt.setCategory(category);
                 receipt.setLocation(location);

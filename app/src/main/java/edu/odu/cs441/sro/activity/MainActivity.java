@@ -139,24 +139,22 @@ public class MainActivity extends AppCompatActivity {
      * If there is no base metadata, create basic metadata information
      */
     private void initializeMetadata() {
-        categoryViewModel.insert(new Category("Grocery"));
-        categoryViewModel.insert(new Category("Electronics"));
-        categoryViewModel.insert(new Category("Furniture"));
-        categoryViewModel.insert(new Category("Restaurant"));
-        categoryViewModel.insert(new Category("Entertainment"));
+        if(categoryViewModel.getCount() == 0) {
+            categoryViewModel.insert(new Category("Grocery"));
+            categoryViewModel.insert(new Category("Electronics"));
+            categoryViewModel.insert(new Category("Furniture"));
+            categoryViewModel.insert(new Category("Restaurant"));
+            categoryViewModel.insert(new Category("Entertainment"));
+        }
 
-        locationViewModel.insert(new Location("Walmart"));
-        locationViewModel.insert(new Location("Pizzahut"));
-        locationViewModel.insert(new Location("Lowe's"));
-        locationViewModel.insert(new Location("McDonald's"));
-        locationViewModel.insert(new Location("Foodlion"));
-
-        methodViewModel.insert(new Method("Cash"));
-        methodViewModel.insert(new Method("Credit Card"));
-        methodViewModel.insert(new Method("Money Order"));
-        methodViewModel.insert(new Method("Check"));
-        methodViewModel.insert(new Method("Debit Card"));
-        methodViewModel.insert(new Method("Paypal"));
+        if(methodViewModel.getCount() == 0) {
+            methodViewModel.insert(new Method("Cash"));
+            methodViewModel.insert(new Method("Credit Card"));
+            methodViewModel.insert(new Method("Money Order"));
+            methodViewModel.insert(new Method("Check"));
+            methodViewModel.insert(new Method("Debit Card"));
+            methodViewModel.insert(new Method("Paypal"));
+        }
     }
 
     /**

@@ -1,16 +1,9 @@
 package edu.odu.cs441.sro.database;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
-import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
-
-import java.util.List;
-
-import edu.odu.cs441.sro.converter.DateConverter;
-import edu.odu.cs441.sro.converter.PriceConverter;
 import edu.odu.cs441.sro.dao.metadata.CategoryDao;
 import edu.odu.cs441.sro.dao.metadata.LocationDao;
 import edu.odu.cs441.sro.dao.metadata.MethodDao;
@@ -20,8 +13,7 @@ import edu.odu.cs441.sro.entity.metadata.Location;
 import edu.odu.cs441.sro.entity.metadata.Method;
 import edu.odu.cs441.sro.entity.record.Receipt;
 
-@Database(entities = {Receipt.class, Location.class, Category.class, Method.class}, version = 3, exportSchema = false)
-@TypeConverters({DateConverter.class, PriceConverter.class})
+@Database(entities = {Receipt.class, Location.class, Category.class, Method.class}, version = 4, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract ReceiptDao receiptDao();

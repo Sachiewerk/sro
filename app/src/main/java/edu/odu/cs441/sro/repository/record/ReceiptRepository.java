@@ -28,7 +28,7 @@ public class ReceiptRepository {
         return allReceipts;
     }
 
-    public LiveData<List<Receipt>> findByQuery(String query) {
+    public LiveData<List<Receipt>> findByQuery(SimpleSQLiteQuery query) {
         try {
             return new SimpleQueryAsyncTask(receiptDao).execute(query).get();
         } catch(Exception e) {
@@ -67,7 +67,7 @@ public class ReceiptRepository {
         }
     }
 
-    private static class SimpleQueryAsyncTask extends AsyncTask<String, Void, LiveData<List<Receipt>>> {
+    private static class SimpleQueryAsyncTask extends AsyncTask<SimpleSQLiteQuery, Void, LiveData<List<Receipt>>> {
         private ReceiptDao receiptDao;
 
         SimpleQueryAsyncTask(ReceiptDao receiptDao) {
@@ -75,8 +75,8 @@ public class ReceiptRepository {
         }
 
         @Override
-        protected LiveData<List<Receipt>> doInBackground(String ... params) {
-            return this.receiptDao.findByQuery(new SimpleSQLiteQuery(params[0]));
+        protected LiveData<List<Receipt>> doInBackground(SimpleSQLiteQuery ... params) {
+            return this.receiptDao.findByQuery(params[0]);
         }
     }
 

@@ -21,6 +21,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import java.io.File;
 import java.io.IOException;
@@ -84,7 +86,7 @@ public class ReceiptViewActivity extends AppCompatActivity {
         TextView commentTextView = findViewById(R.id.receipt_view_textview_value_comment);
 
         titleTextView.setText(receipt.getTitle());
-        dateTextView.setText(receipt.getCreatedDate().toString(DateTimeFormat.shortDateTime()));
+        dateTextView.setText(new DateTime(receipt.getCreatedDate()).toString(DateTimeFormat.shortDateTime()));
         categoryTextView.setText(receipt.getCategory());
         locationTextView.setText(receipt.getLocation());
         methodTextView.setText(receipt.getMethod());

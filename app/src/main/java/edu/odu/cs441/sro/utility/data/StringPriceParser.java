@@ -1,40 +1,38 @@
 package edu.odu.cs441.sro.utility.data;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 
 public class StringPriceParser {
 
     private String stringPrice;
-    private BigDecimal decimalPrice;
+    private Double decimalPrice;
 
     public StringPriceParser(String stringPrice) {
         this.stringPrice = stringPrice;
     }
 
-    public StringPriceParser(BigDecimal decimalPrice) {
+    public StringPriceParser(Double decimalPrice) {
         this.decimalPrice = decimalPrice;
     }
 
-    public BigDecimal getDecimalValue() {
-        BigDecimal bdPrice = null;
+    public Double getDecimalValue() {
         if(stringPrice != null) {
             try {
                 stringPrice = stringPrice.replace("$", "").trim();
-                Double doublePrice = Double.valueOf(stringPrice);
-                bdPrice = BigDecimal.valueOf(doublePrice);
+                return Double.valueOf(stringPrice);
             } catch(Exception e) {
                 e.printStackTrace();
-                bdPrice = null;
             }
         }
-        return bdPrice;
+        return null;
     }
 
     public String getStringValue() {
-        String stringPrice = "";
+        DecimalFormat df2 = new DecimalFormat(".##");
         if(decimalPrice != null) {
-            stringPrice = decimalPrice.setScale(2).toString();
+            return "$" + df2.format(decimalPrice);
         }
-        return "$" + stringPrice;
+        return null;
     }
 }
