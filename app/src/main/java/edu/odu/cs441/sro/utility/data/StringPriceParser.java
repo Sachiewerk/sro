@@ -20,6 +20,7 @@ public class StringPriceParser {
         if(stringPrice != null) {
             try {
                 stringPrice = stringPrice.replace("$", "").trim();
+                stringPrice = stringPrice.replaceAll(",", "");
                 return Double.valueOf(stringPrice);
             } catch(Exception e) {
                 e.printStackTrace();

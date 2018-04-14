@@ -31,6 +31,10 @@ public class ReceiptResultActivity extends AppCompatActivity {
     public static String AFTER_DATE = "AFTER DATE";
     public static String BEFORE_DATE = "BEFORE DATE";
     public static String SELECTED_LOCATION = "SELECTED_LOCATION";
+    public static String SELECTED_METHOD = "SELECTED_METHOD";
+    public static String SELECTED_CATEGORY = "SELECTED CATEGORY";
+    public static String GREATER_PRICE = "GREATER PRICE";
+    public static String LESS_PRICE = "LESS PRICE";
 
     private ReceiptViewModel receiptViewModel;
 
@@ -47,6 +51,10 @@ public class ReceiptResultActivity extends AppCompatActivity {
     private DateTime afterDateTime;
     private DateTime beforeDateTime;
     private String selectedLocation;
+    private String selectedMethod;
+    private String selectedCategory;
+    private Double greaterPrice;
+    private Double lessPrice;
 
     private ListView listView;
     private ReceiptBaseAdapter receiptBaseAdapter;
@@ -57,20 +65,7 @@ public class ReceiptResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_receipt_result);
 
         Intent data = getIntent();
-        dateSpecified = data.getBooleanExtra(DATE_SPECIFIED, false);
-        locationSpecified = data.getBooleanExtra(LOCATION_SPECIFIED,false);
-        methodSpecified = data.getBooleanExtra(METHOD_SPECIFIED, false);
-        categorySpecified = data.getBooleanExtra(CATEGORY_SPECIFIED, false);
-        priceSpecified = data.getBooleanExtra(PRICE_SPECIFIED, false);
-
-        if(dateSpecified) {
-            afterDateTime = DateTime.parse(data.getStringExtra(AFTER_DATE));
-            beforeDateTime = DateTime.parse(data.getStringExtra(BEFORE_DATE));
-        }
-
-        if(locationSpecified) {
-            selectedLocation = data.getStringExtra(SELECTED_LOCATION);
-        }
+        getIntentData(data);
 
         buildQuery();
 
@@ -89,6 +84,35 @@ public class ReceiptResultActivity extends AppCompatActivity {
         listView.setAdapter(receiptBaseAdapter);
     }
 
+    private void getIntentData(Intent data) {
+        dateSpecified = data.getBooleanExtra(DATE_SPECIFIED, false);
+        locationSpecified = data.getBooleanExtra(LOCATION_SPECIFIED,false);
+        methodSpecified = data.getBooleanExtra(METHOD_SPECIFIED, false);
+        categorySpecified = data.getBooleanExtra(CATEGORY_SPECIFIED, false);
+        priceSpecified = data.getBooleanExtra(PRICE_SPECIFIED, false);
+
+        if(dateSpecified) {
+            afterDateTime = DateTime.parse(data.getStringExtra(AFTER_DATE));
+            beforeDateTime = DateTime.parse(data.getStringExtra(BEFORE_DATE));
+        }
+
+        if(locationSpecified) {
+            selectedLocation = data.getStringExtra(SELECTED_LOCATION);
+        }
+
+        if(methodSpecified) {
+            selectedMethod = data.getStringExtra(SELECTED_METHOD);
+        }
+
+        if(categorySpecified) {
+            selectedCategory = data.getStringExtra(SELECTED_CATEGORY);
+        }
+
+        if(priceSpecified) {
+            greaterPrice = data.getDoubleExtra(GREATER_PRICE, 0.00);
+            lessPrice = data.getDoubleExtra(LESS_PRICE, 0.00);
+        }
+    }
 
     private void buildQuery() {
         firstFilter = true;
@@ -96,7 +120,7 @@ public class ReceiptResultActivity extends AppCompatActivity {
         if(dateSpecified) {
             if(firstFilter) { query += " WHERE "; firstFilter = false; }
 
-            query += "created_date BETWEEN ? AND ? ";
+            query += "created_date BETWEEN ? AND ? AND ";
             args.add(afterDateTime.getMillis());
             args.add(beforeDateTime.getMillis());
         }
@@ -104,28 +128,35 @@ public class ReceiptResultActivity extends AppCompatActivity {
         if(locationSpecified) {
             if(firstFilter) { query += " WHERE "; firstFilter = false; }
 
-            query += "location = ? ";
+            query += "location = ? AND ";
             args.add(selectedLocation);
         }
 
         if(categorySpecified) {
             if(firstFilter) { query += " WHERE "; firstFilter = false; }
 
-
+            query += "category = ? AND ";
+            args.add(selectedCategory);
         }
 
         if(methodSpecified) {
             if(firstFilter) { query += " WHERE "; firstFilter = false; }
 
-
+            query += "method = ? AND ";
+            args.add(selectedMethod);
         }
 
         if(priceSpecified) {
             if(firstFilter) { query += " WHERE "; firstFilter = false; }
 
-
+            query += "price BETWEEN ? AND ? AND ";
+            args.add(greaterPrice);
+            args.add(lessPrice);
         }
 
+        if(!firstFilter) {
+            query = query.substring(0, query.length() - 4);
+        }
         SQLiteQuery = new SimpleSQLiteQuery(query, args.toArray());
     }
 }

@@ -25,6 +25,7 @@ import edu.odu.cs441.sro.entity.metadata.Location;
 import edu.odu.cs441.sro.entity.metadata.Category;
 import edu.odu.cs441.sro.entity.metadata.Method;
 import edu.odu.cs441.sro.utility.data.NumberTextWatcher;
+import edu.odu.cs441.sro.utility.data.StringPriceParser;
 import edu.odu.cs441.sro.utility.view.CategoryArrayAdapter;
 import edu.odu.cs441.sro.utility.view.LocationArrayAdapter;
 import edu.odu.cs441.sro.utility.view.MethodArrayAdapter;
@@ -302,6 +303,26 @@ public class ReceiptFilterActivity extends AppCompatActivity {
         if(locationEnableCheckBox.isChecked()) {
             Location selectedLocation = (Location) locationSpinner.getSelectedItem();
             intent.putExtra(ReceiptResultActivity.SELECTED_LOCATION, selectedLocation.getLocation());
+        }
+
+        if(methodEnableCheckBox.isChecked()) {
+            Method selectedMethod = (Method) methodSpinner.getSelectedItem();
+            intent.putExtra(ReceiptResultActivity.SELECTED_METHOD, selectedMethod.getMethod());
+        }
+
+        if(categoryEnableCheckBox.isChecked()) {
+            Category selectedCategory = (Category) categorySpinner.getSelectedItem();
+            intent.putExtra(ReceiptResultActivity.SELECTED_CATEGORY, selectedCategory.getCategory());
+        }
+
+        if(priceEnableCheckBox.isChecked()) {
+            intent.putExtra(
+                    ReceiptResultActivity.GREATER_PRICE,
+                    new StringPriceParser(greaterPriceEditText.getText().toString()).getDecimalValue());
+            intent.putExtra(
+                    ReceiptResultActivity.LESS_PRICE,
+                    new StringPriceParser(lessPriceEditText.getText().toString()).getDecimalValue()
+            );
         }
 
         startActivity(intent);
