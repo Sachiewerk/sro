@@ -1,0 +1,214 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/receipt_edit_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+    <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+    
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/receipt_edit_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimaryDark"
+            app:titleTextColor="@android:color/white">
+    
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+    
+                <TextView
+                    android:id="@+id/receipt_edit_toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:text="Edit Receipt"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+    
+        </android.support.v7.widget.Toolbar>
+    
+        <TextView
+            android:id="@+id/receipt_edit_receipt_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="@dimen/main_app_title_text_size" />
+    
+        <TextView
+            android:id="@+id/receipt_edit_textview_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date:"
+            android:layout_gravity="center"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
+    
+        <ImageButton
+            android:id="@+id/receipt_edit_image_button"
+            android:layout_width="100dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:background="@mipmap/ic_default_image"
+            android:contentDescription="@string/activity_photo_receipt_add_imagebutton_description"
+            android:scaleType="centerCrop" />
+    
+        <ScrollView
+            android:id="@+id/receipt_edit_scrollview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true">
+    
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+    
+                <TextView
+                    android:id="@+id/receipt_edit_textview_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:labelFor="@+id/receipt_edit_edittext_title"
+                    android:text="Title:"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+    
+                <EditText
+                    android:id="@+id/receipt_edit_edittext_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLines="1" />
+    
+                <TextView
+                    android:id="@+id/receipt_edit_textview_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:labelFor="@+id/receipt_edit_autoCompleteTextview_location"
+                    android:text="Location:"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+    
+                <AutoCompleteTextView
+                    android:id="@+id/receipt_edit_autoCompleteTextview_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:imeOptions="actionNext" />
+    
+                <TextView
+                    android:id="@+id/receipt_edit_textview_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:labelFor="@+id/receipt_edit_autoCompleteTextview_price"
+                    android:text="Price:"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+    
+                <AutoCompleteTextView
+                    android:id="@+id/receipt_edit_autoCompleteTextview_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:maxLines="1"
+                    android:imeOptions="actionNext" />
+    
+                <TextView
+                    android:id="@+id/receipt_edit_textview_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:labelFor="@+id/receipt_edit_autoCompleteTextview_category"
+                    android:text="Category:"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+    
+                <AutoCompleteTextView
+                    android:id="@+id/receipt_edit_autoCompleteTextview_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:imeOptions="actionNext" />
+    
+                <TextView
+                    android:id="@+id/receipt_edit_textview_method"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:labelFor="@+id/receipt_edit_autoCompleteTextview_method"
+                    android:text="Payment Method:"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+    
+                <AutoCompleteTextView
+                    android:id="@+id/receipt_edit_autoCompleteTextview_method"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:imeOptions="actionNext" />
+    
+                <TextView
+                    android:id="@+id/receipt_edit_textview_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:labelFor="@+id/receipt_edit_edittext_comment"
+                    android:text="Comment:"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+    
+                <EditText
+                    android:id="@+id/receipt_edit_edittext_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter any comments here."
+                    android:inputType="textMultiLine"
+                    android:imeOptions="actionDone"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center">
+    
+    
+                    <Button
+                        android:id="@+id/receipt_edit_Button_Save"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="30dp"
+                        android:text="Save" />
+    
+                    <Button
+                        android:id="@+id/receipt_edit_Button_Discard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cancel" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+    
+    <!-- This initially-hidden ImageView will hold the expanded/zoomed version of
+         the images above. Without transformations applied, it takes up the entire
+         screen. To achieve the "zoom" animation, this view's bounds are animated
+         from the bounds of the thumbnail button above, to its final laid-out
+         bounds.
+         -->
+    
+    <ImageView
+        android:id="@+id/receipt_edit_expanded_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/activity_photo_receipt_add_imageview_description"
+        android:visibility="invisible" />
+
+</FrameLayout>

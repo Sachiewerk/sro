@@ -28,7 +28,6 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.List;
 import java.util.UUID;
-
 import edu.odu.cs441.sro.R;
 import edu.odu.cs441.sro.entity.metadata.Location;
 import edu.odu.cs441.sro.entity.metadata.Method;
@@ -276,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
                         startReceiptViewActivity(receipt);
                         return true;
                     case R.id.item_action_edit:
-                        // Edit Receipt
+                        startReceiptEditActivity(receipt);
                         return true;
                     case R.id.item_action_send:
                         emailReceipt(receipt);
@@ -374,6 +373,16 @@ public class MainActivity extends AppCompatActivity {
     private void startReceiptViewActivity(Receipt receipt) {
         Intent intent = new Intent(this, ReceiptViewActivity.class);
         intent.putExtra(ReceiptViewActivity.RECEIPT_UNIQUE_IDENTIFIER, receipt.getReceiptKey());
+        startActivity(intent);
+    }
+
+    /**
+     * Open Receipt Edit Activity
+     * @param receipt Receipt
+     */
+    private void startReceiptEditActivity(Receipt receipt) {
+        Intent intent = new Intent(this, ReceiptEditActivity.class);
+        intent.putExtra(ReceiptEditActivity.RECEIPT_UNIQUE_IDENTIFIER, receipt.getReceiptKey());
         startActivity(intent);
     }
 
