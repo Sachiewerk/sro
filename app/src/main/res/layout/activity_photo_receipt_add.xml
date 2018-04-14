@@ -52,15 +52,6 @@
             android:layout_gravity="center"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
-        <ImageButton
-            android:id="@+id/photo_receipt_add_image_button"
-            android:layout_width="100dp"
-            android:layout_height="150dp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="20dp"
-            android:contentDescription="@string/activity_photo_receipt_add_imagebutton_description"
-            android:scaleType="centerCrop" />
-
         <ScrollView
             android:id="@+id/photo_receipt_add_scrollview"
             android:layout_width="match_parent"
@@ -71,6 +62,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
+                <ImageButton
+                    android:id="@+id/photo_receipt_add_image_button"
+                    android:layout_width="100dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="20dp"
+                    android:contentDescription="@string/activity_photo_receipt_add_imagebutton_description"
+                    android:scaleType="centerCrop" />
 
                 <TextView
                     android:id="@+id/photo_receipt_add_textview_title"
