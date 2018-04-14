@@ -2,6 +2,8 @@ package edu.odu.cs441.sro.repository.record;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
+import android.arch.persistence.db.SimpleSQLiteQuery;
+import android.arch.persistence.db.SupportSQLiteQuery;
 import android.os.AsyncTask;
 import java.util.List;
 import edu.odu.cs441.sro.dao.record.ReceiptDao;
@@ -24,6 +26,15 @@ public class ReceiptRepository {
 
     public LiveData<List<Receipt>> findAll() {
         return allReceipts;
+    }
+
+    public LiveData<List<Receipt>> findByQuery(String query) {
+        try {
+            return new SimpleQueryAsyncTask(receiptDao).execute(query).get();
+        } catch(Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public void insert(Receipt receipt) {
@@ -53,6 +64,19 @@ public class ReceiptRepository {
         protected Void doInBackground(final Receipt ... params) {
             this.receiptDao.insert(params[0]);
             return null;
+        }
+    }
+
+    private static class SimpleQueryAsyncTask extends AsyncTask<String, Void, LiveData<List<Receipt>>> {
+        private ReceiptDao receiptDao;
+
+        SimpleQueryAsyncTask(ReceiptDao receiptDao) {
+            this.receiptDao = receiptDao;
+        }
+
+        @Override
+        protected LiveData<List<Receipt>> doInBackground(String ... params) {
+            return this.receiptDao.findByQuery(new SimpleSQLiteQuery(params[0]));
         }
     }
 

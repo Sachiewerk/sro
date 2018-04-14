@@ -22,6 +22,10 @@ public class ReceiptViewModel extends AndroidViewModel {
         return allReceipts;
     }
 
+    public LiveData<List<Receipt>> findByQuery(String query) {
+        return receiptRepository.findByQuery(query);
+    }
+
     public Receipt findByKey(String receiptKey) {
         return receiptRepository.findByKey(receiptKey);
     }
@@ -37,5 +41,4 @@ public class ReceiptViewModel extends AndroidViewModel {
     public void delete(Receipt ... receipts) {
         receiptRepository.delete(receipts);
     }
-
 }

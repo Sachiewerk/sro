@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
 
                         switch (menuItem.getItemId()) {
                             case R.id.nav_existing_receipt:
-
+                                startFilterReceiptActivity();
                                 return true;
 
                             case R.id.nav_existing_subscription:
@@ -393,6 +393,14 @@ public class MainActivity extends AppCompatActivity {
     private void startReceiptEditActivity(Receipt receipt) {
         Intent intent = new Intent(this, ReceiptEditActivity.class);
         intent.putExtra(ReceiptEditActivity.RECEIPT_UNIQUE_IDENTIFIER, receipt.getReceiptKey());
+        startActivity(intent);
+    }
+
+    /**
+     * Open ReceiptFilterActivity
+     */
+    private void startFilterReceiptActivity() {
+        Intent intent = new Intent(this, ReceiptFilterActivity.class);
         startActivity(intent);
     }
 
