@@ -263,11 +263,11 @@ public class ReportActivity extends AppCompatActivity {
                 stringBuilder.append("\n");
                 stringBuilder.append("\t");
                 stringBuilder.append("Percentage of Total Cost: ");
-                stringBuilder.append(total / totalCost * 100);
+                stringBuilder.append(StringPriceParser.toTwoDigitDecimal(total / totalCost * 100));
                 stringBuilder.append("%\n");
                 stringBuilder.append("\t");
                 stringBuilder.append("Percentage of Total Count: ");
-                stringBuilder.append(receipts.size() / (double)totalReceipts * 100);
+                stringBuilder.append(StringPriceParser.toTwoDigitDecimal(receipts.size() / (double)totalReceipts * 100));
                 stringBuilder.append("%\n");
                 stringBuilder.append("\n");
             }
@@ -312,11 +312,11 @@ public class ReportActivity extends AppCompatActivity {
                 stringBuilder.append("\n");
                 stringBuilder.append("\t");
                 stringBuilder.append("Percentage of Total Cost: ");
-                stringBuilder.append(total / totalCost * 100);
+                stringBuilder.append(StringPriceParser.toTwoDigitDecimal(total / totalCost * 100));
                 stringBuilder.append("%\n");
                 stringBuilder.append("\t");
                 stringBuilder.append("Percentage of Total Count: ");
-                stringBuilder.append(receipts.size() / (double)totalReceipts * 100);
+                stringBuilder.append(StringPriceParser.toTwoDigitDecimal(receipts.size() / (double)totalReceipts * 100));
                 stringBuilder.append("%\n");
                 stringBuilder.append("\n");
             }
@@ -361,11 +361,11 @@ public class ReportActivity extends AppCompatActivity {
                 stringBuilder.append("\n");
                 stringBuilder.append("\t");
                 stringBuilder.append("Percentage of Total Cost: ");
-                stringBuilder.append(total / totalCost * 100);
+                stringBuilder.append(StringPriceParser.toTwoDigitDecimal(total / totalCost * 100));
                 stringBuilder.append("%\n");
                 stringBuilder.append("\t");
                 stringBuilder.append("Percentage of Total Count: ");
-                stringBuilder.append(receipts.size() / (double)totalReceipts * 100);
+                stringBuilder.append(StringPriceParser.toTwoDigitDecimal(receipts.size() / (double)totalReceipts * 100));
                 stringBuilder.append("%\n");
                 stringBuilder.append("\n");
             }
