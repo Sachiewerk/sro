@@ -9,7 +9,6 @@
     <string name="main_app_title">Smart Receipt Organizer</string>
     <string name="activity_camera_capture_text">Capture</string>
     <string name="activity_photo_receipt_add_title_text">Add Receipt</string>
-    <string name="activity_subscription_add_title_text">Add Subscription</string>
     <string name="activity_photo_receipt_add_imagebutton_description">Click to Enlarge</string>
     <string name="activity_photo_receipt_add_imageview_description">Touch Anywhere to Close</string>
 </resources>
