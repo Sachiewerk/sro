@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 import edu.odu.cs441.sro.R;
 import edu.odu.cs441.sro.entity.metadata.Category;
+import edu.odu.cs441.sro.entity.metadata.Method;
 
 public class CategoryArrayAdapter extends ArrayAdapter<Category> {
 
@@ -18,44 +19,32 @@ public class CategoryArrayAdapter extends ArrayAdapter<Category> {
     private List<Category> categories;
 
     public CategoryArrayAdapter(@NonNull Context context, List<Category> categories) {
-        super(context, android.R.layout.simple_list_item_1, categories);
+        super(context, 0, categories);
         this.context = context;
         this.categories = categories;
     }
 
     @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-
-        View listItem = convertView;
-        LayoutInflater mInflater = (LayoutInflater)
-                context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-        if (listItem == null) {
-            listItem = mInflater.inflate(R.layout.custom_spinner_item, null);
-        }
-
-        Category category = categories.get(position);
-
-        TextView categoryTextView = listItem.findViewById(R.id.custom_spinner_item_textview);
-        categoryTextView.setText(category.getCategory());
-
-        return listItem;
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+        return createItemView(position, convertView, parent);
     }
 
     @Override
-    public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        View listItem = convertView;
+    public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
+        return createItemView(position, convertView, parent);
+    }
+
+    private View createItemView(int position, View convertView, ViewGroup parent) {
         LayoutInflater mInflater = (LayoutInflater)
                 context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-        if (listItem == null) {
-            listItem = mInflater.inflate(R.layout.custom_spinner_item, null);
-        }
+        final View view = mInflater.inflate(R.layout.custom_spinner_item, null);
 
         Category category = categories.get(position);
 
-        TextView categoryTextView = listItem.findViewById(R.id.custom_spinner_item_textview);
+        TextView categoryTextView = view.findViewById(R.id.custom_spinner_item_textview);
         categoryTextView.setText(category.getCategory());
 
-        return listItem;
+        return view;
     }
 }

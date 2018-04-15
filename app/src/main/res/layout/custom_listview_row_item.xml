@@ -48,13 +48,24 @@
         android:textSize="14dp" />
 
     <TextView
-        android:id="@+id/custom_listview_row_item_receipt_price"
+        android:id="@+id/custom_listview_row_item_receipt_method"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/custom_listview_row_item_receipt_category"
         android:layout_toRightOf="@+id/custom_listview_row_item_icon"
         android:paddingLeft="10dp"
         android:textSize="14dp" />
+
+    <TextView
+        android:id="@+id/custom_listview_row_item_receipt_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/custom_listview_row_item_receipt_method"
+        android:layout_toRightOf="@+id/custom_listview_row_item_icon"
+        android:paddingLeft="10dp"
+        android:textSize="14dp" />
+
+
 
 
 </RelativeLayout>

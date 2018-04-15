@@ -18,7 +18,7 @@ public class LocationArrayAdapter extends ArrayAdapter<Location> {
     private List<Location> locations;
 
     public LocationArrayAdapter(@NonNull Context context, List<Location> locations) {
-        super(context, android.R.layout.simple_list_item_1, locations);
+        super(context, 0, locations);
         this.context = context;
         this.locations = locations;
     }
@@ -26,36 +26,24 @@ public class LocationArrayAdapter extends ArrayAdapter<Location> {
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
-        View listItem = convertView;
-        LayoutInflater mInflater = (LayoutInflater)
-                context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-        if (listItem == null) {
-            listItem = mInflater.inflate(R.layout.custom_spinner_item, null);
-        }
-
-        Location location = locations.get(position);
-
-        TextView locationTextView = listItem.findViewById(R.id.custom_spinner_item_textview);
-        locationTextView.setText(location.getLocation());
-
-        return listItem;
+        return createItemView(position, convertView, parent);
     }
 
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        View listItem = convertView;
+        return createItemView(position, convertView, parent);
+    }
+
+    private View createItemView(int position, View convertView, ViewGroup parent) {
         LayoutInflater mInflater = (LayoutInflater)
                 context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-        if (listItem == null) {
-            listItem = mInflater.inflate(R.layout.custom_spinner_item, null);
-        }
+        final View view = mInflater.inflate(R.layout.custom_spinner_item, null);
 
         Location location = locations.get(position);
 
-        TextView locationTextView = listItem.findViewById(R.id.custom_spinner_item_textview);
+        TextView locationTextView = view.findViewById(R.id.custom_spinner_item_textview);
         locationTextView.setText(location.getLocation());
 
-        return listItem;
+        return view;
     }
 }

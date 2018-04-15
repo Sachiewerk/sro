@@ -29,13 +29,11 @@ import java.io.File;
 import java.util.List;
 import java.util.UUID;
 import edu.odu.cs441.sro.R;
-import edu.odu.cs441.sro.entity.metadata.Location;
 import edu.odu.cs441.sro.entity.metadata.Method;
 import edu.odu.cs441.sro.entity.record.Receipt;
 import edu.odu.cs441.sro.intent.EmailReceiptIntent;
 import edu.odu.cs441.sro.utility.view.ReceiptBaseAdapter;
 import edu.odu.cs441.sro.viewmodel.metadata.CategoryViewModel;
-import edu.odu.cs441.sro.viewmodel.metadata.LocationViewModel;
 import edu.odu.cs441.sro.viewmodel.metadata.MethodViewModel;
 import edu.odu.cs441.sro.viewmodel.record.ReceiptViewModel;
 import edu.odu.cs441.sro.entity.metadata.Category;
@@ -47,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
 
     // ViewModels
     private ReceiptViewModel receiptViewModel;
-    private LocationViewModel locationViewModel;
     private CategoryViewModel categoryViewModel;
     private MethodViewModel methodViewModel;
 
@@ -78,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String MY_SRO_MAIN_DIRECTORY = "SRO";
     public static final String MY_IMAGE_DIRECTORY = "Images";
 
+    private List<Receipt> receiptList;
+
     /**
      * This method is invoked when this Activity is first created.
      * @param savedInstanceState Bundle
@@ -104,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Instantiate the View Models
         receiptViewModel = ViewModelProviders.of(this).get(ReceiptViewModel.class);
-        locationViewModel = ViewModelProviders.of(this).get(LocationViewModel.class);
         categoryViewModel = ViewModelProviders.of(this).get(CategoryViewModel.class);
         methodViewModel = ViewModelProviders.of(this).get(MethodViewModel.class);
 
@@ -116,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(@Nullable List<Receipt> receipts) {
                 mAdapter.setItems(receipts);
                 mAdapter.notifyDataSetChanged();
+                receiptList = receipts;
             }
         });
         mListView.setAdapter(mAdapter);
@@ -256,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Show Action Menu when user long clicks a Receipt in the ListView
-     * @param view
+     * @param view View
      */
     private void showMenu(View view) {
         PopupMenu popup = new PopupMenu(this, view);
@@ -265,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Receipt receipt = receiptViewModel.findAll().getValue().get(longSelectedItemIndex);
+                Receipt receipt = receiptList.get(longSelectedItemIndex);
                 switch (item.getItemId()) {
                     case R.id.item_action_open:
                         startReceiptViewActivity(receipt);
@@ -277,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
                         emailReceipt(receipt);
                         return true;
                     case R.id.item_action_delete:
-                        showDeleteConfirmation();
+                        showDeleteConfirmation(receipt);
                         return true;
                     default:
                         return false;
@@ -286,37 +285,6 @@ public class MainActivity extends AppCompatActivity {
         });
         popup.inflate(R.menu.item_action_menu);
         popup.show();
-    }
-
-    /**
-     * E-mail receipt
-     * @param receipt Receipt
-     */
-    private void emailReceipt(Receipt receipt) {
-        EmailReceiptIntent emailReceiptIntent = new EmailReceiptIntent(this);
-        emailReceiptIntent.sendEmail(receipt);
-    }
-
-    /**
-     * Show delete receipt confirmation popup when user selects to delete a receipt
-     */
-    private void showDeleteConfirmation() {
-        new AlertDialog.Builder(this)
-                .setTitle("Confirm")
-                .setMessage("Do you really want to delete the receipt?")
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        Receipt receipt = receiptViewModel.findAll().getValue().get(longSelectedItemIndex);
-
-                        if(receipt.getImageFilePath() != null) {
-                            File file = new File(receipt.getImageFilePath());
-                            file.delete();
-                        }
-
-                        receiptViewModel.delete(receipt);
-                    }})
-                .setNegativeButton(android.R.string.no, null).show();
     }
 
     /**
@@ -374,6 +342,7 @@ public class MainActivity extends AppCompatActivity {
         // Start PhotoReceiptAddActivity
         startActivity(intent);
     }
+
     /**
      * Open Receipt Information
      * @param receipt Receipt
@@ -392,6 +361,34 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ReceiptEditActivity.class);
         intent.putExtra(ReceiptEditActivity.RECEIPT_UNIQUE_IDENTIFIER, receipt.getReceiptKey());
         startActivity(intent);
+    }
+
+    /**
+     * E-mail receipt
+     * @param receipt Receipt
+     */
+    private void emailReceipt(Receipt receipt) {
+        EmailReceiptIntent emailReceiptIntent = new EmailReceiptIntent(this);
+        emailReceiptIntent.sendEmail(receipt);
+    }
+
+    /**
+     * Show delete receipt confirmation popup when user selects to delete a receipt
+     */
+    private void showDeleteConfirmation(final Receipt receipt) {
+        new AlertDialog.Builder(this)
+                .setTitle("Confirm")
+                .setMessage("Do you really want to delete the receipt?")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        if(receipt.getImageFilePath() != null) {
+                            File file = new File(receipt.getImageFilePath());
+                            file.delete();
+                        }
+                        receiptViewModel.delete(receipt);
+                    }})
+                .setNegativeButton(android.R.string.no, null).show();
     }
 
     /**

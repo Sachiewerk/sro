@@ -198,6 +198,41 @@
                     android:textAlignment="center"/>
             </LinearLayout>
             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@+id/receipt_filter_order_by_spinner"
+                    android:text="Order Results By: "/>
+
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/receipt_filter_order_by_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <RadioGroup
+                android:id="@+id/receipt_filter_order_by_radio_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp">
+                <RadioButton
+                    android:id="@+id/receipt_filter_ascending_radio_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Ascending"/>
+                <RadioButton
+                    android:id="@+id/receipt_filter_descending_radio_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Descending"/>
+            </RadioGroup>
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -214,7 +249,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:text="Cancel"/>
+                    android:text="Back"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -10,11 +10,14 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -65,6 +68,8 @@ public class ReceiptFilterActivity extends AppCompatActivity {
     private EditText greaterPriceEditText;
     private EditText lessPriceEditText;
 
+    private Spinner orderBySpinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +81,7 @@ public class ReceiptFilterActivity extends AppCompatActivity {
         initializeCategoryViews();
         initializeButtons();
         initializePriceViews();
+        initializeOrderBySpinner();
     }
 
     private void initializeDateViews() {
@@ -268,6 +274,15 @@ public class ReceiptFilterActivity extends AppCompatActivity {
         });
     }
 
+    private void initializeOrderBySpinner() {
+        orderBySpinner = findViewById(R.id.receipt_filter_order_by_spinner);
+        ArrayAdapter<String> orderByArrayAdapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_dropdown_item,
+                new String[] { "DATE", "LOCATION", "CATEGORY", "METHOD", "SUBTOTAL" });
+        orderBySpinner.setAdapter(orderByArrayAdapter);
+    }
+
     private void initializeButtons() {
         Button cancelButton = findViewById(R.id.receipt_filter_cancel_button);
         cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -281,7 +296,6 @@ public class ReceiptFilterActivity extends AppCompatActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO INPUT VALIDATION
                 startReceiptResultActivity();
             }
         });
@@ -294,6 +308,12 @@ public class ReceiptFilterActivity extends AppCompatActivity {
         intent.putExtra(ReceiptResultActivity.CATEGORY_SPECIFIED, categoryEnableCheckBox.isChecked());
         intent.putExtra(ReceiptResultActivity.METHOD_SPECIFIED, methodEnableCheckBox.isChecked());
         intent.putExtra(ReceiptResultActivity.PRICE_SPECIFIED, priceEnableCheckBox.isChecked());
+
+        RadioGroup radioGroup = findViewById(R.id.receipt_filter_order_by_radio_group);
+        RadioButton selectedRadioButton = findViewById(radioGroup.getCheckedRadioButtonId());
+
+        intent.putExtra(ReceiptResultActivity.ORDER_BY, (String) orderBySpinner.getSelectedItem());
+        intent.putExtra(ReceiptResultActivity.ORDER_METHOD, selectedRadioButton.getText().toString());
 
         if(dateEnableCheckBox.isChecked()) {
             intent.putExtra(ReceiptResultActivity.AFTER_DATE, afterDateTime.toString());

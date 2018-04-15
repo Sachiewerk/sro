@@ -35,6 +35,7 @@ public class ReceiptBaseAdapter extends BaseAdapter {
     private final String MY_PRICE_LABEL = "Subtotal: ";
     private final String MY_DATE_LABEL = "Date: ";
     private final String MY_CATEGORY_LABEL = "Category: ";
+    private final String MY_METHOD_LABEL = "Payment Method: ";
 
     private Context mContext;
     private List<Receipt> mReceiptCollection;
@@ -52,6 +53,7 @@ public class ReceiptBaseAdapter extends BaseAdapter {
         TextView txtPrice;
         TextView txtLocation;
         TextView txtCategory;
+        TextView txtMethod;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -62,12 +64,13 @@ public class ReceiptBaseAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.custom_listview_row_item, null);
             holder = new ViewHolder();
-            holder.txtDate = (TextView) convertView.findViewById(R.id.custom_listview_row_item_receipt_date);
-            holder.txtTitle = (TextView) convertView.findViewById(R.id.custom_listview_row_item_receipt_title);
-            holder.txtPrice = (TextView) convertView.findViewById(R.id.custom_listview_row_item_receipt_price);
-            holder.txtLocation = (TextView) convertView.findViewById(R.id.custom_listview_row_item_receipt_location);
-            holder.txtCategory = (TextView) convertView.findViewById(R.id.custom_listview_row_item_receipt_category);
-            holder.imageView = (ImageView) convertView.findViewById(R.id.custom_listview_row_item_icon);
+            holder.txtDate = convertView.findViewById(R.id.custom_listview_row_item_receipt_date);
+            holder.txtTitle = convertView.findViewById(R.id.custom_listview_row_item_receipt_title);
+            holder.txtPrice = convertView.findViewById(R.id.custom_listview_row_item_receipt_price);
+            holder.txtLocation = convertView.findViewById(R.id.custom_listview_row_item_receipt_location);
+            holder.txtMethod = convertView.findViewById(R.id.custom_listview_row_item_receipt_method);
+            holder.txtCategory = convertView.findViewById(R.id.custom_listview_row_item_receipt_category);
+            holder.imageView = convertView.findViewById(R.id.custom_listview_row_item_icon);
             convertView.setTag(holder);
         }
         else {
@@ -81,6 +84,7 @@ public class ReceiptBaseAdapter extends BaseAdapter {
         holder.txtPrice.setText(MY_PRICE_LABEL + new StringPriceParser(receipt.getPrice()).getStringValue());
         holder.txtLocation.setText(MY_LOCATION_LABEL + receipt.getLocation());
         holder.txtCategory.setText(MY_CATEGORY_LABEL + receipt.getCategory());
+        holder.txtMethod.setText(MY_METHOD_LABEL + receipt.getMethod());
         holder.imageView.setImageBitmap(null);
 
         String path = receipt.getImageFilePath();

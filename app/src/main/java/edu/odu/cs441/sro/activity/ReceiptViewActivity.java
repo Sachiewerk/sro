@@ -98,7 +98,6 @@ public class ReceiptViewActivity extends AppCompatActivity {
         Button closeButton = findViewById(R.id.receipt_view_button_close);
         Button sendButton = findViewById(R.id.receipt_view_button_send);
         Button splitButton = findViewById(R.id.receipt_view_button_split);
-        Button editButton = findViewById(R.id.receipt_view_button_edit);
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,8 +151,6 @@ public class ReceiptViewActivity extends AppCompatActivity {
                     this,
                     "Error reading receipt image file",
                     Toast.LENGTH_LONG).show();
-
-            //TODO Use the default image
         }
     }
 
