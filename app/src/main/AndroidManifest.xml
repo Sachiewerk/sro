@@ -42,7 +42,8 @@
         <activity android:name=".activity.ReceiptEditActivity" />
         <activity android:name=".activity.NoPhotoReceiptAddActivity" />
         <activity android:name=".activity.ReceiptFilterActivity" />
-        <activity android:name=".activity.ReceiptResultActivity"></activity>
+        <activity android:name=".activity.ReceiptResultActivity" />
+        <activity android:name=".activity.ReportActivity"/>
     </application>
 
 </manifest>

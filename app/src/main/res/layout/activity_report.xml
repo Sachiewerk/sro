@@ -5,13 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activity.ReceiptResultActivity">
+    tools:context=".activity.ReportActivity">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/activity_receipt_result_toolbar"
+        android:id="@+id/main_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:layout_alignParentTop="true"
         android:background="@color/colorPrimaryDark"
         app:titleTextColor="@android:color/white">
 
@@ -22,41 +21,44 @@
                 android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="Receipt Search"
+                android:text="Report"
                 android:gravity="center"
                 android:textColor="@android:color/white"
                 android:layout_centerInParent="true"
                 android:textSize="@dimen/main_app_title_text_size"
                 android:textStyle="bold"/>
         </RelativeLayout>
-
     </android.support.v7.widget.Toolbar>
-
-    <TextView
-        android:id="@+id/activity_receipt_result_listViewLabel"
-        android:labelFor="@+id/main_listView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Search Result"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"/>
-
-    <ListView
-        android:id="@+id/activity_receipt_result_listView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:choiceMode="singleChoice"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_weight="1"
-        android:listSelector="@android:color/holo_blue_dark" />
-
-    <Button
-        android:id="@+id/activity_receipt_result_back_button"
-        android:layout_marginTop="30dp"
-        android:layout_width="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start Date: "/>
+        <EditText
+            android:id="@+id/activity_report_start_date_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Click to Enter Date"
+            android:inputType="date"
+            android:textAlignment="center"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Back"/>
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="End Date: "/>
+        <EditText
+            android:id="@+id/activity_report_end_date_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Click to Enter Date"
+            android:inputType="date"
+            android:textAlignment="center"/>
+    </LinearLayout>
 </LinearLayout>
