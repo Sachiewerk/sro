@@ -32,6 +32,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal">
         <TextView
             android:layout_width="wrap_content"
@@ -41,6 +44,7 @@
             android:id="@+id/activity_report_start_date_edittext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:hint="Click to Enter Date"
             android:inputType="date"
             android:textAlignment="center"/>
@@ -48,6 +52,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:orientation="horizontal">
         <TextView
             android:layout_width="wrap_content"
@@ -60,5 +66,24 @@
             android:hint="Click to Enter Date"
             android:inputType="date"
             android:textAlignment="center"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/activity_report_generate_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text="Generate"/>
+        <Button
+            android:id="@+id/activity_report_back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="Back"/>
     </LinearLayout>
 </LinearLayout>
