@@ -1,6 +1,9 @@
 package edu.odu.cs441.sro.activity;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,7 +16,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.odu.cs441.sro.R;
 import edu.odu.cs441.sro.entity.metadata.Category;
@@ -36,6 +41,16 @@ public class Settings2 extends AppCompatActivity {
     private ArrayList<String> mLocationList;
     private ArrayList<String>sortByList;
 
+
+    private ArrayAdapter<String> mLocationAutoCompleteAdapter;
+    private ArrayAdapter<String> mCategoryAutoCompleteAdapter;
+    private ArrayAdapter<String> mMethodAutoCompleteAdapter;
+
+    private ArrayList mMethodList ;
+    private ArrayList mCategoryList ;
+    private String sortQuery ;
+    //private ArrayList mCategoryList ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,14 +59,18 @@ public class Settings2 extends AppCompatActivity {
         locationViewModel = ViewModelProviders.of(this).get(LocationViewModel.class);
         categoryViewModel = ViewModelProviders.of(this).get(CategoryViewModel.class);
         methodViewModel = ViewModelProviders.of(this).get(MethodViewModel.class);
+        initializeLists();
+
+
         mLocationList = new ArrayList<>();
-        addLocation();
+        changeSortOrder();
 
         ///listener for the add method button
         Button addMethodButton = (Button) findViewById(R.id.addMethodButton);
         addMethodButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 addOrDeleteMethod();
             }
         });
@@ -75,45 +94,40 @@ public class Settings2 extends AppCompatActivity {
             }
         });
 
-
-
-
-        //add ListView with onItemClickListeners
-
-        //add backButton
+        final Button backToMainButton = (Button) findViewById(R.id.backButton);
+        {
+            backToMainButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    backToMain();
+                }
+            });
+        }
 
     }
 
 
 
-    public void addLocation() {
+    public void changeSortOrder() {
 
-        methodViewModel = ViewModelProviders.of(this).get(MethodViewModel.class);
-
-        mLocationList = new ArrayList<>();
-       /* locationViewModel.findAll().observe(this, new Observer<List<Location>>() {
+        mLocationAutoCompleteAdapter = new ArrayAdapter(
+                this, android.R.layout.select_dialog_singlechoice, sortByList);
+        ListView myListView = (ListView) findViewById(R.id.sortByMenu);
+        myListView.setAdapter(mLocationAutoCompleteAdapter);
+        myListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public void onChanged(@Nullable List<Location> locations) {
-                mLocationList.clear();
-                for(Location location : locations) {
-                    mLocationList.add(location.getLocation());
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
+                switch (position)
+                {
+                    case 1:
+                        break ;
+                    case 2:
+                        break;
                 }
-
+                return false;
             }
         });
-*/
-        Location newLocation = new Location("LOGAN");
-        locationViewModel.insert(newLocation);
-        mLocationList.add(newLocation.getLocation());
-        ;
-        ArrayAdapter<String> mLocationAutoCompleteAdapter;
-        mLocationAutoCompleteAdapter = new ArrayAdapter(
-                this, android.R.layout.select_dialog_singlechoice, mLocationList);
-        ListView myListView = (ListView) findViewById(R.id.sortByMenu);
-
-        myListView.setAdapter(mLocationAutoCompleteAdapter);
-
 
     }
     public void addCategory() {
@@ -123,34 +137,9 @@ public class Settings2 extends AppCompatActivity {
     }
 
 
-    public String changeSortOrder() {
-        return "";
-    }
-
-    private void initializeReceipts() {
-        categoryViewModel.insert(new Category("Grocery"));
-        categoryViewModel.insert(new Category("Electronics"));
-        categoryViewModel.insert(new Category("Furniture"));
-        categoryViewModel.insert(new Category("Restaurant"));
-        categoryViewModel.insert(new Category("Entertainment"));
-
-        locationViewModel.insert(new Location("Walmart"));
-        locationViewModel.insert(new Location("Pizzahut"));
-        locationViewModel.insert(new Location("Lowe's"));
-        locationViewModel.insert(new Location("McDonald's"));
-        locationViewModel.insert(new Location("Foodlion"));
-
-        methodViewModel.insert(new Method("Cash"));
-        methodViewModel.insert(new Method("Credit Card"));
-        methodViewModel.insert(new Method("Money Order"));
-        methodViewModel.insert(new Method("Check"));
-        methodViewModel.insert(new Method("Debit Card"));
-        methodViewModel.insert(new Method("Paypal"));
-    }
-
     public void addOrDeleteMethod() {
-        ArrayList methodList = new ArrayList() ;
-        final ArrayAdapter myAdapter;
+
+
         final ArrayList myMethodList = new ArrayList();
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(Settings2.this);
         final View mView = getLayoutInflater().inflate(R.layout.addmethodlayout, null);
@@ -158,9 +147,34 @@ public class Settings2 extends AppCompatActivity {
         final ListView addMethodListView = (ListView) mView.findViewById(R.id.addSomethingListview);
         final EditText methodEntryBox = (EditText) mView.findViewById(R.id.addMethodBox);
         final TextView LocationLabel = (TextView)mView.findViewById(R.id.addMethodLabel);
+        //=================================================================================
+        mLocationList = new ArrayList<>();
+        //mMethodList = new ArrayList<>();
 
-        final ArrayAdapter myMethodAdapter = new ArrayAdapter<>(
-                this, android.R.layout.select_dialog_singlechoice, myMethodList);
+        Location newLocation = new Location("LOGAN");
+        locationViewModel.insert(newLocation);
+
+        Method newMethod = new Method("BitChips");
+        methodViewModel.insert(newMethod);
+
+        mMethodList.add(newMethod.getMethod());
+        mLocationList.add(newLocation.getLocation());
+
+       ArrayAdapter adapter = new ArrayAdapter(
+                this, android.R.layout.select_dialog_singlechoice, mMethodList); ;
+        mLocationAutoCompleteAdapter = new ArrayAdapter(
+                getApplicationContext(), android.R.layout.select_dialog_singlechoice, mMethodList);
+        ListView myListView = (ListView) mView.findViewById(R.id.addSomethingListview);
+        myListView.setAdapter(mLocationAutoCompleteAdapter);
+
+
+
+
+
+
+        //==================================================================================
+
+
 
 
         LocationLabel.setText("Method");
@@ -168,23 +182,20 @@ public class Settings2 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!methodEntryBox.getText().toString().isEmpty()) {
-                    myMethodList.add(methodEntryBox.getText().toString());
-                    addMethodListView.setAdapter(myMethodAdapter);
-                    addMethodListView.invalidateViews();
-                    Toast.makeText(getApplicationContext(),"ERRRR",Toast.LENGTH_LONG).show();
-                    methodEntryBox.setText("");
+                    Method newMethod = new Method(methodEntryBox.getText().toString());
+                    methodViewModel.insert(newMethod);
+                    mMethodList.add(newMethod.getMethod());
 
-                    ///add the text from the box to the list
-                    ///create a new Method and add it to the data base
                 }
             }
         });
-
         addMethodListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                ///remove the item from the list, and from the database
-
+                String toBeDeleted = (String)parent.getItemAtPosition(position);
+                //mMethodList.remove(position);
+                mMethodList.remove(toBeDeleted);
+                addMethodListView.invalidateViews();
                 return false;
             }
         });
@@ -198,7 +209,6 @@ public class Settings2 extends AppCompatActivity {
     public void addOrDeleteCategory() {
         ///need a list of methods
         ArrayList methodList = new ArrayList() ;
-        final ArrayAdapter myAdapter;
         final ArrayList myMethodList = new ArrayList();
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(Settings2.this);
         final View mView = getLayoutInflater().inflate(R.layout.addmethodlayout, null);
@@ -207,24 +217,42 @@ public class Settings2 extends AppCompatActivity {
         final EditText methodEntryBox = (EditText) mView.findViewById(R.id.addMethodBox);
         final TextView LocationLabel = (TextView)mView.findViewById(R.id.addMethodLabel);
         methodEntryBox.setHint("Enter the Category Here");
+        final ArrayList newCategoryList = new ArrayList();
 
-        final ArrayAdapter myMethodAdapter = new ArrayAdapter<>(
-                this, android.R.layout.select_dialog_singlechoice, myMethodList);
 
+        //final ArrayAdapter myMethodAdapter = new ArrayAdapter<>(
+         //       this, android.R.layout.select_dialog_singlechoice, myMethodList);
+
+       final ArrayAdapter myMethodAdapter = new ArrayAdapter<>(
+                this, android.R.layout.select_dialog_singlechoice,newCategoryList);
+
+       //========================================================================
+
+        mCategoryAutoCompleteAdapter = new ArrayAdapter(
+                getApplicationContext(), android.R.layout.select_dialog_singlechoice, mCategoryList);
+        ListView myListView = (ListView) mView.findViewById(R.id.addSomethingListview);
+        myListView.setAdapter(mLocationAutoCompleteAdapter);
+
+
+        //=======================================================================
+
+
+
+
+        addMethodListView.setAdapter(mCategoryAutoCompleteAdapter);
 
         LocationLabel.setText("Category ");
         addMethodButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!methodEntryBox.getText().toString().isEmpty()) {
-                    myMethodList.add(methodEntryBox.getText().toString());
-                    addMethodListView.setAdapter(myMethodAdapter);
+                    Category newCategory = new Category(methodEntryBox.getText().toString());
+                    categoryViewModel.insert(newCategory);
+                    mCategoryList.add(methodEntryBox.getText().toString());
+                    newCategoryList.add(newCategory.getCategory());
                     addMethodListView.invalidateViews();
-                    Toast.makeText(getApplicationContext(),"ERRRR",Toast.LENGTH_LONG).show();
                     methodEntryBox.setText("");
 
-                    ///add the text from the box to the list
-                    ///create a new Method and add it to the data base
                 }
             }
         });
@@ -232,7 +260,9 @@ public class Settings2 extends AppCompatActivity {
         addMethodListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                ///remove the item from the list, and from the database
+                String toBeDeleted = (String)parent.getItemAtPosition(position);
+                mCategoryList.remove(toBeDeleted);
+                addMethodListView.invalidateViews();
                 return false;
             }
         });
@@ -253,9 +283,13 @@ public class Settings2 extends AppCompatActivity {
         final EditText methodEntryBox = (EditText) mView.findViewById(R.id.addMethodBox);
         final TextView LocationLabel = (TextView)mView.findViewById(R.id.addMethodLabel);
 
-        final ArrayAdapter myMethodAdapter = new ArrayAdapter<>(
-                this, android.R.layout.select_dialog_singlechoice, myMethodList);
-        methodEntryBox.setHint("Enter the Method Here");
+
+        //==========================================================================================
+        mLocationAutoCompleteAdapter = new ArrayAdapter(
+                getApplicationContext(), android.R.layout.select_dialog_singlechoice, mLocationList);
+        ListView myListView = (ListView) mView.findViewById(R.id.addSomethingListview);
+        myListView.setAdapter(mLocationAutoCompleteAdapter);
+        //==========================================================================================
 
 
         LocationLabel.setText("Location");
@@ -263,31 +297,78 @@ public class Settings2 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!methodEntryBox.getText().toString().isEmpty()) {
-                    myMethodList.add(methodEntryBox.getText().toString());
-                    addMethodListView.setAdapter(myMethodAdapter);
-                    addMethodListView.invalidateViews();
-                    Toast.makeText(getApplicationContext(),"ERRRR",Toast.LENGTH_LONG).show();
-                    methodEntryBox.setText("");
+                   Location newLocation = new Location(methodEntryBox.getText().toString());
+                   locationViewModel.insert(newLocation);
+                   mLocationList.add(methodEntryBox.getText().toString());
 
-                    ///add the text from the box to the list
-                    ///create a new Method and add it to the data base
                 }
             }
         });
 
-        addMethodListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                ///remove the item from the list, and from the database
-                return false;
-            }
-        });
+       addMethodListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+           @Override
+           public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+               String toBeDeleted = (String)parent.getItemAtPosition(position);
+               mLocationList.remove(toBeDeleted);
+               addMethodListView.invalidateViews();
+               return false;
+           }
+       });
 
         mBuilder.setView(mView);
         AlertDialog dialog = mBuilder.create();
         dialog.show();
 
 
+    }
+
+    public void initializeLists()
+    {
+        locationViewModel.findAll().observe(this, new Observer<List<Location>>() {
+
+            public void onChanged(@Nullable List<Location> locations) {
+                mLocationList.clear();
+                for(Location location : locations) {
+                    mLocationList.add(location.getLocation());
+
+                }
+
+            }
+        });
+
+        mCategoryList = new ArrayList<> ();
+        categoryViewModel.findAll().observe(this, new Observer<List<Category>>() {
+            @Override
+            public void onChanged(@Nullable List<Category> categories) {
+                mCategoryList.clear();
+                for(Category category : categories) {
+                    mCategoryList.add(category.getCategory());
+                }
+            }
+        });
+        mMethodList = new ArrayList<> ();
+        methodViewModel.findAll().observe(this, new Observer<List<Method>>() {
+            @Override
+            public void onChanged(@Nullable List<Method> methods) {
+                mMethodList.clear();
+                for(Method method : methods) {
+                    mMethodList.add(method.getMethod());
+                }
+            }
+        });
+
+        sortByList = new ArrayList<>();
+        sortByList.add("ASCEND");
+        sortByList.add("DESCEND");
+        sortByList.add("BEFORE");
+        sortByList.add("AFTER");
+
+    }
+
+    public void backToMain()
+    {
+        Intent intent = new Intent(this,MainActivity.class);
+        startActivity(intent);
     }
 }
 

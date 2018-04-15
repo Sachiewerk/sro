@@ -202,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
                                 return true;
 
                             case R.id.nav_setting:
+                                startSettingsActivity();
 
                                 return true;
                         }
@@ -556,5 +557,11 @@ public class MainActivity extends AppCompatActivity {
             // Return true since the permission was initially granted
             return true;
         }
+    }
+
+    public void startSettingsActivity()
+    {
+        Intent settingsIntent = new Intent(this,Settings2.class);
+        startActivity(settingsIntent);
     }
 }
