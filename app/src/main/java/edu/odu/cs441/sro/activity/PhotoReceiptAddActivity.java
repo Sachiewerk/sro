@@ -1,4 +1,4 @@
-package edu.odu.cs441.sro;
+package edu.odu.cs441.sro.activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -27,19 +27,23 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
+import edu.odu.cs441.sro.R;
 import edu.odu.cs441.sro.entity.metadata.Category;
 import edu.odu.cs441.sro.entity.metadata.Location;
 import edu.odu.cs441.sro.entity.metadata.Method;
 import edu.odu.cs441.sro.entity.record.Receipt;
-import edu.odu.cs441.sro.utility.NumberTextWatcher;
-import edu.odu.cs441.sro.utility.StringPriceParser;
+import edu.odu.cs441.sro.utility.data.NumberTextWatcher;
+import edu.odu.cs441.sro.utility.data.StringPriceParser;
 import edu.odu.cs441.sro.viewmodel.metadata.CategoryViewModel;
 import edu.odu.cs441.sro.viewmodel.metadata.LocationViewModel;
 import edu.odu.cs441.sro.viewmodel.metadata.MethodViewModel;
@@ -71,18 +75,15 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
     // The UUID of this receipt, which is also part of the image file name
     UUID mUUID;
 
-
     private ArrayList<String> mLocationList;
-    private ArrayList<String> mPriceList;
     private ArrayList<String> mCategoryList;
     private ArrayList<String> mMethodList;
 
     private ArrayAdapter<String> mLocationAutoCompleteAdapter;
-    private ArrayAdapter<String> mPriceAutoCompleteAdapter;
     private ArrayAdapter<String> mCategoryAutoCompleteAdapter;
     private ArrayAdapter<String> mMethodAutoCompleteAdapter;
 
-    private Date mDate;
+    private DateTime mDate;
     private EditText mTitleEditText;
     private AutoCompleteTextView mLocationAutoCompleteTextView;
     private AutoCompleteTextView mPriceAutoCompleteTextView;
@@ -101,14 +102,12 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
 
         mUUID = (UUID)getIntent().getSerializableExtra(MainActivity.MY_UUID_INTENT_IDENTIFIER);
 
-        mDate = new Date();
+        mDate = new DateTime();
 
         receiptViewModel = ViewModelProviders.of(this).get(ReceiptViewModel.class);
         locationViewModel = ViewModelProviders.of(this).get(LocationViewModel.class);
         categoryViewModel = ViewModelProviders.of(this).get(CategoryViewModel.class);
         methodViewModel = ViewModelProviders.of(this).get(MethodViewModel.class);
-
-
 
         mLocationList = new ArrayList<> ();
         locationViewModel.findAll().observe(this, new Observer<List<Location>>() {
@@ -179,8 +178,7 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
         TextView dateView = findViewById(R.id.photo_receipt_add_textview_date);
 
         // Create a temporary DateTime for date formatting
-        Date dateTime = new Date();
-        dateView.setText(dateTime.toString());
+        dateView.setText(mDate.toString(DateTimeFormat.shortDateTime()));
     }
 
     private void initializeTitleViews() {
@@ -255,7 +253,6 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
 
     private void initializeButtonEventListener() {
         final Button saveButton = findViewById(R.id.photo_receipt_add_Button_Save);
-        final Button splitButton = findViewById(R.id.photo_receipt_add_Button_Split);
         final Button discardButton = findViewById(R.id.photo_receipt_add_Button_Discard);
 
 
@@ -276,7 +273,7 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
                 locationViewModel.insert(new Location(location));
                 methodViewModel.insert(new Method(method));
 
-                Receipt receipt = new Receipt(mUUID.toString(), mDate, mImageFile.getAbsolutePath());
+                Receipt receipt = new Receipt(mUUID.toString(), mDate.getMillis(), mImageFile.getAbsolutePath());
                 receipt.setTitle(title);
                 receipt.setCategory(category);
                 receipt.setLocation(location);
@@ -288,17 +285,6 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
 
                 setResult(RESULT_OK);
                 finish();
-            }
-        });
-
-        // What should happen when user clicks "Split" button
-        splitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                //TODO Duplicate the image file, assign a different name with different UUID
-                //TODO and create another instance of this Activity. Use the same request code as
-                //TODO in the MainActivity - MY_PHOTO_RECEIPT_ADD_ACTIVITY_REQUEST_CODE
             }
         });
 

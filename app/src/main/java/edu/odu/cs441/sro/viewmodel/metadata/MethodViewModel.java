@@ -34,4 +34,6 @@ public class MethodViewModel extends AndroidViewModel {
         methodRepository.delete(methods);
     }
 
+    public int getCount() { return methodRepository.getCount(); }
+
 }

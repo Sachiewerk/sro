@@ -11,28 +11,32 @@ import edu.odu.cs441.sro.entity.metadata.Category;
 public class CategoryRepository {
 
     private CategoryDao categoryDao;
-    private LiveData<List<Category>> allCategorys;
+    private LiveData<List<Category>> allCategories;
 
     public CategoryRepository(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
         categoryDao = db.categoryDao();
-        allCategorys = categoryDao.findAll();
+        allCategories = categoryDao.findAll();
     }
 
     public LiveData<List<Category>> findAll() {
-        return allCategorys;
+        return allCategories;
     }
 
     public void insert(Category category) {
         new InsertAsyncTask(categoryDao).execute(category);
     }
 
-    public void delete(Category ... categorys) {
-        new DeleteAsyncTask(categoryDao).execute(categorys);
+    public void delete(Category ... categories) {
+        new DeleteAsyncTask(categoryDao).execute(categories);
     }
 
     public void update(Category category) {
         new UpdateAsyncTask(categoryDao).execute(category);
+    }
+
+    public int getCount() {
+        return categoryDao.getCount();
     }
 
     private static class InsertAsyncTask extends AsyncTask<Category, Void, Void> {

@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,15 +15,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import edu.odu.cs441.sro.R;
 import edu.odu.cs441.sro.entity.record.Receipt;
-import edu.odu.cs441.sro.utility.StringPriceParser;
+import edu.odu.cs441.sro.utility.data.StringPriceParser;
 
 /**
  * Created by michael on 3/15/18.
@@ -32,6 +34,8 @@ public class ReceiptBaseAdapter extends BaseAdapter {
     private final String MY_LOCATION_LABEL = "Location: ";
     private final String MY_PRICE_LABEL = "Subtotal: ";
     private final String MY_DATE_LABEL = "Date: ";
+    private final String MY_CATEGORY_LABEL = "Category: ";
+    private final String MY_METHOD_LABEL = "Payment Method: ";
 
     private Context mContext;
     private List<Receipt> mReceiptCollection;
@@ -48,22 +52,25 @@ public class ReceiptBaseAdapter extends BaseAdapter {
         TextView txtDate;
         TextView txtPrice;
         TextView txtLocation;
+        TextView txtCategory;
+        TextView txtMethod;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
+        ViewHolder holder;
 
         LayoutInflater mInflater = (LayoutInflater)
                 mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.custom_listview_row_item, null);
             holder = new ViewHolder();
-            holder.txtDate = (TextView) convertView.findViewById(R.id.custom_listview_row_item_receipt_date);
-            holder.txtTitle = (TextView) convertView.findViewById(R.id.custom_listview_row_item_receipt_title);
-            holder.txtPrice = (TextView) convertView.findViewById(R.id.custom_listview_row_item_receipt_price);
-            holder.txtLocation = (TextView) convertView.findViewById(R.id.custom_listview_row_item_receipt_location);
-            holder.imageView = (ImageView) convertView.findViewById(R.id.custom_listview_row_item_icon);
-
+            holder.txtDate = convertView.findViewById(R.id.custom_listview_row_item_receipt_date);
+            holder.txtTitle = convertView.findViewById(R.id.custom_listview_row_item_receipt_title);
+            holder.txtPrice = convertView.findViewById(R.id.custom_listview_row_item_receipt_price);
+            holder.txtLocation = convertView.findViewById(R.id.custom_listview_row_item_receipt_location);
+            holder.txtMethod = convertView.findViewById(R.id.custom_listview_row_item_receipt_method);
+            holder.txtCategory = convertView.findViewById(R.id.custom_listview_row_item_receipt_category);
+            holder.imageView = convertView.findViewById(R.id.custom_listview_row_item_icon);
             convertView.setTag(holder);
         }
         else {
@@ -72,31 +79,26 @@ public class ReceiptBaseAdapter extends BaseAdapter {
 
         Receipt receipt = (Receipt) getItem(position);
 
-        holder.txtDate.setText(MY_DATE_LABEL + receipt.getCreatedDate());
+        holder.txtDate.setText(MY_DATE_LABEL + new DateTime(receipt.getCreatedDate()).toString(DateTimeFormat.shortDateTime()));
         holder.txtTitle.setText(receipt.getTitle());
         holder.txtPrice.setText(MY_PRICE_LABEL + new StringPriceParser(receipt.getPrice()).getStringValue());
         holder.txtLocation.setText(MY_LOCATION_LABEL + receipt.getLocation());
+        holder.txtCategory.setText(MY_CATEGORY_LABEL + receipt.getCategory());
+        holder.txtMethod.setText(MY_METHOD_LABEL + receipt.getMethod());
+        holder.imageView.setImageBitmap(null);
 
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        String path = receipt.getImageFilePath();
+        if(path != null) {
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            Bitmap bitmap = BitmapFactory.decodeFile(path, bmOptions);
 
-        // Hook up clicks on the thumbnail views.
-        Bitmap bitmap = BitmapFactory.decodeFile(receipt.getImageFilePath(), bmOptions);
-
-        try {
-            final Bitmap mBitmap = modifyOrientation(bitmap, receipt.getImageFilePath());
-
-
-            holder.imageView.setImageBitmap(mBitmap);
-
-        } catch(IOException e) {
-            Toast.makeText(
-                    mContext,
-                    "Error reading receipt image file",
-                    Toast.LENGTH_LONG).show();
-
-            //TODO Use the default image
+            try {
+                final Bitmap mBitmap = modifyOrientation(bitmap, path);
+                holder.imageView.setImageBitmap(mBitmap);
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
         }
-
         return convertView;
     }
 

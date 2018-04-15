@@ -1,9 +1,10 @@
-package edu.odu.cs441.sro;
+package edu.odu.cs441.sro.activity;
 
 import android.Manifest;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.Nullable;
@@ -13,24 +14,26 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 import java.io.File;
 import java.util.List;
 import java.util.UUID;
-
-import edu.odu.cs441.sro.entity.metadata.Location;
+import edu.odu.cs441.sro.R;
 import edu.odu.cs441.sro.entity.metadata.Method;
 import edu.odu.cs441.sro.entity.record.Receipt;
+import edu.odu.cs441.sro.intent.EmailReceiptIntent;
 import edu.odu.cs441.sro.utility.view.ReceiptBaseAdapter;
 import edu.odu.cs441.sro.viewmodel.metadata.CategoryViewModel;
-import edu.odu.cs441.sro.viewmodel.metadata.LocationViewModel;
 import edu.odu.cs441.sro.viewmodel.metadata.MethodViewModel;
 import edu.odu.cs441.sro.viewmodel.record.ReceiptViewModel;
 import edu.odu.cs441.sro.entity.metadata.Category;
@@ -38,22 +41,21 @@ import edu.odu.cs441.sro.entity.metadata.Category;
 /**
  * This is the main Activity of this application.
  */
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class MainActivity extends AppCompatActivity {
 
     // ViewModels
-    ReceiptViewModel receiptViewModel;
-    LocationViewModel locationViewModel;
-    CategoryViewModel categoryViewModel;
-    MethodViewModel methodViewModel;
+    private ReceiptViewModel receiptViewModel;
+    private CategoryViewModel categoryViewModel;
+    private MethodViewModel methodViewModel;
 
     // Navigation Drawer
     private DrawerLayout mDrawerLayout;
 
-    // Custom BaseAdapter
-    ReceiptBaseAdapter mAdapter;
+    // Receipt BaseAdapter
+    private ReceiptBaseAdapter mAdapter;
 
     // Receipt ListView
-    ListView mListView;
+    private ListView mListView;
 
     // Request codes for user permissions
     private final int MY_CAMERA_REQUEST_CODE = 100;
@@ -61,23 +63,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     // Request code for child activity
     private final int MY_CAMERA_ACTIVITY_REQUEST_CODE = 1000;
-    private final int MY_PHOTO_RECEIPT_ADD_ACTIVITY_REQUEST_CODE = 2000;
 
     // Identifiers for Intent data
     public static final String MY_UUID_INTENT_IDENTIFIER = "UUID";
-    public static final String MY_DATE_INTENT_IDENTIFIER = "DATE";
     public static final String MY_IMAGE_FILE_INTENT_IDENTIFIER = "IMAGE_FILE";
-    public static final String MY_RECEIPT_OBJECTS_INTENT_IDENTIFIER = "RECEIPT_OBJECT";
-    public static final String MY_METADATA_CONTROLLER_OBJECT_INTENT_IDENTIFIER =
-            "METADATA_CONTROLLER";
+
+    // Variable to keep track of selected item index in the Receipt ListView
+    private int longSelectedItemIndex = -1;
 
     // File Directory names
     public static final String MY_SRO_MAIN_DIRECTORY = "SRO";
     public static final String MY_IMAGE_DIRECTORY = "Images";
-    public static final String MY_RECEIPT_DIRECTORY = "Data";
 
-    // Tag Not Specified Literal
-    public static final String NOT_SPECIFIED_LITERAL = "[Not Specified]";
+    private List<Receipt> receiptList;
 
     /**
      * This method is invoked when this Activity is first created.
@@ -100,57 +98,62 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         actionbar.setDisplayHomeAsUpEnabled(true);
 
         // Change the default icon of the home button to the predefined headline icon
-        actionbar.setHomeAsUpIndicator(R.drawable.ic_view_headline_black_24dp);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_view_headline_white_24dp);
         actionbar.setDisplayShowCustomEnabled(true);
 
+        // Instantiate the View Models
         receiptViewModel = ViewModelProviders.of(this).get(ReceiptViewModel.class);
-        locationViewModel = ViewModelProviders.of(this).get(LocationViewModel.class);
         categoryViewModel = ViewModelProviders.of(this).get(CategoryViewModel.class);
         methodViewModel = ViewModelProviders.of(this).get(MethodViewModel.class);
 
         mListView = findViewById(R.id.main_listView);
+
         mAdapter = new ReceiptBaseAdapter(this);
         receiptViewModel.findAll().observe(this, new Observer<List<Receipt>>() {
             @Override
             public void onChanged(@Nullable List<Receipt> receipts) {
                 mAdapter.setItems(receipts);
                 mAdapter.notifyDataSetChanged();
+                receiptList = receipts;
             }
         });
         mListView.setAdapter(mAdapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // TODO Receipt is clicked
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                longSelectedItemIndex = position;
+                showMenu(view);
+                return false;
             }
         });
 
         // Initialize Custom Navigation Drawers
         initializeDrawers();
 
-        initializeReceipts();
+        initializeMetadata();
     }
 
+    /**
+     * If there is no base metadata, create basic metadata information
+     */
+    private void initializeMetadata() {
+        if(categoryViewModel.getCount() == 0) {
+            categoryViewModel.insert(new Category("Grocery"));
+            categoryViewModel.insert(new Category("Electronics"));
+            categoryViewModel.insert(new Category("Furniture"));
+            categoryViewModel.insert(new Category("Restaurant"));
+            categoryViewModel.insert(new Category("Entertainment"));
+        }
 
-    private void initializeReceipts() {
-        categoryViewModel.insert(new Category("Grocery"));
-        categoryViewModel.insert(new Category("Electronics"));
-        categoryViewModel.insert(new Category("Furniture"));
-        categoryViewModel.insert(new Category("Restaurant"));
-        categoryViewModel.insert(new Category("Entertainment"));
-
-        locationViewModel.insert(new Location("Walmart"));
-        locationViewModel.insert(new Location("Pizzahut"));
-        locationViewModel.insert(new Location("Lowe's"));
-        locationViewModel.insert(new Location("McDonald's"));
-        locationViewModel.insert(new Location("Foodlion"));
-
-        methodViewModel.insert(new Method("Cash"));
-        methodViewModel.insert(new Method("Credit Card"));
-        methodViewModel.insert(new Method("Money Order"));
-        methodViewModel.insert(new Method("Check"));
-        methodViewModel.insert(new Method("Debit Card"));
-        methodViewModel.insert(new Method("Paypal"));
+        if(methodViewModel.getCount() == 0) {
+            methodViewModel.insert(new Method("Cash"));
+            methodViewModel.insert(new Method("Credit Card"));
+            methodViewModel.insert(new Method("Money Order"));
+            methodViewModel.insert(new Method("Check"));
+            methodViewModel.insert(new Method("Debit Card"));
+            methodViewModel.insert(new Method("Paypal"));
+        }
     }
 
     /**
@@ -187,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                         switch (menuItem.getItemId()) {
                             case R.id.nav_existing_receipt:
-
+                                startFilterReceiptActivity();
                                 return true;
 
                             case R.id.nav_existing_subscription:
@@ -232,16 +235,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             case R.id.add_photo_receipt:
                                 if(checkCameraHardware(getApplicationContext())) {
                                     startCameraActivity();
-
-
                                 } else {
-                                    //TODO Camera was not found on this device. Create no photo
-                                    //TODO receipt instead
+                                    startNoPhotoReceiptAddActivity();
                                 }
                                 return true;
-
                             case R.id.add_nophoto_receipt:
-
+                                startNoPhotoReceiptAddActivity();
                                 return true;
 
                             case R.id.add_subscription:
@@ -252,6 +251,40 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     }
                 }
         );
+    }
+
+    /**
+     * Show Action Menu when user long clicks a Receipt in the ListView
+     * @param view View
+     */
+    private void showMenu(View view) {
+        PopupMenu popup = new PopupMenu(this, view);
+
+        // This activity implements OnMenuItemClickListener
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Receipt receipt = receiptList.get(longSelectedItemIndex);
+                switch (item.getItemId()) {
+                    case R.id.item_action_open:
+                        startReceiptViewActivity(receipt);
+                        return true;
+                    case R.id.item_action_edit:
+                        startReceiptEditActivity(receipt);
+                        return true;
+                    case R.id.item_action_send:
+                        emailReceipt(receipt);
+                        return true;
+                    case R.id.item_action_delete:
+                        showDeleteConfirmation(receipt);
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+        popup.inflate(R.menu.item_action_menu);
+        popup.show();
     }
 
     /**
@@ -288,12 +321,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position,
-                            long id) {
-
-    }
-
+    /**
+     * Start the camera activity for taking a photo of a receipt
+     */
     public void startCameraActivity() {
 
         // Start the Camera activity after Camera and Write External Storage permissions
@@ -304,6 +334,70 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    public void startNoPhotoReceiptAddActivity() {
+        // Add UUID and Image file data to the intent
+        Intent intent = new Intent(this, NoPhotoReceiptAddActivity.class);
+        intent.putExtra(MY_UUID_INTENT_IDENTIFIER, UUID.randomUUID());
+
+        // Start PhotoReceiptAddActivity
+        startActivity(intent);
+    }
+
+    /**
+     * Open Receipt Information
+     * @param receipt Receipt
+     */
+    private void startReceiptViewActivity(Receipt receipt) {
+        Intent intent = new Intent(this, ReceiptViewActivity.class);
+        intent.putExtra(ReceiptViewActivity.RECEIPT_UNIQUE_IDENTIFIER, receipt.getReceiptKey());
+        startActivity(intent);
+    }
+
+    /**
+     * Open Receipt Edit Activity
+     * @param receipt Receipt
+     */
+    private void startReceiptEditActivity(Receipt receipt) {
+        Intent intent = new Intent(this, ReceiptEditActivity.class);
+        intent.putExtra(ReceiptEditActivity.RECEIPT_UNIQUE_IDENTIFIER, receipt.getReceiptKey());
+        startActivity(intent);
+    }
+
+    /**
+     * E-mail receipt
+     * @param receipt Receipt
+     */
+    private void emailReceipt(Receipt receipt) {
+        EmailReceiptIntent emailReceiptIntent = new EmailReceiptIntent(this);
+        emailReceiptIntent.sendEmail(receipt);
+    }
+
+    /**
+     * Show delete receipt confirmation popup when user selects to delete a receipt
+     */
+    private void showDeleteConfirmation(final Receipt receipt) {
+        new AlertDialog.Builder(this)
+                .setTitle("Confirm")
+                .setMessage("Do you really want to delete the receipt?")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        if(receipt.getImageFilePath() != null) {
+                            File file = new File(receipt.getImageFilePath());
+                            file.delete();
+                        }
+                        receiptViewModel.delete(receipt);
+                    }})
+                .setNegativeButton(android.R.string.no, null).show();
+    }
+
+    /**
+     * Open ReceiptFilterActivity
+     */
+    private void startFilterReceiptActivity() {
+        Intent intent = new Intent(this, ReceiptFilterActivity.class);
+        startActivity(intent);
+    }
 
     /**
      * This method is invoked when an Activity started for result returns a result
@@ -330,19 +424,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 intent.putExtra(MY_UUID_INTENT_IDENTIFIER, uuid);
 
                 // Start PhotoReceiptAddActivity
-                startActivityForResult(intent, MY_PHOTO_RECEIPT_ADD_ACTIVITY_REQUEST_CODE);
+                startActivity(intent);
             }
             // Unsuccessful Result
             else {
-                //TODO what should we do if the CameraActivity returns bad result?
-                //TODO Maybe image file was not successfully saved or camera stopped working.
-            }
-        }
-
-        // Check if the request code is for the PhotoReceiptAddActivity
-        if(requestCode == MY_PHOTO_RECEIPT_ADD_ACTIVITY_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                //TODO
+                Toast.makeText(this, R.string.camera_preview_error, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -386,8 +472,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     startCameraActivity();
 
                 } else {
-                    //TODO Permission is denied. You are not able to use the camera, so create
-                    //TODO a receipt with no photo.
+                    startNoPhotoReceiptAddActivity();
                 }
 
                 return;
@@ -404,11 +489,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     startCameraActivity();
 
                 } else {
-                    //TODO Permission is denied. You are not able to save any data on user's SD card.
-                    //TODO Go ahead and store all information in its own private internal storage.
+                    startNoPhotoReceiptAddActivity();
                 }
-
-                return;
             }
         }
     }
