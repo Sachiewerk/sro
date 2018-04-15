@@ -1,7 +1,6 @@
 package edu.odu.cs441.sro.utility.data;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -17,7 +16,7 @@ public class StringPriceParser {
         this.decimalPrice = decimalPrice;
     }
 
-    public Double getDecimalValue() {
+    public BigDecimal getDecimalValue() {
         if(stringPrice != null) {
             try {
                 stringPrice = stringPrice.replace("$", "").trim();

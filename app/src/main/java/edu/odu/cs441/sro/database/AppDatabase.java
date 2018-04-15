@@ -5,9 +5,11 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import edu.odu.cs441.sro.dao.metadata.CategoryDao;
+import edu.odu.cs441.sro.dao.metadata.DuedateDao;
 import edu.odu.cs441.sro.dao.metadata.LocationDao;
 import edu.odu.cs441.sro.dao.metadata.MethodDao;
 import edu.odu.cs441.sro.dao.record.ReceiptDao;
+import edu.odu.cs441.sro.dao.record.SubscriptionDao;
 import edu.odu.cs441.sro.entity.metadata.Category;
 import edu.odu.cs441.sro.entity.metadata.Location;
 import edu.odu.cs441.sro.entity.metadata.Method;
@@ -20,6 +22,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract LocationDao locationDao();
     public abstract CategoryDao categoryDao();
     public abstract MethodDao methodDao();
+    public abstract DuedateDao duedateDao();
+    public abstract SubscriptionDao subscriptionDao();
 
     private static AppDatabase INSTANCE;
 
