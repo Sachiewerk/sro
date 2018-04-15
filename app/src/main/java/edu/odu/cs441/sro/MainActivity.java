@@ -25,11 +25,13 @@ import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
+import edu.odu.cs441.sro.entity.metadata.Duedate;
 import edu.odu.cs441.sro.entity.metadata.Location;
 import edu.odu.cs441.sro.entity.metadata.Method;
 import edu.odu.cs441.sro.entity.record.Receipt;
 import edu.odu.cs441.sro.utility.view.ReceiptBaseAdapter;
 import edu.odu.cs441.sro.viewmodel.metadata.CategoryViewModel;
+import edu.odu.cs441.sro.viewmodel.metadata.DuedateViewModel;
 import edu.odu.cs441.sro.viewmodel.metadata.LocationViewModel;
 import edu.odu.cs441.sro.viewmodel.metadata.MethodViewModel;
 import edu.odu.cs441.sro.viewmodel.record.ReceiptViewModel;
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     LocationViewModel locationViewModel;
     CategoryViewModel categoryViewModel;
     MethodViewModel methodViewModel;
+    DuedateViewModel duedateViewModel;
 
     // Navigation Drawer
     private DrawerLayout mDrawerLayout;
@@ -62,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     // Request code for child activity
     private final int MY_CAMERA_ACTIVITY_REQUEST_CODE = 1000;
     private final int MY_PHOTO_RECEIPT_ADD_ACTIVITY_REQUEST_CODE = 2000;
+    private final  int MY_SUBSCRIPTION_ADD_ACTIVITY_REQUEST_CODE = 3000;
 
     // Identifiers for Intent data
     public static final String MY_UUID_INTENT_IDENTIFIER = "UUID";
@@ -129,6 +133,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         initializeDrawers();
 
         initializeReceipts();
+
+        initializeSubscription();
     }
 
 
@@ -152,6 +158,63 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         methodViewModel.insert(new Method("Debit Card"));
         methodViewModel.insert(new Method("Paypal"));
     }
+
+    private void initializeSubscription() {
+        categoryViewModel.insert(new Category("Rent"));
+        categoryViewModel.insert(new Category("Insurance"));
+        categoryViewModel.insert(new Category("House"));
+        categoryViewModel.insert(new Category("Car"));
+        categoryViewModel.insert(new Category("Investment"));
+
+        locationViewModel.insert(new Location("Menagement"));
+        locationViewModel.insert(new Location("AAA"));
+        locationViewModel.insert(new Location("GEICO"));
+        locationViewModel.insert(new Location("Mercedes-Benz"));
+        locationViewModel.insert(new Location("Toyota"));
+
+        methodViewModel.insert(new Method("Cash"));
+        methodViewModel.insert(new Method("Credit Card"));
+        methodViewModel.insert(new Method("Money Order"));
+        methodViewModel.insert(new Method("Check"));
+        methodViewModel.insert(new Method("Debit Card"));
+        methodViewModel.insert(new Method("Paypal"));
+
+        duedateViewModel.insert(new Duedate("1"));
+        duedateViewModel.insert(new Duedate("2"));
+        duedateViewModel.insert(new Duedate("3"));
+        duedateViewModel.insert(new Duedate("4"));
+        duedateViewModel.insert(new Duedate("5"));
+        duedateViewModel.insert(new Duedate("6"));
+        duedateViewModel.insert(new Duedate("7"));
+        duedateViewModel.insert(new Duedate("8"));
+        duedateViewModel.insert(new Duedate("9"));
+        duedateViewModel.insert(new Duedate("10"));
+        duedateViewModel.insert(new Duedate("11"));
+        duedateViewModel.insert(new Duedate("12"));
+        duedateViewModel.insert(new Duedate("13"));
+        duedateViewModel.insert(new Duedate("14"));
+        duedateViewModel.insert(new Duedate("15"));
+        duedateViewModel.insert(new Duedate("16"));
+        duedateViewModel.insert(new Duedate("17"));
+        duedateViewModel.insert(new Duedate("18"));
+        duedateViewModel.insert(new Duedate("19"));
+        duedateViewModel.insert(new Duedate("20"));
+        duedateViewModel.insert(new Duedate("21"));
+        duedateViewModel.insert(new Duedate("22"));
+        duedateViewModel.insert(new Duedate("23"));
+        duedateViewModel.insert(new Duedate("24"));
+        duedateViewModel.insert(new Duedate("25"));
+        duedateViewModel.insert(new Duedate("26"));
+        duedateViewModel.insert(new Duedate("27"));
+        duedateViewModel.insert(new Duedate("28"));
+        duedateViewModel.insert(new Duedate("29"));
+        duedateViewModel.insert(new Duedate("30"));
+        duedateViewModel.insert(new Duedate("31"));
+
+
+
+    }
+
 
     /**
      * Initialize the Navigation Drawers and add Event Handlers
@@ -341,6 +404,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Check if the request code is for the PhotoReceiptAddActivity
         if(requestCode == MY_PHOTO_RECEIPT_ADD_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                //TODO
+            }
+        }
+        if(requestCode == MY_SUBSCRIPTION_ADD_ACTIVITY_REQUEST_CODE){
             if (resultCode == RESULT_OK) {
                 //TODO
             }
