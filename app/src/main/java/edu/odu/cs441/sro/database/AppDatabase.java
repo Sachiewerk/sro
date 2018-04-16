@@ -15,7 +15,7 @@ import edu.odu.cs441.sro.entity.metadata.Method;
 import edu.odu.cs441.sro.entity.record.Receipt;
 import edu.odu.cs441.sro.entity.record.Subscription;
 
-@Database(entities = {Receipt.class, Subscription.class, Location.class, Category.class, Method.class}, version = 4, exportSchema = false)
+@Database(entities = {Receipt.class, Subscription.class, Location.class, Category.class, Method.class}, version = 5, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract ReceiptDao receiptDao();

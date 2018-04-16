@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
     private ReceiptViewModel receiptViewModel;
     private CategoryViewModel categoryViewModel;
     private MethodViewModel methodViewModel;
-    private DuedateViewModel duedateViewModel;
 
     // Navigation Drawer
     private DrawerLayout mDrawerLayout;
@@ -155,39 +154,7 @@ public class MainActivity extends AppCompatActivity {
             methodViewModel.insert(new Method("Debit Card"));
             methodViewModel.insert(new Method("Paypal"));
         }
-        if(duedateViewModel.getCount() == 0){
-            duedateViewModel.insert(new Duedate("1"));
-            duedateViewModel.insert(new Duedate("2"));
-            duedateViewModel.insert(new Duedate("3"));
-            duedateViewModel.insert(new Duedate("4"));
-            duedateViewModel.insert(new Duedate("5"));
-            duedateViewModel.insert(new Duedate("6"));
-            duedateViewModel.insert(new Duedate("7"));
-            duedateViewModel.insert(new Duedate("8"));
-            duedateViewModel.insert(new Duedate("9"));
-            duedateViewModel.insert(new Duedate("10"));
-            duedateViewModel.insert(new Duedate("11"));
-            duedateViewModel.insert(new Duedate("12"));
-            duedateViewModel.insert(new Duedate("13"));
-            duedateViewModel.insert(new Duedate("14"));
-            duedateViewModel.insert(new Duedate("15"));
-            duedateViewModel.insert(new Duedate("16"));
-            duedateViewModel.insert(new Duedate("17"));
-            duedateViewModel.insert(new Duedate("18"));
-            duedateViewModel.insert(new Duedate("19"));
-            duedateViewModel.insert(new Duedate("20"));
-            duedateViewModel.insert(new Duedate("21"));
-            duedateViewModel.insert(new Duedate("22"));
-            duedateViewModel.insert(new Duedate("23"));
-            duedateViewModel.insert(new Duedate("24"));
-            duedateViewModel.insert(new Duedate("25"));
-            duedateViewModel.insert(new Duedate("26"));
-            duedateViewModel.insert(new Duedate("27"));
-            duedateViewModel.insert(new Duedate("28"));
-            duedateViewModel.insert(new Duedate("29"));
-            duedateViewModel.insert(new Duedate("30"));
-            duedateViewModel.insert(new Duedate("31"));
-        }
+
     }
 
     /**
@@ -278,9 +245,8 @@ public class MainActivity extends AppCompatActivity {
                             case R.id.add_nophoto_receipt:
                                 startNoPhotoReceiptAddActivity();
                                 return true;
-
                             case R.id.add_subscription:
-
+                                startSubscriptionActivity();
                                 return true;
                         }
                         return true;
@@ -376,6 +342,14 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(MY_UUID_INTENT_IDENTIFIER, UUID.randomUUID());
 
         // Start PhotoReceiptAddActivity
+        startActivity(intent);
+    }
+
+    /**
+     * Start the AddSubscriptionActivity
+     */
+    private void startSubscriptionActivity() {
+        Intent intent = new Intent(this, SubscriptionAddActivity.class);
         startActivity(intent);
     }
 

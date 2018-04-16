@@ -144,7 +144,7 @@ public class SubscriptionAddActivity extends AppCompatActivity {
     }
 
     private void setSubscriptionDate() {
-        TextView dateView = findViewById(R.id.no_photo_receipt_add_textview_date);
+        TextView dateView = findViewById(R.id.subscription_add_textview_date);
 
         // Create a temporary DateTime for date formatting
         dateView.setText(mDate.toString(DateTimeFormat.shortDateTime()));
@@ -235,10 +235,22 @@ public class SubscriptionAddActivity extends AppCompatActivity {
                 String location = mLocationAutoCompleteTextView.getText().toString();
                 String method = mMethodAutoCompleteTextView.getText().toString();
                 String price = mPriceAutoCompleteTextView.getText().toString();
-                String duedate = mDuedateAutoCompleteTextView.getText().toString();
                 String comment = mCommentEditText.getText().toString();
-                String startdate = mStartdateEditText.getText().toString();
-                String enddate = mEnddateEditText.getText().toString();
+
+                Long dueDate = null;
+                Long endDate = null;
+                Long startDate = null;
+                try {
+                    dueDate = Long.parseLong(mDuedateAutoCompleteTextView.getText().toString());
+                    endDate = Long.parseLong(mEnddateEditText.getText().toString());
+                    startDate = Long.parseLong(
+                            mStartdateEditText.getText().toString());
+                } catch(Exception e) {
+                    e.printStackTrace();
+                    dueDate = null;
+                    endDate = null;
+                    startDate = null;
+                }
 
                 categoryViewModel.insert(new Category(category));
                 locationViewModel.insert(new Location(location));
@@ -251,6 +263,9 @@ public class SubscriptionAddActivity extends AppCompatActivity {
                 subscription.setMethod(method);
                 subscription.setPrice(new StringPriceParser(price).getDecimalValue());
                 subscription.setComment(comment);
+                subscription.setStartDate(startDate);
+                subscription.setEndDate(endDate);
+                subscription.setDueDate(dueDate);
 
                 subscriptionViewModel.insert(subscription);
 

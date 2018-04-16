@@ -44,7 +44,8 @@
         <activity android:name=".activity.ReceiptFilterActivity" />
         <activity android:name=".activity.ReceiptResultActivity" />
         <activity android:name=".activity.ReportActivity" />
-        <activity android:name=".activity.ReportResultActivity"></activity>
+        <activity android:name=".activity.ReportResultActivity" />
+        <activity android:name=".activity.SubscriptionAddActivity" />
     </application>
 
 </manifest>
