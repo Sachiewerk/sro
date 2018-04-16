@@ -32,6 +32,22 @@ public class ReceiptViewModel extends AndroidViewModel {
         return receiptRepository.findByKey(receiptKey);
     }
 
+    public List<Receipt> findByDate(Long startDate, Long endDate) {
+        return receiptRepository.findByDate(startDate, endDate);
+    }
+
+    public List<Receipt> findByDateAndLocation(Long startDate, Long endDate, String location) {
+        return receiptRepository.findByDateAndLocation(startDate, endDate, location);
+    }
+
+    public List<Receipt> findByDateAndCategory(Long startDate, Long endDate, String category) {
+        return receiptRepository.findByDateAndCategory(startDate, endDate, category);
+    }
+
+    public List<Receipt> findByDateAndMethod(Long startDate, Long endDate, String method) {
+        return receiptRepository.findByDateAndMethod(startDate, endDate, method);
+    }
+
     public void insert(Receipt receipt) {
         receiptRepository.insert(receipt);
     }

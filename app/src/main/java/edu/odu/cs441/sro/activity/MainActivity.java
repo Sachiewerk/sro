@@ -196,7 +196,9 @@ public class MainActivity extends AppCompatActivity {
                             case R.id.nav_existing_subscription:
 
                                 return true;
-
+                            case R.id.nav_existing_report:
+                                startReportActivity();
+                                return true;
                             case R.id.nav_setting:
                                 startSettingsActivity();
 
@@ -397,6 +399,14 @@ public class MainActivity extends AppCompatActivity {
      */
     private void startFilterReceiptActivity() {
         Intent intent = new Intent(this, ReceiptFilterActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Start ReportActivity
+     */
+    private void startReportActivity() {
+        Intent intent = new Intent(this, ReportActivity.class);
         startActivity(intent);
     }
 

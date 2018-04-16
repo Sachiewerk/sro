@@ -28,6 +28,18 @@ public interface ReceiptDao {
     @Query("SELECT * FROM receipt WHERE receipt_key = :receiptKey")
     Receipt findByKey(String receiptKey);
 
+    @Query("SELECT * FROM receipt WHERE created_date BETWEEN :startDate AND :endDate")
+    List<Receipt> findByDate(Long startDate, Long endDate);
+
+    @Query("SELECT * FROM receipt WHERE category = :category AND created_date BETWEEN :startDate AND :endDate")
+    List<Receipt> findByDateAndCategory(Long startDate, Long endDate, String category);
+
+    @Query("SELECT * FROM receipt WHERE method = :method AND created_date BETWEEN :startDate AND :endDate")
+    List<Receipt> findByDateAndMethod(Long startDate, Long endDate, String method);
+
+    @Query("SELECT * FROM receipt WHERE location = :location AND created_date BETWEEN :startDate AND :endDate")
+    List<Receipt> findByDateAndLocation(Long startDate, Long endDate, String location);
+
     @RawQuery(observedEntities = Receipt.class)
     LiveData<List<Receipt>> findByQuery(SupportSQLiteQuery query);
 

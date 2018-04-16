@@ -53,6 +53,22 @@ public class ReceiptRepository {
         return receiptDao.findByKey(receiptKey);
     }
 
+    public List<Receipt> findByDate(Long startDate, Long endDate) {
+        return receiptDao.findByDate(startDate, endDate);
+    }
+
+    public List<Receipt> findByDateAndCategory(Long startDate, Long endDate, String category) {
+        return receiptDao.findByDateAndCategory(startDate, endDate, category);
+    }
+
+    public List<Receipt> findByDateAndMethod(Long startDate, Long endDate, String method) {
+        return receiptDao.findByDateAndMethod(startDate, endDate, method);
+    }
+
+    public List<Receipt> findByDateAndLocation(Long startDate, Long endDate, String location) {
+        return receiptDao.findByDateAndLocation(startDate, endDate, location);
+    }
+
     private static class InsertAsyncTask extends AsyncTask<Receipt, Void, Void> {
         private ReceiptDao receiptDao;
 
