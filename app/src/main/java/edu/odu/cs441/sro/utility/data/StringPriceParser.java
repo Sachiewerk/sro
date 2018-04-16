@@ -1,6 +1,5 @@
 package edu.odu.cs441.sro.utility.data;
 
-import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -16,7 +15,7 @@ public class StringPriceParser {
         this.decimalPrice = decimalPrice;
     }
 
-    public BigDecimal getDecimalValue() {
+    public Double getDecimalValue() {
         if(stringPrice != null) {
             try {
                 stringPrice = stringPrice.replace("$", "").trim();
@@ -38,5 +37,16 @@ public class StringPriceParser {
             return "$" + nf.format(decimalPrice);
         }
         return null;
+    }
+
+    public static String toTwoDigitDecimal(Double value) {
+        if(value != null) {
+            Locale locale = Locale.ENGLISH;
+            NumberFormat nf = NumberFormat.getNumberInstance(locale);
+            nf.setMinimumFractionDigits(2);
+            nf.setMaximumFractionDigits(2);
+            return nf.format(value);
+        }
+        return "";
     }
 }

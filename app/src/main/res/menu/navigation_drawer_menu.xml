@@ -10,6 +10,10 @@
             android:icon="@drawable/ic_subscription"
             android:title="Manage Existing Subscription" />
         <item
+            android:id="@+id/nav_existing_report"
+            android:icon="@drawable/ic_assignment_24dp"
+            android:title="Report" />?
+        <item
             android:id="@+id/nav_setting"
             android:icon="@drawable/ic_settings"
             android:title="Settings" />
