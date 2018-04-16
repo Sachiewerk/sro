@@ -21,6 +21,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import java.io.File;
 import java.io.IOException;
@@ -34,8 +36,6 @@ import edu.odu.cs441.sro.viewmodel.record.ReceiptViewModel;
 public class ReceiptViewActivity extends AppCompatActivity {
 
     public static String RECEIPT_UNIQUE_IDENTIFIER = "RECEIPT_PRIMARY_KEY";
-
-    private String emailAddress;
 
     private Receipt receipt;
     private ReceiptViewModel receiptViewModel;
@@ -67,11 +67,13 @@ public class ReceiptViewActivity extends AppCompatActivity {
             finish();
         }
 
-        mImageFile = new File(receipt.getImageFilePath());
-
         initializeTextViews();
         initializeButtons();
-        setThumbnailImage();
+
+        if(receipt.getImageFilePath() != null) {
+            mImageFile = new File(receipt.getImageFilePath());
+            setThumbnailImage();
+        }
     }
 
     private void initializeTextViews() {
@@ -84,7 +86,7 @@ public class ReceiptViewActivity extends AppCompatActivity {
         TextView commentTextView = findViewById(R.id.receipt_view_textview_value_comment);
 
         titleTextView.setText(receipt.getTitle());
-        dateTextView.setText(receipt.getCreatedDate().toString(DateTimeFormat.shortDateTime()));
+        dateTextView.setText(new DateTime(receipt.getCreatedDate()).toString(DateTimeFormat.shortDateTime()));
         categoryTextView.setText(receipt.getCategory());
         locationTextView.setText(receipt.getLocation());
         methodTextView.setText(receipt.getMethod());
@@ -96,7 +98,6 @@ public class ReceiptViewActivity extends AppCompatActivity {
         Button closeButton = findViewById(R.id.receipt_view_button_close);
         Button sendButton = findViewById(R.id.receipt_view_button_send);
         Button splitButton = findViewById(R.id.receipt_view_button_split);
-        Button editButton = findViewById(R.id.receipt_view_button_edit);
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,8 +151,6 @@ public class ReceiptViewActivity extends AppCompatActivity {
                     this,
                     "Error reading receipt image file",
                     Toast.LENGTH_LONG).show();
-
-            //TODO Use the default image
         }
     }
 

@@ -1,10 +1,12 @@
 package edu.odu.cs441.sro.dao.record;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.persistence.db.SupportSQLiteQuery;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.RawQuery;
 import android.arch.persistence.room.Update;
 
 import java.util.List;
@@ -23,6 +25,9 @@ public interface ReceiptDao {
     @Query("SELECT * FROM receipt WHERE receipt_key = :receiptKey")
     Receipt findByKey(String receiptKey);
 
+    @RawQuery(observedEntities = Receipt.class)
+    LiveData<List<Receipt>> findByQuery(SupportSQLiteQuery query);
+
     @Insert
     void insert(Receipt receipt);
 
@@ -31,5 +36,4 @@ public interface ReceiptDao {
 
     @Delete
     void delete(Receipt ... recepts);
-
 }

@@ -3,6 +3,8 @@ package edu.odu.cs441.sro.viewmodel.record;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
+import android.arch.persistence.db.SimpleSQLiteQuery;
+
 import java.util.List;
 import edu.odu.cs441.sro.entity.record.Receipt;
 import edu.odu.cs441.sro.repository.record.ReceiptRepository;
@@ -22,6 +24,10 @@ public class ReceiptViewModel extends AndroidViewModel {
         return allReceipts;
     }
 
+    public LiveData<List<Receipt>> findByQuery(SimpleSQLiteQuery query) {
+        return receiptRepository.findByQuery(query);
+    }
+
     public Receipt findByKey(String receiptKey) {
         return receiptRepository.findByKey(receiptKey);
     }
@@ -37,5 +43,4 @@ public class ReceiptViewModel extends AndroidViewModel {
     public void delete(Receipt ... receipts) {
         receiptRepository.delete(receipts);
     }
-
 }

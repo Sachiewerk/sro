@@ -17,7 +17,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="edu.odu.cs441.sro"
@@ -25,7 +24,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/photo_file_path"/>
+                android:resource="@xml/photo_file_path" />
         </provider>
 
         <activity android:name=".activity.MainActivity">
@@ -42,6 +41,10 @@
             android:screenOrientation="portrait" />
         <activity android:name=".activity.PhotoReceiptAddActivity" />
         <activity android:name=".activity.ReceiptViewActivity" />
+        <activity android:name=".activity.ReceiptEditActivity" />
+        <activity android:name=".activity.NoPhotoReceiptAddActivity" />
+        <activity android:name=".activity.ReceiptFilterActivity" />
+        <activity android:name=".activity.ReceiptResultActivity"></activity>
     </application>
 
 </manifest>

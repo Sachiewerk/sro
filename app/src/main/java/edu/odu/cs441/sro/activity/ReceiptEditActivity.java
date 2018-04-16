@@ -30,13 +30,10 @@ import android.widget.Toast;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
 import edu.odu.cs441.sro.R;
 import edu.odu.cs441.sro.entity.metadata.Category;
 import edu.odu.cs441.sro.entity.metadata.Location;
@@ -49,10 +46,9 @@ import edu.odu.cs441.sro.viewmodel.metadata.LocationViewModel;
 import edu.odu.cs441.sro.viewmodel.metadata.MethodViewModel;
 import edu.odu.cs441.sro.viewmodel.record.ReceiptViewModel;
 
-/**
- *
- */
-public class PhotoReceiptAddActivity extends AppCompatActivity {
+public class ReceiptEditActivity extends AppCompatActivity {
+
+    public static String RECEIPT_UNIQUE_IDENTIFIER = "RECEIPT_PRIMARY_KEY";
 
     // ViewModels
     ReceiptViewModel receiptViewModel;
@@ -73,7 +69,9 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
     File mImageFile;
 
     // The UUID of this receipt, which is also part of the image file name
-    UUID mUUID;
+    private String receiptKey;
+
+    private Receipt receipt;
 
     private ArrayList<String> mLocationList;
     private ArrayList<String> mCategoryList;
@@ -83,7 +81,6 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
     private ArrayAdapter<String> mCategoryAutoCompleteAdapter;
     private ArrayAdapter<String> mMethodAutoCompleteAdapter;
 
-    private DateTime mDate;
     private EditText mTitleEditText;
     private AutoCompleteTextView mLocationAutoCompleteTextView;
     private AutoCompleteTextView mPriceAutoCompleteTextView;
@@ -94,20 +91,20 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_photo_receipt_add);
+        setContentView(R.layout.activity_receipt_edit);
 
-        // Obtain image files and UUID from the calling MainMethod and set the current date/time
-        mImageFile =
-                (File)getIntent().getSerializableExtra(MainActivity.MY_IMAGE_FILE_INTENT_IDENTIFIER);
-
-        mUUID = (UUID)getIntent().getSerializableExtra(MainActivity.MY_UUID_INTENT_IDENTIFIER);
-
-        mDate = new DateTime();
+        receiptKey = getIntent().getStringExtra(RECEIPT_UNIQUE_IDENTIFIER);
 
         receiptViewModel = ViewModelProviders.of(this).get(ReceiptViewModel.class);
         locationViewModel = ViewModelProviders.of(this).get(LocationViewModel.class);
         categoryViewModel = ViewModelProviders.of(this).get(CategoryViewModel.class);
         methodViewModel = ViewModelProviders.of(this).get(MethodViewModel.class);
+
+        receipt = receiptViewModel.findByKey(receiptKey);
+
+        if(receipt == null) {
+            finish();
+        }
 
         mLocationList = new ArrayList<> ();
         locationViewModel.findAll().observe(this, new Observer<List<Location>>() {
@@ -117,13 +114,9 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
                 for(Location location : locations) {
                     mLocationList.add(location.getLocation());
                 }
-
             }
         });
-        if(mLocationList.isEmpty())
-        {
-            Toast.makeText(this,"ERROR",Toast.LENGTH_LONG).show();
-        }
+
         mCategoryList = new ArrayList<> ();
         categoryViewModel.findAll().observe(this, new Observer<List<Category>>() {
             @Override
@@ -134,7 +127,6 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
                 }
             }
         });
-
 
         mMethodList = new ArrayList<> ();
         methodViewModel.findAll().observe(this, new Observer<List<Method>>() {
@@ -147,46 +139,40 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
             }
         });
 
+        mTitleEditText = findViewById(R.id.receipt_edit_edittext_title);
+        mLocationAutoCompleteTextView = findViewById(R.id.receipt_edit_autoCompleteTextview_location);
+        mPriceAutoCompleteTextView = findViewById(R.id.receipt_edit_autoCompleteTextview_price);
+        mCategoryAutoCompleteTextView = findViewById(R.id.receipt_edit_autoCompleteTextview_category);
+        mMethodAutoCompleteTextView = findViewById(R.id.receipt_edit_autoCompleteTextview_method);
+        mCommentEditText = findViewById(R.id.receipt_edit_edittext_comment);
 
-        mTitleEditText = findViewById(R.id.photo_receipt_add_edittext_title);
-        mLocationAutoCompleteTextView =
-                (AutoCompleteTextView) findViewById(
-                        R.id.photo_receipt_add_autoCompleteTextview_location);
-        mPriceAutoCompleteTextView =
-                (AutoCompleteTextView) findViewById(
-                        R.id.photo_receipt_add_autoCompleteTextview_price);
-        mCategoryAutoCompleteTextView =
-                (AutoCompleteTextView) findViewById(
-                        R.id.photo_receipt_add_autoCompleteTextview_category);
-        mMethodAutoCompleteTextView =
-                (AutoCompleteTextView) findViewById(
-                        R.id.photo_receipt_add_autoCompleteTextview_method);
-        mCommentEditText = findViewById(R.id.photo_receipt_add_edittext_comment);
+        if(receipt.getImageFilePath() != null) {
+            mImageFile = new File(receipt.getImageFilePath());
+            setThumbnailImage();
+        }
 
-
-        mLocationAutoCompleteAdapter = new ArrayAdapter<>(
-                this,android.R.layout.select_dialog_singlechoice, mLocationList);
-        mCategoryAutoCompleteAdapter = new ArrayAdapter<>(
-                this, android.R.layout.select_dialog_singlechoice, mCategoryList);
-        mMethodAutoCompleteAdapter = new ArrayAdapter<>(
-                this, android.R.layout.select_dialog_singlechoice, mMethodList);
-
-        setThumbnailImage();
-        setReceiptDate();
+        setViewValues();
         initializeTitleViews();
         initializeAutoCompleteTextViews();
         initializeButtonEventListener();
     }
 
-    private void setReceiptDate() {
-        TextView dateView = findViewById(R.id.photo_receipt_add_textview_date);
+    private void setViewValues() {
+        TextView dateView = findViewById(R.id.receipt_edit_textview_date);
+        TextView titleView = findViewById(R.id.receipt_edit_receipt_title);
 
-        // Create a temporary DateTime for date formatting
-        dateView.setText(mDate.toString(DateTimeFormat.shortDateTime()));
+        dateView.setText(new DateTime(receipt.getCreatedDate()).toString(DateTimeFormat.shortDateTime()));
+        titleView.setText(receipt.getTitle());
+        mTitleEditText.setText(receipt.getTitle());
+        mLocationAutoCompleteTextView.setText(receipt.getLocation());
+        mPriceAutoCompleteTextView.setText(new StringPriceParser(receipt.getPrice()).getStringValue());
+        mCategoryAutoCompleteTextView.setText(receipt.getCategory());
+        mMethodAutoCompleteTextView.setText(receipt.getMethod());
+        mCommentEditText.setText(receipt.getComment());
     }
 
     private void initializeTitleViews() {
-        final TextView titleView = findViewById(R.id.photo_receipt_add_receipt_title);
+        final TextView titleView = findViewById(R.id.receipt_edit_receipt_title);
 
         mTitleEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -207,6 +193,12 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
     }
 
     private void initializeAutoCompleteTextViews() {
+        mLocationAutoCompleteAdapter = new ArrayAdapter<>(
+                this,android.R.layout.select_dialog_singlechoice, mLocationList);
+        mCategoryAutoCompleteAdapter = new ArrayAdapter<>(
+                this, android.R.layout.select_dialog_singlechoice, mCategoryList);
+        mMethodAutoCompleteAdapter = new ArrayAdapter<>(
+                this, android.R.layout.select_dialog_singlechoice, mMethodList);
 
         // Add the currency TextWatcher for the price AutoCompleteTextView
         mPriceAutoCompleteTextView.addTextChangedListener
@@ -215,38 +207,33 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
         // Initialize the location AutoCompleteTextView
         initializeAutoCompleteTextView
                 (
-                    mLocationAutoCompleteTextView,
-                    mLocationAutoCompleteAdapter,
-                    mLocationList
+                        mLocationAutoCompleteTextView,
+                        mLocationAutoCompleteAdapter
                 );
 
         // Initialize the Category AutoCompleteTextView
         initializeAutoCompleteTextView
                 (
-                    mCategoryAutoCompleteTextView,
-                    mCategoryAutoCompleteAdapter,
-                    mCategoryList
+                        mCategoryAutoCompleteTextView,
+                        mCategoryAutoCompleteAdapter
                 );
 
         // Initialize the Method AutoCompleteTextView
         initializeAutoCompleteTextView
                 (
-                    mMethodAutoCompleteTextView,
-                    mMethodAutoCompleteAdapter,
-                    mMethodList
+                        mMethodAutoCompleteTextView,
+                        mMethodAutoCompleteAdapter
                 );
     }
 
     private void initializeAutoCompleteTextView
             (final AutoCompleteTextView acTextView,
-             ArrayAdapter<String> adapter,
-             ArrayList<String> list) {
+             ArrayAdapter<String> adapter) {
 
         acTextView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View paramView) {
-                    acTextView.showDropDown();
-
+                acTextView.showDropDown();
                 return false;
             }
         });
@@ -256,16 +243,14 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
     }
 
     private void initializeButtonEventListener() {
-        final Button saveButton = findViewById(R.id.photo_receipt_add_Button_Save);
-        final Button discardButton = findViewById(R.id.photo_receipt_add_Button_Discard);
+        final Button saveButton = findViewById(R.id.receipt_edit_Button_Save);
+        final Button discardButton = findViewById(R.id.receipt_edit_Button_Discard);
 
 
         // What should happen when user clicks "Save" button
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //TODO Add the Receipt object created from this Activity
                 String title = mTitleEditText.getText().toString();
                 String category = mCategoryAutoCompleteTextView.getText().toString();
                 String location = mLocationAutoCompleteTextView.getText().toString();
@@ -277,7 +262,6 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
                 locationViewModel.insert(new Location(location));
                 methodViewModel.insert(new Method(method));
 
-                Receipt receipt = new Receipt(mUUID.toString(), mDate.getMillis(), mImageFile.getAbsolutePath());
                 receipt.setTitle(title);
                 receipt.setCategory(category);
                 receipt.setLocation(location);
@@ -285,7 +269,7 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
                 receipt.setPrice(new StringPriceParser(price).getDecimalValue());
                 receipt.setComment(comment);
 
-                receiptViewModel.insert(receipt);
+                receiptViewModel.update(receipt);
 
                 setResult(RESULT_OK);
                 finish();
@@ -296,10 +280,6 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
         discardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                // Delete the image file of this activity
-                mImageFile.delete();
-
                 // Set the result to canceled
                 setResult(RESULT_CANCELED);
 
@@ -322,7 +302,7 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
             final Bitmap mBitmap = modifyOrientation(bitmap, mImageFile.getAbsolutePath());
 
 
-            final ImageButton imageButton = findViewById(R.id.photo_receipt_add_image_button);
+            final ImageButton imageButton = findViewById(R.id.receipt_edit_image_button);
 
             imageButton.setImageBitmap(mBitmap);
 
@@ -341,8 +321,6 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
                     this,
                     "Error reading receipt image file",
                     Toast.LENGTH_LONG).show();
-
-            //TODO Use the default image
         }
     }
 
@@ -357,7 +335,7 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
      * @param bitmap Bitmap
      * @param image_absolute_path String
      * @return Bitmap corrected Bitmap
-     * @throws IOException
+     * @throws IOException IOException
      */
     public static Bitmap modifyOrientation(Bitmap bitmap, String image_absolute_path) throws IOException {
         ExifInterface ei = new ExifInterface(image_absolute_path);
@@ -440,8 +418,7 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
 
         // Load the high-resolution "zoomed-in" image.
 
-        final ImageView expandedImageView = (ImageView) findViewById(
-                R.id.photo_receipt_add_expanded_image);
+        final ImageView expandedImageView = findViewById(R.id.receipt_edit_expanded_image);
         expandedImageView.setImageBitmap(bm);
 
         // Calculate the starting and ending bounds for the zoomed-in image.
@@ -456,7 +433,7 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
         // bounds, since that's the origin for the positioning animation
         // properties (X, Y).
         thumbView.getGlobalVisibleRect(startBounds);
-        findViewById(R.id.photo_receipt_add_container)
+        findViewById(R.id.receipt_edit_container)
                 .getGlobalVisibleRect(finalBounds, globalOffset);
         startBounds.offset(-globalOffset.x, -globalOffset.y);
         finalBounds.offset(-globalOffset.x, -globalOffset.y);
@@ -570,4 +547,6 @@ public class PhotoReceiptAddActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }

@@ -33,7 +33,7 @@ public class Receipt {
     private String imageFilePath;
 
     @ColumnInfo(name = "created_date")
-    private DateTime createdDate;
+    private Long createdDate;
 
     @ColumnInfo(name = "title")
     private String title;
@@ -42,7 +42,7 @@ public class Receipt {
     private String location;
 
     @ColumnInfo(name = "price")
-    private BigDecimal price;
+    private Double price;
 
     @ColumnInfo(name = "category")
     private String category;
@@ -57,7 +57,20 @@ public class Receipt {
         receiptKey = UUID.randomUUID().toString();
     }
 
-    public Receipt(@NonNull String receiptKey, DateTime date, String imageFilePath) {
+    public Receipt(@NonNull String receiptKey, Long date) {
+        this.receiptKey = receiptKey;
+        createdDate = date;
+        subscriptionKey = null;
+        this.imageFilePath = null;
+        category = null;
+        location = null;
+        price = null;
+        method = null;
+        comment = null;
+        title = null;
+    }
+
+    public Receipt(@NonNull String receiptKey, Long date, String imageFilePath) {
         this.receiptKey = receiptKey;
         createdDate = date;
         subscriptionKey = null;
@@ -71,10 +84,10 @@ public class Receipt {
         title = null;
     }
 
-    public Receipt(@NonNull String receiptKey, String subscriptionKey, DateTime date, String imageFilePath) {
+    public Receipt(@NonNull String receiptKey, String subscriptionKey, Long date) {
         this.receiptKey = receiptKey;
         this.subscriptionKey = subscriptionKey;
-        this.imageFilePath = imageFilePath;
+        this.imageFilePath = null;
 
         createdDate = date;
         category = null;
@@ -109,11 +122,11 @@ public class Receipt {
         this.imageFilePath = imageFilePath;
     }
 
-    public DateTime getCreatedDate() {
+    public Long getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(DateTime createdDate) {
+    public void setCreatedDate(Long createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -133,11 +146,11 @@ public class Receipt {
         this.location = location.toUpperCase();
     }
 
-    public BigDecimal getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
