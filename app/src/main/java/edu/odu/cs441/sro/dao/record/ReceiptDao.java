@@ -23,7 +23,7 @@ public interface ReceiptDao {
     LiveData<List<Receipt>> findAll();
 
     @Query("SELECT * FROM receipt ORDER BY created_date ASC")
-    LiveData<List<Receipt>> findByASC();
+    List<Receipt> findByASC();
 
     @Query("SELECT * FROM receipt WHERE receipt_key = :receiptKey")
     Receipt findByKey(String receiptKey);

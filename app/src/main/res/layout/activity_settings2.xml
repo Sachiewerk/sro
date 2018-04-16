@@ -36,21 +36,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Add Location" />
+                android:text="Add Location"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"/>
 
             <Button
                 android:id="@+id/addMethodButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Add Payment" />
+                android:text="Add Method"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"/>
 
             <Button
                 android:id="@+id/addCategoryButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Add Category" />
+                android:text="Add Category"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"/>
 
         </LinearLayout>
 
@@ -65,25 +71,42 @@
             <ListView
                 android:id="@+id/LocationDisplay"
                 android:layout_width="match_parent"
+                android:layout_gravity="right"
                 android:layout_height="50dp"
-                android:layout_marginTop="5dp" />
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"/>
 
             <ListView
                 android:id="@+id/CategoryDisplay"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="5dp" />
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"/>
 
 
             <ListView
                 android:id="@+id/MethodDisplay"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="5dp" />
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"/>
 
         </LinearLayout>
     </LinearLayout>
 
+
+    <TextView
+        android:id="@+id/sortByTextView"
+        android:layout_gravity="left"
+        android:text="Sort By"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/spinnerLabel"
+        android:text="Receipt Order"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <Spinner
         android:id="@+id/userChoiceSpinner"
@@ -97,19 +120,8 @@
         android:id="@+id/backButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:text="Back" />
-    <TextView
-        android:id="@+id/sortByTextView"
-        android:layout_gravity="left"
-        android:text="Sort By"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/spinnerLabel"
-        android:text="Receipt Order"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_gravity="end"
+        android:text="Back" />
 
 </LinearLayout>

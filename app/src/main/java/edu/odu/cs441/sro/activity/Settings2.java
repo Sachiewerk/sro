@@ -60,12 +60,13 @@ public class Settings2 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings2);
-        receiptViewModel = ViewModelProviders.of(this).get(ReceiptViewModel.class);
+      /*  receiptViewModel = ViewModelProviders.of(this).get(ReceiptViewModel.class);
         locationViewModel = ViewModelProviders.of(this).get(LocationViewModel.class);
         categoryViewModel = ViewModelProviders.of(this).get(CategoryViewModel.class);
-        methodViewModel = ViewModelProviders.of(this).get(MethodViewModel.class);
+        methodViewModel = ViewModelProviders.of(this).get(MethodViewModel.class);*/
         initializeLists();
         setSpinner();
+
 
 
 
@@ -156,15 +157,17 @@ public class Settings2 extends AppCompatActivity {
                     Method newMethod = new Method(methodEntryBox.getText().toString());
                     methodViewModel.insert(newMethod);
                     mMethodList.add(newMethod.getMethod());
+                    methodEntryBox.setText("");
 
                 }
+                else Toast.makeText(getApplicationContext(),"Please Enter a Method",Toast.LENGTH_LONG).show();
             }
         });
         addMethodListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 String toBeDeleted = (String)parent.getItemAtPosition(position);
-
+                //remove from database
                 mMethodList.remove(position);
                 addMethodListView.invalidateViews();
                 methodEntryBox.setText("");
@@ -180,8 +183,7 @@ public class Settings2 extends AppCompatActivity {
 
     public void addOrDeleteCategory() {
         ///need a list of methods
-        ArrayList methodList = new ArrayList() ;
-        final ArrayList myMethodList = new ArrayList();
+
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(Settings2.this);
         final View mView = getLayoutInflater().inflate(R.layout.addmethodlayout, null);
         final Button addMethodButton = (Button) mView.findViewById(R.id.addSomethingButton);
@@ -191,9 +193,6 @@ public class Settings2 extends AppCompatActivity {
         methodEntryBox.setHint("Enter the Category Here");
         final ArrayList newCategoryList = new ArrayList();
 
-
-        //final ArrayAdapter myMethodAdapter = new ArrayAdapter<>(
-         //       this, android.R.layout.select_dialog_singlechoice, myMethodList);
 
        final ArrayAdapter myMethodAdapter = new ArrayAdapter<>(
                 this, android.R.layout.select_dialog_singlechoice,newCategoryList);
@@ -226,6 +225,7 @@ public class Settings2 extends AppCompatActivity {
                     methodEntryBox.setText("");
 
                 }
+                else Toast.makeText(getApplicationContext(),"Please Enter a Category",Toast.LENGTH_LONG).show();
             }
         });
 
@@ -276,6 +276,7 @@ public class Settings2 extends AppCompatActivity {
                    mLocationList.add(methodEntryBox.getText().toString());
 
                 }
+                else Toast.makeText(getApplicationContext(),"Please Enter a Location",Toast.LENGTH_LONG).show();
             }
         });
 
@@ -298,6 +299,11 @@ public class Settings2 extends AppCompatActivity {
 
     public void initializeLists()
     {
+
+        receiptViewModel = ViewModelProviders.of(this).get(ReceiptViewModel.class);
+        locationViewModel = ViewModelProviders.of(this).get(LocationViewModel.class);
+        categoryViewModel = ViewModelProviders.of(this).get(CategoryViewModel.class);
+        methodViewModel = ViewModelProviders.of(this).get(MethodViewModel.class);
 
         mLocationList = new ArrayList<>();
         mMethodList = new ArrayList<>();
@@ -338,8 +344,8 @@ public class Settings2 extends AppCompatActivity {
         });
 
         sortByList = new ArrayList<>();
-        sortByList.add("ASCEND");
-        sortByList.add("DESCEND");
+        sortByList.add("DATE - ASCENDING");
+        sortByList.add("DATE - DESCENDING");
 
         ArrayAdapter newCategoryAdapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,mCategoryList);
         ArrayAdapter newLocationAdapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,mLocationList);
@@ -382,6 +388,24 @@ public void setSpinner()
             }
         }
     });*/
+  mySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+      @Override
+      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+          switch (position)
+          {
+              case 0: Toast.makeText(getApplicationContext(),"1",Toast.LENGTH_LONG).show();
+                  break ;
+              case 1: Toast.makeText(getApplicationContext(),"2",Toast.LENGTH_LONG).show();
+                  break ;
+          }
+
+      }
+
+      @Override
+      public void onNothingSelected(AdapterView<?> parent) {
+
+      }
+  });
 }
 
 }
