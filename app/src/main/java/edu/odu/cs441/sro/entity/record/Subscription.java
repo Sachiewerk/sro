@@ -4,9 +4,6 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
-
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -21,7 +18,7 @@ public class Subscription {
     private String subscriptionKey;
 
     @ColumnInfo(name = "created_date")
-    private Date createdDate;
+    private Long createdDate;
 
     @ColumnInfo(name = "title")
     private String title;
@@ -30,7 +27,7 @@ public class Subscription {
     private String location;
 
     @ColumnInfo(name = "price")
-    private BigDecimal price;
+    private Double price;
 
     @ColumnInfo(name = "category")
     private String category;
@@ -39,22 +36,22 @@ public class Subscription {
     private String method;
 
     @ColumnInfo(name = "Start date")
-    private String startdate;
+    private Long startDate;
 
     @ColumnInfo(name = "End date")
-    private String enddate;
+    private Long endDate;
 
     @ColumnInfo(name = "Due date")
-    private String duedate;
+    private Long dueDate;
 
     @ColumnInfo(name = "comment")
     private String comment;
 
-    public Subscription(String subscriptionKey, long millis) {
+    public Subscription() {
         this.subscriptionKey = UUID.randomUUID().toString();
     }
 
-    public Subscription(String subscriptionKey,Date date) {
+    public Subscription(String subscriptionKey,Long date, Long startDate, Long endDate) {
         this.subscriptionKey = subscriptionKey;
         createdDate = date;
 
@@ -64,9 +61,9 @@ public class Subscription {
         method = null;
         comment = null;
         title = null;
-        startdate = null;
-        enddate = null;
-        duedate = null;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        dueDate = null;
 
     }
 
@@ -74,15 +71,15 @@ public class Subscription {
         return  subscriptionKey;
     }
 
-    public void setSubscriptionKey(String subscriptionKey) {
+    public void setSubscriptionKey(@NonNull String subscriptionKey) {
         this.subscriptionKey = subscriptionKey;
     }
 
-    public Date getCreatedDate() {
+    public Long getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(Long createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -102,11 +99,11 @@ public class Subscription {
         this.location = location.toUpperCase();
     }
 
-    public BigDecimal getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
@@ -134,28 +131,28 @@ public class Subscription {
         this.comment = comment;
     }
 
-    public String getDuedate() {
-        return duedate;
+    public Long getDueDate() {
+        return dueDate;
     }
 
-    public void setDuedate(String duedate) {
-        this.duedate = duedate;
+    public void setDueDate(Long dueDate) {
+        this.dueDate = dueDate;
     }
 
-    public String getEnddate() {
-        return enddate;
+    public Long getEndDate() {
+        return endDate;
     }
 
-    public void setEnddate(String enddate) {
-        this.enddate = enddate;
+    public void setEndDate(Long endDate) {
+        this.endDate = endDate;
     }
 
-    public String getStartdate() {
-        return startdate;
+    public Long getStartDate() {
+        return startDate;
     }
 
-    public void setStartdate(String startdate) {
-        this.startdate = startdate;
+    public void setStartDate(Long startDate) {
+        this.startDate = startDate;
     }
 }
 
