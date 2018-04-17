@@ -1,17 +1,10 @@
 package edu.odu.cs441.sro.intent;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
-
 import java.io.File;
-import edu.odu.cs441.sro.R;
 import edu.odu.cs441.sro.entity.record.Receipt;
 
 public class EmailReceiptIntent {

@@ -7,10 +7,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import edu.odu.cs441.sro.R;
+import edu.odu.cs441.sro.intent.EmailReportIntent;
 
 public class ReportResultActivity extends AppCompatActivity {
 
     public static String REPORT_RESULT = "REPORT RESULT";
+    private String reportResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +21,7 @@ public class ReportResultActivity extends AppCompatActivity {
 
         Intent data = getIntent();
         String result = data.getStringExtra(REPORT_RESULT);
+        reportResult = result;
 
         TextView textView = findViewById(R.id.activity_report_result_textview);
 
@@ -36,8 +39,13 @@ public class ReportResultActivity extends AppCompatActivity {
         emailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO
+                sendReportEmail();
             }
         });
+    }
+
+    private void sendReportEmail() {
+        EmailReportIntent emailReportIntent = new EmailReportIntent(this);
+        emailReportIntent.sendEmail(reportResult);
     }
 }
