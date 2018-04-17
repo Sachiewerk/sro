@@ -154,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
             methodViewModel.insert(new Method("Debit Card"));
             methodViewModel.insert(new Method("Paypal"));
         }
+
     }
 
     /**
@@ -245,9 +246,8 @@ public class MainActivity extends AppCompatActivity {
                             case R.id.add_nophoto_receipt:
                                 startNoPhotoReceiptAddActivity();
                                 return true;
-
                             case R.id.add_subscription:
-
+                                startSubscriptionActivity();
                                 return true;
                         }
                         return true;
@@ -343,6 +343,14 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(MY_UUID_INTENT_IDENTIFIER, UUID.randomUUID());
 
         // Start PhotoReceiptAddActivity
+        startActivity(intent);
+    }
+
+    /**
+     * Start the AddSubscriptionActivity
+     */
+    private void startSubscriptionActivity() {
+        Intent intent = new Intent(this, SubscriptionAddActivity.class);
         startActivity(intent);
     }
 
